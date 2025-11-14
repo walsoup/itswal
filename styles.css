@@ -1,0 +1,178 @@
+/* ===== BASE STYLES ===== */
+body {
+  font-family: 'Inter', sans-serif;
+  overflow: hidden;
+  position: relative;
+  background-color: #121212;
+}
+
+/* ===== ANIMATED BACKGROUND ===== */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background: linear-gradient(135deg, #ffdabe, #ffc0cb 30%, #e6e6fa 60%, #add8e6 100%);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+}
+
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ===== BLOB ANIMATIONS ===== */
+.blob {
+  position: absolute;
+  opacity: 0.5;
+  filter: blur(40px);
+  z-index: 0;
+}
+
+.blob-1 {
+  width: 450px;
+  height: 450px;
+  top: -100px;
+  left: -100px;
+  background: rgba(170, 180, 200, 0.5);
+  border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+  animation: blobFloat 20s infinite alternate;
+}
+
+.blob-2 {
+  width: 550px;
+  height: 550px;
+  bottom: -150px;
+  right: -150px;
+  background: rgba(60, 140, 130, 0.6);
+  border-radius: 70% 30% 40% 60% / 60% 40% 70% 30%;
+  animation: blobFloat 25s infinite alternate-reverse;
+}
+
+@keyframes blobFloat {
+  to {
+    transform: translate(20px, -30px) scale(1.1);
+    border-radius: 70% 30% 40% 60% / 60% 40% 70% 30%;
+  }
+}
+
+/* ===== NAVIGATION ===== */
+.nav-link {
+  position: relative;
+  transition: all 0.2s ease-in-out;
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.nav-link:hover {
+  transform: translateY(-2px);
+  color: #4a5568;
+}
+
+.nav-link.active {
+  font-weight: 700;
+  color: #374151;
+}
+
+/* Navigation torchlight glow effect */
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 7px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 95%;
+  height: 12px;
+  background: #d57624;
+  filter: blur(8px);
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  z-index: -1;
+  border-radius: 50%;
+}
+
+.nav-link:hover::after {
+  opacity: 0.6;
+}
+
+.nav-link.active::after {
+  opacity: 1;
+}
+
+/* ===== SOCIAL ICONS ===== */
+.social-icon {
+  transition: all 0.2s ease-in-out;
+}
+
+.social-icon:hover {
+  transform: scale(1.2);
+  color: #e07b39;
+}
+
+/* ===== MAIN CONTENT ===== */
+.main-content-box {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(20px) saturate(180%) brightness(120%);
+}
+
+/* ===== PROFILE PICTURE ===== */
+.profile-pic-container {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 1.5rem;
+}
+
+.profile-pic {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 0 4px rgba(212, 179, 141, 0.3);
+  background: transparent;
+}
+
+/* ===== SQUIGGLE ANIMATION ===== */
+#squiggle-path {
+  stroke: #d57624;
+  stroke-width: 5;
+  stroke-linecap: round;
+  fill: none;
+  stroke-dasharray: var(--squiggle-length);
+  stroke-dashoffset: var(--squiggle-length);
+  animation: draw 1.5s ease-out 0.5s forwards;
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ===== UTILITY CLASSES ===== */
+.hidden {
+  display: none !important;
+}
+
+/* ===== ACCESSIBILITY: REDUCED MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+  body::before,
+  .blob-1,
+  .blob-2 {
+    animation: none !important;
+    background-size: auto !important;
+    transform: none !important;
+    border-radius: initial !important;
+  }
+  
+  #squiggle-path {
+    animation: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+}

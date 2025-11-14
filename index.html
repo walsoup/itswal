@@ -1,185 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>itswal.me</title>
+    
+    <!-- External Dependencies -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      /* Body and Background Styling */
-      body {
-        font-family: 'Inter', sans-serif;
-        overflow: hidden; /* Prevent scrolling if blobs go off screen */
-        position: relative;
-        background-color: #121212; /* Fallback background color */
-      }
-
-      body::before {
-        content: '';
-        position: fixed; /* Fixed background to fill viewport */
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: -1; /* Ensure background is behind content */
-        background: linear-gradient(135deg, #ffdabe, #ffc0cb 30%, #e6e6fa 60%, #add8e6 100%);
-        background-size: 400% 400%; /* For animating the gradient */
-        animation: gradient 15s ease infinite;
-      }
-
-      @keyframes gradient {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
-      }
-
-      /* Blob Animations */
-      .blob {
-        position: absolute;
-        opacity: 0.5;
-        filter: blur(40px); /* Soften the blob appearance */
-        z-index: 0; /* Above background, below main content */
-      }
-      .blob-1 {
-        width: 450px;
-        height: 450px;
-        top: -100px;
-        left: -100px;
-        background: rgba(170, 180, 200, 0.5); /* Bluish-grey blob */
-        border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
-        animation: blobFloat 20s infinite alternate;
-      }
-      .blob-2 {
-        width: 550px;
-        height: 550px;
-        bottom: -150px;
-        right: -150px;
-        background: rgba(60, 140, 130, 0.6); /* Greenish-blue blob */
-        border-radius: 70% 30% 40% 60% / 60% 40% 70% 30%;
-        animation: blobFloat 25s infinite alternate-reverse;
-      }
-      @keyframes blobFloat {
-        to {
-          transform: translate(20px, -30px) scale(1.1); /* Slight movement and scale change */
-          border-radius: 70% 30% 40% 60% / 60% 40% 70% 30%; /* Morph shape */
-        }
-      }
-      
-      /* Navigation Link Styling */
-      .nav-link {
-        position: relative; /* For the ::after pseudo-element */
-        transition: all 0.2s ease-in-out;
-        display: inline-block; /* Allows width to be based on content */
-        padding: 0.25rem 0.5rem; /* Added padding for better click/tap area */
-        border-radius: 0.5rem; /* Rounded corners for links */
-      }
-      .nav-link:hover {
-        transform: translateY(-2px); /* Lift effect on hover */
-        color: #4a5568; /* Darker text on hover */
-      }
-      .nav-link.active {
-        font-weight: 700; /* Bold text for active link */
-        color: #374151; /* Even darker text for active link */
-      }
-
-      /* Social Icon Styling */
-      .social-icon {
-        transition: all 0.2s ease-in-out;
-      }
-      .social-icon:hover {
-        transform: scale(1.2); /* Pop effect on hover */
-        color: #e07b39; /* Amber color on hover */
-      }
-      .hidden {
-        display: none !important; /* Utility class for hiding sections */
-      }
-
-      /* Squiggle Path Animation */
-      #squiggle-path {
-        stroke: #d57624; /* Amber stroke color */
-        stroke-width: 5;
-        stroke-linecap: round;
-        fill: none;
-        stroke-dasharray: var(--squiggle-length); /* Set dynamically by JS */
-        stroke-dashoffset: var(--squiggle-length); /* Start fully hidden */
-        animation: draw 1.5s ease-out 0.5s forwards; /* Draw animation */
-      }
-
-      @keyframes draw {
-        to {
-          stroke-dashoffset: 0; /* Fully visible at the end of animation */
-        }
-      }
-      
-      /* Torchlight Glow Effect for Nav Links */
-      .nav-link::after {
-        content: '';
-        position: absolute;
-        bottom: 7px; /* Adjusted: Lifted slightly above baseline */
-        left: 50%;
-        transform: translateX(-50%);
-        width: 95%;
-        height: 12px; /* Slightly smaller height */
-        background: #d57624; /* Matching squiggle color */
-        filter: blur(8px); /* Less blur for a more focused glow */
-        opacity: 0;
-        transition: opacity 0.3s ease-in-out;
-        z-index: -1; /* Behind the text */
-        border-radius: 50%; /* Make the glow more circular */
-      }
-
-      .nav-link:hover::after {
-        opacity: 0.6; /* Slight glow on hover */
-      }
-      .nav-link.active::after {
-        opacity: 1; /* Full glow for active link */
-      }
-
-      /* Main content box: Frosted glass effect */
-      .main-content-box {
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        /* Enhanced frosted glass effect */
-        backdrop-filter: blur(20px) saturate(180%) brightness(120%);
-      }
-
-      /* Performance Optimization: Reduced motion preference */
-      @media (prefers-reduced-motion: reduce) {
-        body::before,
-        .blob-1,
-        .blob-2 {
-          animation: none !important; /* Disable background and blob animations */
-          background-size: auto !important; /* Static background size */
-          transform: none !important; /* Prevent blob movement */
-          border-radius: initial !important; /* Prevent blob morphing */
-        }
-        #squiggle-path {
-          animation: none !important; /* Disable squiggle drawing animation */
-          stroke-dashoffset: 0 !important; /* Ensure squiggle is fully visible */
-        }
-      }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet" />
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body class="text-gray-800">
-    <!-- Animated blobs for background aesthetic -->
+    <!-- Animated Background Blobs -->
     <div class="absolute inset-0 z-0">
       <div class="blob blob-1"></div>
       <div class="blob blob-2"></div>
     </div>
 
-    <!-- Main content container, centered on screen -->
+    <!-- Main Content Container -->
     <div class="relative min-h-screen flex items-center justify-center p-4 z-10">
       <div class="max-w-6xl w-full flex flex-col md:flex-row md:items-start md:space-x-8">
-        <!-- Navigation area -->
+        
+        <!-- Navigation -->
         <nav class="w-full md:w-1/4 mb-8 md:mb-0">
-          <div
-            class="container mx-auto flex flex-row md:flex-col justify-center md:items-center space-x-6 md:space-x-0 md:space-y-6 text-sm font-normal tracking-widest text-gray-700 uppercase"
-          >
+          <div class="container mx-auto flex flex-row md:flex-col justify-center md:items-center space-x-6 md:space-x-0 md:space-y-6 text-sm font-normal tracking-widest text-gray-700 uppercase">
             <a href="#" class="nav-link" id="bio-nav-link">Bio</a>
             <a href="#" class="nav-link" id="cat-nav-link">Cat</a>
             <a href="#" class="nav-link" id="bear-nav-link">Bear</a>
@@ -187,143 +35,93 @@
           </div>
         </nav>
 
-        <!-- Main content display area -->
-        <main
-          class="w-full md:w-3/4 bg-white/30 backdrop-blur-md rounded-2xl border border-[#d4b38d] p-8 md:p-12 main-content-box"
-        >
-          <!-- Intro Section - Initially visible -->
+        <!-- Main Content Area -->
+        <main class="w-full md:w-3/4 bg-white/30 backdrop-blur-md rounded-2xl border border-[#d4b38d] p-8 md:p-12 main-content-box">
+          <!-- Intro Section -->
           <div id="intro-section">
-              <div class="mb-4">
-                  <h1 class="text-5xl md:text-7xl font-bold text-gray-800">Wal</h1>
-                  <svg id="squiggle-svg" class="h-8 w-40 -mt-2" viewBox="0 0 160 30">
-                    <path id="squiggle-path" d="M 5,15 C 40,30 80,-10 155,15" />
-                  </svg>
-              </div>
+            <!-- Profile Picture (optional) -->
+            <div class="profile-pic-container">
+              <img id="profile-pic" src="profilepic.png" alt="Profile Picture" class="profile-pic" />
+            </div>
 
-              <!-- Social icons with updated, functional links -->
-              <div class="flex items-center space-x-5 text-amber-600 mt-6">
-                  <a href="https://www.instagram.com/walsoup" class="social-icon h-6 w-6 flex items-center justify-center" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
-  <svg role="img" viewBox="-2 -2 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" preserveAspectRatio="xMinYMin">
-    <path d='M14.017 0h-8.07A5.954 5.954 0 0 0 0 5.948v8.07a5.954 5.954 0 0 0 5.948 5.947h8.07a5.954 5.954 0 0 0 5.947-5.948v-8.07A5.954 5.954 0 0 0 14.017 0zm3.94 14.017a3.94 3.94 0 0 1-3.94 3.94h-8.07a3.94 3.94 0 0 1-3.939-3.94v-8.07a3.94 3.94 0 0 1 3.94-3.939h8.07a3.94 3.94 0 0 1 3.939 3.94v8.07z'/>
-    <path d='M9.982 4.819A5.17 5.17 0 0 0 4.82 9.982a5.17 5.17 0 0 0 5.163 5.164 5.17 5.17 0 0 0 5.164-5.164A5.17 5.17 0 0 0 9.982 4.82zm0 8.319a3.155 3.155 0 1 1 0-6.31 3.155 3.155 0 0 1 0 6.31z'/>
-    <circle cx='15.156' cy='4.858' r='1.237'/>
-  </svg>
-</a>
-                  <a href="https://github.com/walsoup/" class="social-icon h-6 w-6 flex items-center justify-center" target="_blank" rel="noopener noreferrer"><svg fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.378.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.942.359.308.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12.017C22 6.484 17.523 2 12 2z" /></svg></a>
-                  <a href="https://twitter.com/walsoup" class="social-icon h-6 w-6 flex items-center justify-center" aria-label="Twitter" target="_blank" rel="noopener noreferrer"><svg fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
-                  <a href="https://www.linkedin.com/in/itswal/" class="social-icon h-6 w-6 flex items-center justify-center" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer"><svg fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>
-              </div>
+            <!-- Name and Squiggle -->
+            <div class="mb-4">
+              <h1 class="text-5xl md:text-7xl font-bold text-gray-800">Wal</h1>
+              <svg id="squiggle-svg" class="h-8 w-40 -mt-2" viewBox="0 0 160 30">
+                <path id="squiggle-path" d="M 5,15 C 40,30 80,-10 155,15" />
+              </svg>
+            </div>
+
+            <!-- Social Icons -->
+            <div class="flex items-center space-x-5 text-amber-600 mt-6">
+              <a href="https://www.instagram.com/walsoup" class="social-icon h-6 w-6 flex items-center justify-center" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+                <svg role="img" viewBox="-2 -2 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" preserveAspectRatio="xMinYMin">
+                  <path d='M14.017 0h-8.07A5.954 5.954 0 0 0 0 5.948v8.07a5.954 5.954 0 0 0 5.948 5.947h8.07a5.954 5.954 0 0 0 5.947-5.948v-8.07A5.954 5.954 0 0 0 14.017 0zm3.94 14.017a3.94 3.94 0 0 1-3.94 3.94h-8.07a3.94 3.94 0 0 1-3.939-3.94v-8.07a3.94 3.94 0 0 1 3.94-3.939h8.07a3.94 3.94 0 0 1 3.939 3.94v8.07z'/>
+                  <path d='M9.982 4.819A5.17 5.17 0 0 0 4.82 9.982a5.17 5.17 0 0 0 5.163 5.164 5.17 5.17 0 0 0 5.164-5.164A5.17 5.17 0 0 0 9.982 4.82zm0 8.319a3.155 3.155 0 1 1 0-6.31 3.155 3.155 0 0 1 0 6.31z'/>
+                  <circle cx='15.156' cy='4.858' r='1.237'/>
+                </svg>
+              </a>
+              <a href="https://github.com/walsoup/" class="social-icon h-6 w-6 flex items-center justify-center" aria-label="GitHub" target="_blank" rel="noopener noreferrer">
+                <svg fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.378.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.942.359.308.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12.017C22 6.484 17.523 2 12 2z" />
+                </svg>
+              </a>
+              <a href="https://twitter.com/walsoup" class="social-icon h-6 w-6 flex items-center justify-center" aria-label="Twitter" target="_blank" rel="noopener noreferrer">
+                <svg fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+              </a>
+              <a href="https://www.linkedin.com/in/itswal/" class="social-icon h-6 w-6 flex items-center justify-center" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+                <svg fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                </svg>
+              </a>
+            </div>
           </div>
 
-          <!-- Bio Section - Initially hidden -->
+          <!-- Bio Section -->
           <div id="bio-section" class="hidden">
-              <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">About Me</h2>
-              <p class="text-lg text-gray-700 mb-4">
-                  Hey, you... still nothing here yet :< 
-              </p>
-              <p class="text-lg text-gray-700 mb-4">
-                  Have a cool flower
-              </p>
-              <img src="flower.jpg" alt="A cool flower image" class="rounded-lg mt-6 shadow-md w-full max-w-lg mx-auto" loading="lazy" onerror="this.onerror=null; this.src='https://placehold.co/600x400/FFDAB9/B22222?text=A+Cool+Flower';" />
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">About Me</h2>
+            <p class="text-lg text-gray-700 mb-4">
+              Hey, you... still nothing here yet :< 
+            </p>
+            <p class="text-lg text-gray-700 mb-4">
+              Have a cool flower
+            </p>
+            <img src="flower.jpg" alt="A cool flower image" class="rounded-lg mt-6 shadow-md w-full max-w-lg mx-auto" loading="lazy" onerror="this.onerror=null; this.src='https://placehold.co/600x400/FFDAB9/B22222?text=A+Cool+Flower';" />
           </div>
 
-          <!-- Cat Section - Initially hidden -->
+          <!-- Cat Section -->
           <div id="cat-section" class="hidden">
-              <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">Cats</h2>
-              <p class="text-lg text-gray-700 mb-4">
-                  Here's cat kitty kitty kitty.
-              </p>
-              <img src="https://cataas.com/cat" alt="A cute cat" class="rounded-lg mt-6 shadow-md w-full max-w-lg mx-auto" loading="lazy" onerror="this.onerror=null; this.src='https://placehold.co/600x400/cccccc/333333?text=Image+Unavailable';" />
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">Cats</h2>
+            <p class="text-lg text-gray-700 mb-4">
+              Here's cat kitty kitty kitty.
+            </p>
+            <img src="https://cataas.com/cat" alt="A cute cat" class="rounded-lg mt-6 shadow-md w-full max-w-lg mx-auto" loading="lazy" onerror="this.onerror=null; this.src='https://placehold.co/600x400/cccccc/333333?text=Image+Unavailable';" />
           </div>
 
-          <!-- Bear Section - Initially hidden -->
+          <!-- Bear Section -->
           <div id="bear-section" class="hidden">
-              <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">Bear fish</h2>
-              <p class="text-lg text-gray-700 mb-4">
-                  bear.
-              </p>
-              <img src="https://placebear.com/600/700" alt="A (doub) bear" class="rounded-lg mt-6 shadow-md w-full max-w-lg mx-auto" loading="lazy" onerror="this.onerror=null; this.src='https://placehold.co/600x400/cccccc/333333?text=Image+Unavailable';" />
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">Bear fish</h2>
+            <p class="text-lg text-gray-700 mb-4">
+              bear.
+            </p>
+            <img src="https://placebear.com/600/700" alt="A (doub) bear" class="rounded-lg mt-6 shadow-md w-full max-w-lg mx-auto" loading="lazy" onerror="this.onerror=null; this.src='https://placehold.co/600x400/cccccc/333333?text=Image+Unavailable';" />
           </div>
 
-          <!-- Doggo Section - Initially hidden -->
+          <!-- Doggo Section -->
           <div id="doggo-section" class="hidden">
-              <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">Dogs</h2>
-              <p class="text-lg text-gray-700 mb-4">
-                  Dogs!.
-              </p>
-              <img src="https://place.dog/700/600" alt="An dog" class="rounded-lg mt-6 shadow-md w-full max-w-lg mx-auto" loading="lazy" onerror="this.onerror=null; this.src='https://placehold.co/600x400/cccccc/333333?text=Image+Unavailable';" />
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">Dogs</h2>
+            <p class="text-lg text-gray-700 mb-4">
+              Dogs!.
+            </p>
+            <img src="https://place.dog/700/600" alt="An dog" class="rounded-lg mt-6 shadow-md w-full max-w-lg mx-auto" loading="lazy" onerror="this.onerror=null; this.src='https://placehold.co/600x400/cccccc/333333?text=Image+Unavailable';" />
           </div>
         </main>
       </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Mapping of section IDs to their HTML elements
-            const sections = {
-                intro: document.getElementById('intro-section'),
-                bio: document.getElementById('bio-section'),
-                cat: document.getElementById('cat-section'),
-                bear: document.getElementById('bear-section'),
-                doggo: document.getElementById('doggo-section'),
-            };
-
-            // Mapping of navigation link IDs to their HTML elements
-            const navLinks = {
-                bio: document.getElementById('bio-nav-link'),
-                cat: document.getElementById('cat-nav-link'),
-                bear: document.getElementById('bear-nav-link'),
-                doggo: document.getElementById('doggo-nav-link'),
-            };
-
-            /**
-             * Hides all content sections and deactivates all navigation links.
-             */
-            function hideAllSections() {
-                for (const key in sections) {
-                    sections[key].classList.add('hidden');
-                }
-                for (const key in navLinks) {
-                    navLinks[key].classList.remove('active');
-                }
-            }
-
-            /**
-             * Shows a specific content section and activates its corresponding navigation link.
-             * @param {string} key - The key corresponding to the section and navigation link to show/activate.
-             */
-            function showSection(key) {
-                hideAllSections(); // Hide everything first
-                sections[key].classList.remove('hidden'); // Show the target section
-                if (navLinks[key]) {
-                    navLinks[key].classList.add('active'); // Activate the target nav link
-                }
-            }
-
-            // Add click event listeners to all navigation links
-            for (const key in navLinks) {
-                navLinks[key].addEventListener('click', function(event) {
-                    event.preventDefault(); // Prevent default link behavior (page reload)
-                    if (sections[key].classList.contains('hidden')) {
-                        // If the clicked section is hidden, show it
-                        showSection(key);
-                    } else {
-                        // If the clicked section is already visible, toggle back to intro
-                        showSection('intro');
-                    }
-                });
-            }
-            
-            // Show the intro section by default when the page loads
-            showSection('intro');
-
-            // Initialize the squiggle path animation
-            const squigglePath = document.getElementById('squiggle-path');
-            if (squigglePath) { // Check if element exists before accessing properties
-                const length = squigglePath.getTotalLength();
-                squigglePath.style.setProperty('--squiggle-length', length);
-            }
-        });
-    </script>
+    <!-- Custom JavaScript -->
+    <script src="script.js"></script>
   </body>
 </html>
