@@ -2,35 +2,325 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="description" content="Wal's personal website - Learn more about me, my interests, and connect on social media." />
+    <meta name="author" content="Wal" />
+    <meta name="keywords" content="Wal, Personal Site, Portfolio, Developer, Cats, Bears, Dogs" />
+    <meta name="theme-color" content="#121212" />
+    
+    <meta property="og:title" content="itswal.me" />
+    <meta property="og:description" content="Wal's personal website" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://itswal.me" />
+    <meta property="og:site_name" content="Wal's World" />
+    
     <title>itswal.me</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700&family=VT323&display=swap"
       rel="stylesheet"
     />
+
     <style>
-      /* Body and Background Styling */
-      body {
-        font-family: 'Inter', sans-serif;
-        overflow: hidden; /* Prevent scrolling if blobs go off screen */
-        position: relative;
-        background-color: #121212; /* Fallback background color */
+      /* --------------------------------------------------------------------------
+      RESET & BASE VARIABLES (DEFAULT THEME)
+      --------------------------------------------------------------------------
+      */
+      :root {
+          /* Core Colors */
+          --color-bg-primary: #121212;
+          --color-accent: #d57624;
+          --color-accent-hover: #e07b39;
+          --color-text-main: #1f2937;
+          --color-text-muted: #4b5563;
+          --color-text-heading: #1f2937;
+          --color-nav-text: #374151;
+          --color-social: #d97706;
+          --animation-speed-slow: 0.5s;
+          --animation-speed-fast: 0.2s;
+          --blob-opacity: 0.4;
+          
+          /* Gradient Colors */
+          --gradient-1: #ffdabe;
+          --gradient-2: #ffc0cb;
+          --gradient-3: #e6e6fa;
+          --gradient-4: #add8e6;
+          
+          /* Blob Colors */
+          --blob-1-color: rgba(170, 180, 200, 0.5);
+          --blob-2-color: rgba(60, 140, 130, 0.6);
+          
+          /* Glass Box */
+          --glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.35) 50%, rgba(255, 255, 255, 0.45) 100%);
+          --glass-border: rgba(255, 255, 255, 0.4);
+          --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+          --glass-shine: rgba(255, 255, 255, 0.3);
+          
+          /* Font */
+          --font-main: 'Inter', sans-serif;
       }
 
+      * {
+          box-sizing: border-box;
+      }
+      
+      /* --------------------------------------------------------------------------
+      THEME: DARK MODE 🌙
+      Trigger: Type "night"
+      --------------------------------------------------------------------------
+      */
+      body.theme-dark {
+          --color-bg-primary: #0a0a0f;
+          --color-accent: #ff9500;
+          --color-accent-hover: #ffaa33;
+          --color-text-main: #e0e0e0;
+          --color-text-muted: #888888;
+          --color-text-heading: #ffffff;
+          --color-nav-text: #cccccc;
+          --color-social: #ff9500;
+          
+          --gradient-1: #0f0f1a;
+          --gradient-2: #1a1a2e;
+          --gradient-3: #16213e;
+          --gradient-4: #0f0f1a;
+          
+          --blob-1-color: rgba(255, 149, 0, 0.3);
+          --blob-2-color: rgba(128, 0, 255, 0.3);
+          
+          --glass-bg: linear-gradient(135deg, rgba(30, 30, 40, 0.7) 0%, rgba(20, 20, 30, 0.6) 50%, rgba(25, 25, 35, 0.65) 100%);
+          --glass-border: rgba(255, 255, 255, 0.1);
+          --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+          --glass-shine: rgba(255, 255, 255, 0.05);
+      }
+      
+      /* --------------------------------------------------------------------------
+      THEME: OCEAN 🌊
+      Trigger: Type "swim"
+      --------------------------------------------------------------------------
+      */
+      body.theme-ocean {
+          --color-bg-primary: #001f3f;
+          --color-accent: #00d4ff;
+          --color-accent-hover: #33ddff;
+          --color-text-main: #c5e4f3;
+          --color-text-muted: #7fdbff;
+          --color-text-heading: #ffffff;
+          --color-nav-text: #a8d8ea;
+          --color-social: #00d4ff;
+          
+          --gradient-1: #001f3f;
+          --gradient-2: #003366;
+          --gradient-3: #004080;
+          --gradient-4: #0059b3;
+          
+          --blob-1-color: rgba(0, 212, 255, 0.4);
+          --blob-2-color: rgba(0, 100, 200, 0.5);
+          
+          --glass-bg: linear-gradient(135deg, rgba(0, 50, 100, 0.5) 0%, rgba(0, 40, 80, 0.4) 50%, rgba(0, 60, 120, 0.45) 100%);
+          --glass-border: rgba(0, 212, 255, 0.3);
+          --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+          --glass-shine: rgba(0, 212, 255, 0.1);
+      }
+      
+      /* --------------------------------------------------------------------------
+      THEME: FOREST 🌲
+      Trigger: Type "tree"
+      --------------------------------------------------------------------------
+      */
+      body.theme-forest {
+          --color-bg-primary: #0d1f0d;
+          --color-accent: #4ade80;
+          --color-accent-hover: #6ee7a0;
+          --color-text-main: #d1fae5;
+          --color-text-muted: #86efac;
+          --color-text-heading: #ecfdf5;
+          --color-nav-text: #a7f3d0;
+          --color-social: #4ade80;
+          
+          --gradient-1: #0d1f0d;
+          --gradient-2: #14532d;
+          --gradient-3: #166534;
+          --gradient-4: #15803d;
+          
+          --blob-1-color: rgba(74, 222, 128, 0.4);
+          --blob-2-color: rgba(34, 197, 94, 0.4);
+          
+          --glass-bg: linear-gradient(135deg, rgba(20, 60, 30, 0.5) 0%, rgba(15, 50, 25, 0.4) 50%, rgba(25, 70, 35, 0.45) 100%);
+          --glass-border: rgba(74, 222, 128, 0.3);
+          --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+          --glass-shine: rgba(74, 222, 128, 0.1);
+      }
+      
+      /* --------------------------------------------------------------------------
+      THEME: RETRO 🕹️
+      Trigger: Type "arcade"
+      --------------------------------------------------------------------------
+      */
+      body.theme-retro {
+          --color-bg-primary: #1a0a2e;
+          --color-accent: #ff2a6d;
+          --color-accent-hover: #ff5588;
+          --color-text-main: #f0e6ff;
+          --color-text-muted: #d946ef;
+          --color-text-heading: #ffffff;
+          --color-nav-text: #e879f9;
+          --color-social: #ff2a6d;
+          
+          --gradient-1: #1a0a2e;
+          --gradient-2: #2d1b4e;
+          --gradient-3: #4a1d6a;
+          --gradient-4: #7c2d8c;
+          
+          --blob-1-color: rgba(255, 42, 109, 0.5);
+          --blob-2-color: rgba(5, 217, 232, 0.5);
+          
+          --glass-bg: linear-gradient(135deg, rgba(50, 20, 80, 0.6) 0%, rgba(40, 15, 70, 0.5) 50%, rgba(60, 25, 90, 0.55) 100%);
+          --glass-border: rgba(255, 42, 109, 0.4);
+          --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 60px rgba(255, 42, 109, 0.2);
+          --glass-shine: rgba(255, 42, 109, 0.15);
+          
+          --font-main: 'VT323', monospace;
+      }
+      
+      body.theme-retro .wal-title,
+      body.theme-retro h2,
+      body.theme-retro .nav-link {
+          font-family: 'VT323', monospace !important;
+          letter-spacing: 0.1em;
+      }
+      
+      body.theme-retro .wal-title {
+          text-shadow: 0 0 10px var(--color-accent), 0 0 20px var(--color-accent);
+      }
+      
+      /* Scanline effect for retro */
+      body.theme-retro::after {
+          content: '';
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: repeating-linear-gradient(
+              0deg,
+              rgba(0, 0, 0, 0.1) 0px,
+              rgba(0, 0, 0, 0.1) 1px,
+              transparent 1px,
+              transparent 2px
+          );
+          pointer-events: none;
+          z-index: 9998;
+      }
+      
+      /* --------------------------------------------------------------------------
+      THEME: PAPER 📜
+      Trigger: Triple-click the squiggle
+      --------------------------------------------------------------------------
+      */
+      body.theme-paper {
+          --color-bg-primary: #f5f0e6;
+          --color-accent: #8b4513;
+          --color-accent-hover: #a0522d;
+          --color-text-main: #3d2914;
+          --color-text-muted: #6b4423;
+          --color-text-heading: #2c1810;
+          --color-nav-text: #5d3a1a;
+          --color-social: #8b4513;
+          
+          --gradient-1: #f5f0e6;
+          --gradient-2: #ebe4d4;
+          --gradient-3: #e8dcc8;
+          --gradient-4: #f0e8d8;
+          
+          --blob-1-color: rgba(139, 69, 19, 0.15);
+          --blob-2-color: rgba(160, 82, 45, 0.15);
+          
+          --glass-bg: linear-gradient(135deg, rgba(255, 253, 245, 0.9) 0%, rgba(250, 245, 235, 0.85) 50%, rgba(255, 250, 240, 0.88) 100%);
+          --glass-border: rgba(139, 69, 19, 0.2);
+          --glass-shadow: 0 4px 20px rgba(60, 40, 20, 0.15);
+          --glass-shine: rgba(255, 255, 255, 0.5);
+          
+          --font-main: 'Playfair Display', serif;
+      }
+      
+      body.theme-paper .wal-title,
+      body.theme-paper h2 {
+          font-family: 'Playfair Display', serif !important;
+          font-weight: 600;
+      }
+      
+      body.theme-paper .nav-link {
+          font-family: 'Playfair Display', serif !important;
+          font-style: italic;
+      }
+      
+      /* Paper texture overlay */
+      body.theme-paper .main-content-box::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+          opacity: 0.03;
+          pointer-events: none;
+          border-radius: inherit;
+      }
+      
+      /* Ink splatter decorations for paper theme */
+      body.theme-paper #squiggle-path {
+          stroke-width: 3;
+      }
+
+      /* --------------------------------------------------------------------------
+      BODY & LAYOUT
+      --------------------------------------------------------------------------
+      */
+      body {
+        font-family: var(--font-main);
+        overflow-x: hidden;
+        overflow-y: auto;
+        position: relative;
+        background-color: var(--color-bg-primary);
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        transition: background-color 0.5s ease;
+      }
+
+      /* Background Gradient Overlay */
       body::before {
         content: '';
-        position: fixed; /* Fixed background to fill viewport */
+        position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        z-index: -1; /* Ensure background is behind content */
-        background: linear-gradient(135deg, #ffdabe, #ffc0cb 30%, #e6e6fa 60%, #add8e6 100%);
-        background-size: 400% 400%; /* For animating the gradient */
-        animation: gradient 15s ease infinite;
+        z-index: -1;
+        background: linear-gradient(
+            135deg, 
+            var(--gradient-1) 0%, 
+            var(--gradient-2) 30%, 
+            var(--gradient-3) 60%, 
+            var(--gradient-4) 100%
+        );
+        background-size: 100% 100%;
+        opacity: 1;
+        transition: background 0.8s ease;
+      }
+      
+      /* Active Animation State for Body */
+      body.animations-enabled::before {
+        background-size: 400% 400%;
+        animation-name: gradient;
+        animation-duration: 15s;
+        animation-timing-function: ease;
+        animation-iteration-count: infinite;
+        will-change: background-position;
       }
 
       @keyframes gradient {
@@ -39,219 +329,582 @@
         100% { background-position: 0% 50%; }
       }
 
-      /* Blob Animations */
+      /* --------------------------------------------------------------------------
+      AMBIENT BLOB SYSTEM
+      --------------------------------------------------------------------------
+      */
       .blob {
         position: absolute;
-        opacity: 0.5;
-        filter: blur(40px); /* Soften the blob appearance */
-        z-index: 0; /* Above background, below main content */
+        opacity: var(--blob-opacity);
+        z-index: 0;
+        will-change: transform;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        pointer-events: none;
+        transition: background 0.8s ease, opacity 0.8s ease;
       }
+      
       .blob-1 {
-        width: 450px;
-        height: 450px;
+        width: 300px;
+        height: 300px;
         top: -100px;
         left: -100px;
-        background: rgba(170, 180, 200, 0.5); /* Bluish-grey blob */
-        border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
-        animation: blobFloat 20s infinite alternate;
+        background: var(--blob-1-color);
+        border-top-left-radius: 40%;
+        border-top-right-radius: 60%;
+        border-bottom-right-radius: 70%;
+        border-bottom-left-radius: 30%;
+        filter: blur(25px);
       }
+      
       .blob-2 {
-        width: 550px;
-        height: 550px;
+        width: 350px;
+        height: 350px;
         bottom: -150px;
         right: -150px;
-        background: rgba(60, 140, 130, 0.6); /* Greenish-blue blob */
-        border-radius: 70% 30% 40% 60% / 60% 40% 70% 30%;
-        animation: blobFloat 25s infinite alternate-reverse;
-      }
-      @keyframes blobFloat {
-        to {
-          transform: translate(20px, -30px) scale(1.1); /* Slight movement and scale change */
-          border-radius: 70% 30% 40% 60% / 60% 40% 70% 30%; /* Morph shape */
-        }
+        background: var(--blob-2-color);
+        border-top-left-radius: 70%;
+        border-top-right-radius: 30%;
+        border-bottom-right-radius: 40%;
+        border-bottom-left-radius: 60%;
+        filter: blur(25px);
       }
       
-      /* Navigation Link Styling */
+      /* Blob Animation Definitions */
+      body.animations-enabled .blob-1 {
+        width: 450px;
+        height: 450px;
+        filter: blur(40px);
+        opacity: 0.5;
+        animation-name: blobFloat1;
+        animation-duration: 20s;
+        animation-iteration-count: infinite;
+        animation-direction: alternate;
+      }
+      
+      body.animations-enabled .blob-2 {
+        width: 550px;
+        height: 550px;
+        filter: blur(40px);
+        opacity: 0.5;
+        animation-name: blobFloat2;
+        animation-duration: 25s;
+        animation-iteration-count: infinite;
+        animation-direction: alternate-reverse;
+      }
+      
+      @keyframes blobFloat1 {
+        0% { transform: translate3d(0, 0, 0) scale(1); }
+        100% { transform: translate3d(20px, -30px, 0) scale(1.1); }
+      }
+      
+      @keyframes blobFloat2 {
+        0% { transform: translate3d(0, 0, 0) scale(1); }
+        100% { transform: translate3d(-20px, 30px, 0) scale(1.1); }
+      }
+
+      /* --------------------------------------------------------------------------
+      NAVIGATION COMPONENT
+      --------------------------------------------------------------------------
+      */
       .nav-link {
-        position: relative; /* For the ::after pseudo-element */
-        transition: all 0.2s ease-in-out;
-        display: inline-block; /* Allows width to be based on content */
-        padding: 0.25rem 0.5rem; /* Added padding for better click/tap area */
-        border-radius: 0.5rem; /* Rounded corners for links */
+        position: relative;
+        transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        text-decoration: none;
+        color: var(--color-nav-text);
       }
+
       .nav-link:hover {
-        transform: translateY(-2px); /* Lift effect on hover */
-        color: #4a5568; /* Darker text on hover */
-      }
-      .nav-link.active {
-        font-weight: 700; /* Bold text for active link */
-        color: #374151; /* Even darker text for active link */
-      }
-
-      /* Social Icon Styling */
-      .social-icon {
-        transition: all 0.2s ease-in-out;
-      }
-      .social-icon:hover {
-        transform: scale(1.2); /* Pop effect on hover */
-        color: #e07b39; /* Amber color on hover */
-      }
-      .hidden {
-        display: none !important; /* Utility class for hiding sections */
-      }
-
-      /* Squiggle Path Animation */
-      #squiggle-path {
-        stroke: #d57624; /* Amber stroke color */
-        stroke-width: 5;
-        stroke-linecap: round;
-        fill: none;
-        stroke-dasharray: var(--squiggle-length); /* Set dynamically by JS */
-        stroke-dashoffset: var(--squiggle-length); /* Start fully hidden */
-        animation: draw 1.5s ease-out 0.5s forwards; /* Draw animation */
-      }
-
-      @keyframes draw {
-        to {
-          stroke-dashoffset: 0; /* Fully visible at the end of animation */
-        }
+        transform: translateY(-2px);
+        opacity: 0.8;
       }
       
-      /* Torchlight Glow Effect for Nav Links */
-      .nav-link::after {
+      /* Explicit outline removal as requested */
+      .nav-link:focus {
+        outline: none;
+      }
+      
+      .nav-link.active {
+        font-weight: 700;
+        color: var(--color-text-heading);
+      }
+      
+      /* Fallback style (No Animations) */
+      .nav-link.active {
+        text-decoration: underline;
+        text-underline-offset: 4px;
+        text-decoration-color: var(--color-accent);
+        text-decoration-thickness: 2px;
+      }
+      
+      /* Torchlight Effect (Animations Enabled) */
+      body.animations-enabled .nav-link {
+        text-decoration: none;
+      }
+      
+      body.animations-enabled .nav-link::after {
         content: '';
         position: absolute;
-        bottom: 7px; /* Adjusted: Lifted slightly above baseline */
+        bottom: 7px;
         left: 50%;
         transform: translateX(-50%);
         width: 95%;
-        height: 12px; /* Slightly smaller height */
-        background: #d57624; /* Matching squiggle color */
-        filter: blur(8px); /* Less blur for a more focused glow */
+        height: 12px;
+        background-color: var(--color-accent);
+        filter: blur(8px);
         opacity: 0;
         transition: opacity 0.3s ease-in-out;
-        z-index: -1; /* Behind the text */
-        border-radius: 50%; /* Make the glow more circular */
+        z-index: -1;
+        border-radius: 50%;
+        pointer-events: none;
       }
 
-      .nav-link:hover::after {
-        opacity: 0.6; /* Slight glow on hover */
+      body.animations-enabled .nav-link:hover::after,
+      body.animations-enabled .nav-link:focus::after {
+        opacity: 0.6;
       }
-      .nav-link.active::after {
-        opacity: 1; /* Full glow for active link */
-      }
-
-      /* Main content box: Frosted glass effect */
-      .main-content-box {
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        /* Enhanced frosted glass effect */
-        backdrop-filter: blur(20px) saturate(180%) brightness(120%);
+      
+      body.animations-enabled .nav-link.active::after {
+        opacity: 1;
       }
 
-      /* Performance Optimization: Reduced motion preference */
-      @media (prefers-reduced-motion: reduce) {
-        body::before,
-        .blob-1,
-        .blob-2 {
-          animation: none !important; /* Disable background and blob animations */
-          background-size: auto !important; /* Static background size */
-          transform: none !important; /* Prevent blob movement */
-          border-radius: initial !important; /* Prevent blob morphing */
+      /* --------------------------------------------------------------------------
+      SOCIAL MEDIA ICONS
+      --------------------------------------------------------------------------
+      */
+      .social-icon {
+        transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
+        color: var(--color-social);
+      }
+
+      .social-icon:hover {
+        transform: scale(1.2);
+        color: var(--color-accent-hover);
+      }
+
+      /* Explicit outline removal */
+      .social-icon:focus {
+        outline: none;
+      }
+
+      /* --------------------------------------------------------------------------
+      CONTENT SECTION TRANSITIONS
+      --------------------------------------------------------------------------
+      */
+      .content-section {
+        opacity: 0;
+        transform: translateY(10px);
+        transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+        display: none;
+      }
+
+      .content-section.visible {
+        opacity: 1;
+        transform: translateY(0);
+        display: block;
+      }
+      
+      .content-section h2 {
+        color: var(--color-text-heading);
+      }
+      
+      .content-section p {
+        color: var(--color-text-main);
+      }
+
+      /* --------------------------------------------------------------------------
+      SQUIGGLE PATH SVG ANIMATION
+      --------------------------------------------------------------------------
+      */
+      /* REMOVING OUTLINE FROM SVG AS REQUESTED */
+      #squiggle-svg {
+        outline: none;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+      }
+      
+      #squiggle-svg:focus {
+        outline: none;
+      }
+      
+      #squiggle-svg:hover {
+        transform: scale(1.05);
+      }
+      
+      #squiggle-path {
+        stroke: var(--color-accent);
+        stroke-width: 5;
+        stroke-linecap: round;
+        fill: none;
+        stroke-dasharray: var(--squiggle-length);
+        stroke-dashoffset: 0;
+        transition: stroke 0.5s ease;
+      }
+      
+      body.animations-enabled #squiggle-path {
+        stroke-dashoffset: var(--squiggle-length);
+        animation-name: draw;
+        animation-duration: 1s;
+        animation-timing-function: ease-out;
+        animation-delay: 0.8s;
+        animation-fill-mode: forwards;
+      }
+
+      @keyframes draw {
+        to { 
+            stroke-dashoffset: 0; 
         }
-        #squiggle-path {
-          animation: none !important; /* Disable squiggle drawing animation */
-          stroke-dashoffset: 0 !important; /* Ensure squiggle is fully visible */
+      }
+
+      /* --------------------------------------------------------------------------
+      FROSTED GLASS CONTAINER (NEUMORPHISM/GLASSMORPHISM)
+      --------------------------------------------------------------------------
+      */
+      .main-content-box {
+        position: relative;
+        background: var(--glass-bg);
+        box-shadow: var(--glass-shadow), inset 0 1px 1px rgba(255, 255, 255, 0.6), inset 0 -1px 1px rgba(255, 255, 255, 0.2);
+        border: 1px solid var(--glass-border);
+        overflow: hidden;
+        transition: background 0.5s ease, box-shadow 0.5s ease, border-color 0.5s ease;
+      }
+      
+      /* Glass Shine Effect */
+      .main-content-box::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 50%;
+        background: linear-gradient(
+          to bottom,
+          var(--glass-shine) 0%,
+          transparent 100%
+        );
+        pointer-events: none;
+        border-top-left-radius: 1rem;
+        border-top-right-radius: 1rem;
+      }
+      
+      /* Advanced Backdrop Filter */
+      body.animations-enabled .main-content-box {
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+      }
+
+      /* --------------------------------------------------------------------------
+      ACCESSIBILITY (A11Y)
+      --------------------------------------------------------------------------
+      */
+      .skip-link {
+        position: absolute;
+        top: -40px;
+        left: 0;
+        background-color: var(--color-accent);
+        color: white;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        padding-left: 16px;
+        padding-right: 16px;
+        z-index: 100;
+        border-bottom-right-radius: 4px;
+        transition-property: top;
+        transition-duration: 0.3s;
+      }
+      .skip-link:focus {
+        top: 0;
+      }
+      
+      /* --------------------------------------------------------------------------
+      TYPEWRITER EFFECT LOGIC
+      --------------------------------------------------------------------------
+      */
+      .wal-container {
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
+        user-select: none;
+        min-height: 1.2em; /* Prevents layout shift during loading */
+      }
+      
+      .wal-title {
+        font-size: inherit;
+        font-weight: bold;
+        color: var(--color-text-heading);
+        position: relative;
+        display: inline-block;
+        transition: color 0.5s ease;
+      }
+      
+      .wal-cursor {
+        display: inline-block;
+        width: 4px;
+        height: 0.9em;
+        background-color: var(--color-accent);
+        margin-left: 4px;
+        vertical-align: text-bottom;
+        opacity: 0; /* Hidden by default */
+        transition: opacity 0.2s ease, background-color 0.5s ease;
+      }
+      
+      /* Animation States */
+      body.animations-enabled .wal-cursor {
+        opacity: 1;
+        animation-name: blink;
+        animation-duration: 1s;
+        animation-timing-function: step-end;
+        animation-iteration-count: infinite;
+      }
+      
+      body.animations-enabled .wal-cursor.typing {
+        animation: none;
+        opacity: 1;
+      }
+      
+      /* FINAL STATE - CURSOR REMOVED */
+      body.animations-enabled .wal-cursor.done {
+        animation: none;
+        opacity: 0;
+        display: none; /* Removed from flow */
+      }
+      
+      @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0; }
+      }
+      
+      /* --------------------------------------------------------------------------
+      SOCIAL CONTAINER ANIMATION
+      --------------------------------------------------------------------------
+      */
+      .social-icons-container {
+        opacity: 1;
+      }
+      
+      body.animations-enabled .social-icons-container {
+        opacity: 0;
+        animation-name: fadeInUp;
+        animation-duration: 0.6s;
+        animation-timing-function: ease-out;
+        animation-delay: 1.2s;
+        animation-fill-mode: forwards;
+      }
+      
+      @keyframes fadeInUp {
+        from { 
+            opacity: 0; 
+            transform: translateY(10px); 
+        }
+        to { 
+            opacity: 1; 
+            transform: translateY(0); 
+        }
+      }
+      
+      /* --------------------------------------------------------------------------
+      INDICATORS & UTILITIES
+      --------------------------------------------------------------------------
+      */
+      .animation-indicator {
+        position: absolute;
+        top: -8px;
+        right: -30px;
+        font-size: 0.6rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #9ca3af;
+        opacity: 0;
+        transition-property: opacity;
+        transition-duration: 0.3s;
+        transition-timing-function: ease;
+        pointer-events: none;
+      }
+      
+      .wal-container:hover .animation-indicator {
+        opacity: 1;
+      }
+      
+      .animation-indicator.on { 
+          color: #10b981; 
+      }
+      
+      .animation-indicator.off { 
+          color: #ef4444; 
+      }
+      
+      /* Fact Text Styling */
+      .fun-fact-text {
+          font-style: italic;
+          color: var(--color-text-muted);
+          font-size: 0.95rem;
+          margin-bottom: 0.5rem;
+          min-height: 1.5rem;
+      }
+      
+      /* --------------------------------------------------------------------------
+      THEME TOAST NOTIFICATION
+      --------------------------------------------------------------------------
+      */
+      .theme-toast {
+          position: fixed;
+          bottom: 20px;
+          left: 50%;
+          transform: translateX(-50%) translateY(100px);
+          background: var(--glass-bg);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          border: 1px solid var(--glass-border);
+          padding: 12px 24px;
+          border-radius: 50px;
+          font-size: 0.9rem;
+          font-weight: 500;
+          color: var(--color-text-main);
+          z-index: 10000;
+          opacity: 0;
+          transition: transform 0.4s ease, opacity 0.4s ease;
+          pointer-events: none;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+          display: flex;
+          align-items: center;
+      }
+      
+      .theme-toast.visible {
+          transform: translateX(-50%) translateY(0);
+          opacity: 1;
+      }
+      
+      .theme-toast .toast-icon {
+          margin-right: 8px;
+          font-size: 1.2rem;
+      }
+
+      /* --------------------------------------------------------------------------
+      MATRIX MODE (HIDDEN EASTER EGG)
+      --------------------------------------------------------------------------
+      */
+      #matrix-canvas {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          z-index: 9999;
+          pointer-events: none; /* Let clicks pass through */
+          opacity: 0;
+          transition: opacity 1s ease;
+          display: none;
+      }
+      
+      body.matrix-mode-active #matrix-canvas {
+          display: block;
+          opacity: 0.8;
+      }
+
+      /* --------------------------------------------------------------------------
+      MEDIA QUERIES & RESPONSIVENESS
+      --------------------------------------------------------------------------
+      */
+      @media (prefers-reduced-motion: reduce) {
+        body.animations-enabled::before,
+        body.animations-enabled .blob-1,
+        body.animations-enabled .blob-2 {
+          animation: none !important;
+        }
+        body.animations-enabled #squiggle-path {
+          animation: none !important;
+          stroke-dashoffset: 0 !important;
+        }
+        .content-section, 
+        .nav-link, 
+        .social-icon,
+        .theme-toast {
+          transition: none !important;
         }
       }
     </style>
-  </head>
-  <body class="text-gray-800">
-    <!-- Animated blobs for background aesthetic -->
-    <div class="absolute inset-0 z-0">
+</head>
+<body class="text-gray-800">
+
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <div class="absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
       <div class="blob blob-1"></div>
       <div class="blob blob-2"></div>
     </div>
 
-    <!-- Main content container, centered on screen -->
+    <canvas id="matrix-canvas"></canvas>
+    
+    <div class="theme-toast" id="theme-toast">
+        <span class="toast-icon">🎨</span>
+        <span class="toast-message" id="toast-message">Theme activated!</span>
+    </div>
+
     <div class="relative min-h-screen flex items-center justify-center p-4 z-10">
       <div class="max-w-6xl w-full flex flex-col md:flex-row md:items-start md:space-x-8">
-        <!-- Navigation area -->
-        <nav class="w-full md:w-1/4 mb-8 md:mb-0">
-          <div
-            class="container mx-auto flex flex-row md:flex-col justify-center md:items-center space-x-6 md:space-x-0 md:space-y-6 text-sm font-normal tracking-widest text-gray-700 uppercase"
-          >
-            <a href="#" class="nav-link" id="bio-nav-link">Bio</a>
-            <a href="#" class="nav-link" id="cat-nav-link">Cat</a>
-            <a href="#" class="nav-link" id="bear-nav-link">Bear</a>
-            <a href="#" class="nav-link" id="doggo-nav-link">Doggo</a>
+        
+        <nav class="w-full md:w-1/4 mb-8 md:mb-0" aria-label="Main navigation">
+          <div class="container mx-auto flex flex-row md:flex-col justify-center md:items-center space-x-6 md:space-x-0 md:space-y-6 text-sm font-normal tracking-widest uppercase">
+            <a href="#bio" class="nav-link" id="bio-nav-link" aria-current="false">Bio</a>
+            <a href="#cat" class="nav-link" id="cat-nav-link" aria-current="false">Cat</a>
+            <a href="#bear" class="nav-link" id="bear-nav-link" aria-current="false">Bear</a>
+            <a href="#doggo" class="nav-link" id="doggo-nav-link" aria-current="false">Doggo</a>
           </div>
         </nav>
 
-        <!-- Main content display area -->
-        <main
-          class="w-full md:w-3/4 bg-white/30 backdrop-blur-md rounded-2xl border border-[#d4b38d] p-8 md:p-12 main-content-box"
-        >
-          <!-- Intro Section - Initially visible -->
-          <div id="intro-section">
+        <main id="main-content" class="w-full md:w-3/4 rounded-2xl p-8 md:p-12 main-content-box">
+          
+          <div id="intro-section" class="content-section visible">
               <div class="mb-4">
-                  <h1 class="text-5xl md:text-7xl font-bold text-gray-800">Wal</h1>
-                  <svg id="squiggle-svg" class="h-8 w-40 -mt-2" viewBox="0 0 160 30">
+                  <div class="wal-container" id="wal-toggle" role="button" tabindex="0" aria-label="Toggle animations">
+                    <h1 class="wal-title text-5xl md:text-7xl" id="wal-text"></h1>
+                    <span class="wal-cursor" id="wal-cursor"></span>
+                    <span class="animation-indicator" id="animation-indicator">fx: on</span>
+                  </div>
+                  <svg id="squiggle-svg" class="h-8 w-40 -mt-2" viewBox="0 0 160 30" aria-hidden="true" role="button" tabindex="0" aria-label="Secret theme trigger">
                     <path id="squiggle-path" d="M 5,15 C 40,30 80,-10 155,15" />
                   </svg>
               </div>
 
-              <!-- Social icons with updated, functional links -->
-              <div class="flex items-center space-x-5 text-amber-600 mt-6">
-                  <a href="https://www.instagram.com/walsoup" class="social-icon h-6 w-6 flex items-center justify-center" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
-  <svg role="img" viewBox="-2 -2 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" preserveAspectRatio="xMinYMin">
-    <path d='M14.017 0h-8.07A5.954 5.954 0 0 0 0 5.948v8.07a5.954 5.954 0 0 0 5.948 5.947h8.07a5.954 5.954 0 0 0 5.947-5.948v-8.07A5.954 5.954 0 0 0 14.017 0zm3.94 14.017a3.94 3.94 0 0 1-3.94 3.94h-8.07a3.94 3.94 0 0 1-3.939-3.94v-8.07a3.94 3.94 0 0 1 3.94-3.939h8.07a3.94 3.94 0 0 1 3.939 3.94v8.07z'/>
-    <path d='M9.982 4.819A5.17 5.17 0 0 0 4.82 9.982a5.17 5.17 0 0 0 5.163 5.164 5.17 5.17 0 0 0 5.164-5.164A5.17 5.17 0 0 0 9.982 4.82zm0 8.319a3.155 3.155 0 1 1 0-6.31 3.155 3.155 0 0 1 0 6.31z'/>
-    <circle cx='15.156' cy='4.858' r='1.237'/>
-  </svg>
-</a>
-                  <a href="https://github.com/walsoup/" class="social-icon h-6 w-6 flex items-center justify-center" target="_blank" rel="noopener noreferrer"><svg fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.378.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.942.359.308.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12.017C22 6.484 17.523 2 12 2z" /></svg></a>
-                  <a href="https://twitter.com/walsoup" class="social-icon h-6 w-6 flex items-center justify-center" aria-label="Twitter" target="_blank" rel="noopener noreferrer"><svg fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
-                  <a href="https://www.linkedin.com/in/itswal/" class="social-icon h-6 w-6 flex items-center justify-center" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer"><svg fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>
+              <div class="social-icons-container flex items-center space-x-5 mt-6" role="list">
+                  <a href="https://www.instagram.com/walsoup" class="social-icon h-6 w-6 flex items-center justify-center" target="_blank" rel="noopener noreferrer" id="social-instagram">
+                    <svg role="img" viewBox="-2 -2 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" preserveAspectRatio="xMinYMin"><path d='M14.017 0h-8.07A5.954 5.954 0 0 0 0 5.948v8.07a5.954 5.954 0 0 0 5.948 5.947h8.07a5.954 5.954 0 0 0 5.947-5.948v-8.07A5.954 5.954 0 0 0 14.017 0zm3.94 14.017a3.94 3.94 0 0 1-3.94 3.94h-8.07a3.94 3.94 0 0 1-3.939-3.94v-8.07a3.94 3.94 0 0 1 3.94-3.939h8.07a3.94 3.94 0 0 1 3.939 3.94v8.07z'/><path d='M9.982 4.819A5.17 5.17 0 0 0 4.82 9.982a5.17 5.17 0 0 0 5.163 5.164 5.17 5.17 0 0 0 5.164-5.164A5.17 5.17 0 0 0 9.982 4.82zm0 8.319a3.155 3.155 0 1 1 0-6.31 3.155 3.155 0 0 1 0 6.31z'/><circle cx='15.156' cy='4.858' r='1.237'/></svg>
+                  </a>
+                  <a href="https://github.com/walsoup/" class="social-icon h-6 w-6 flex items-center justify-center" target="_blank" rel="noopener noreferrer" id="social-github"><svg fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.378.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.942.359.308.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12.017C22 6.484 17.523 2 12 2z" /></svg></a>
+                  <a href="https://twitter.com/walsoup" class="social-icon h-6 w-6 flex items-center justify-center" target="_blank" rel="noopener noreferrer" id="social-twitter"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+                  <a href="https://www.linkedin.com/in/itswal/" class="social-icon h-6 w-6 flex items-center justify-center" target="_blank" rel="noopener noreferrer" id="social-linkedin"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>
               </div>
           </div>
 
-          <!-- Bio Section - Initially hidden -->
-          <div id="bio-section" class="hidden">
-              <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">About Me</h2>
-              <p class="text-lg text-gray-700 mb-4">
-                  Hey, you... still nothing here yet :< 
-              </p>
-              <p class="text-lg text-gray-700 mb-4">
-                  Have a cool flower
-              </p>
-              <img src="flower.jpg" alt="A cool flower image" class="rounded-lg mt-6 shadow-md w-full max-w-lg mx-auto" loading="lazy" onerror="this.onerror=null; this.src='https://placehold.co/600x400/FFDAB9/B22222?text=A+Cool+Flower';" />
+          <div id="bio-section" class="content-section">
+              <h2 class="text-4xl md:text-5xl font-bold mb-4">About Me</h2>
+              <p class="text-lg mb-4">Hey, you... still nothing here yet :&lt;</p>
+              <img src="flower.jpg" alt="A beautiful flower" class="rounded-lg mt-6 shadow-md w-full max-w-lg mx-auto" onerror="this.onerror=null; this.src='https://placehold.co/600x400/FFDAB9/B22222?text=A+Cool+Flower';" />
           </div>
 
-          <!-- Cat Section - Initially hidden -->
-          <div id="cat-section" class="hidden">
-              <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">Cats</h2>
-              <p class="text-lg text-gray-700 mb-4">
-                  Here's cat kitty kitty kitty.
-              </p>
-              <img src="https://cataas.com/cat" alt="A cute cat" class="rounded-lg mt-6 shadow-md w-full max-w-lg mx-auto" loading="lazy" onerror="this.onerror=null; this.src='https://placehold.co/600x400/cccccc/333333?text=Image+Unavailable';" />
+          <div id="cat-section" class="content-section">
+              <h2 class="text-4xl md:text-5xl font-bold mb-4">Cats</h2>
+              <p class="text-lg mb-4">kitty kitty kitty (I love cats sm)</p>
+              <p id="cat-fact" class="fun-fact-text">Cats are my favorite animal</p>
+              <img src="https://cataas.com/cat" alt="A cute cat" class="rounded-lg mt-6 shadow-md w-full max-w-lg mx-auto" onerror="this.onerror=null; this.src='https://placehold.co/600x400/cccccc/333333?text=Cutie+Kitty';" />
           </div>
 
-          <!-- Bear Section - Initially hidden -->
-          <div id="bear-section" class="hidden">
-              <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">Bear fish</h2>
-              <p class="text-lg text-gray-700 mb-4">
-                  bear.
-              </p>
-              <img src="https://placebear.com/600/700" alt="A (doub) bear" class="rounded-lg mt-6 shadow-md w-full max-w-lg mx-auto" loading="lazy" onerror="this.onerror=null; this.src='https://placehold.co/600x400/cccccc/333333?text=Image+Unavailable';" />
+          <div id="bear-section" class="content-section">
+              <h2 class="text-4xl md:text-5xl font-bold mb-4">Bears</h2>
+              <p class="text-lg mb-4">Bear with me (sorry) </p>
+              <p id="bear-fact" class="fun-fact-text">Loading bear fact...</p>
+              <img src="https://placebear.com/600/700" alt="A fluffy bear" class="rounded-lg mt-6 shadow-md w-full max-w-lg mx-auto" onerror="this.onerror=null; this.src='https://placehold.co/600x400/cccccc/333333?text=Bear';" />
           </div>
 
-          <!-- Doggo Section - Initially hidden -->
-          <div id="doggo-section" class="hidden">
-              <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">Dogs</h2>
-              <p class="text-lg text-gray-700 mb-4">
-                  Dogs!.
-              </p>
-              <img src="https://place.dog/700/600" alt="An dog" class="rounded-lg mt-6 shadow-md w-full max-w-lg mx-auto" loading="lazy" onerror="this.onerror=null; this.src='https://placehold.co/600x400/cccccc/333333?text=Image+Unavailable';" />
+          <div id="doggo-section" class="content-section">
+              <h2 class="text-4xl md:text-5xl font-bold mb-4">Dogs</h2>
+              <p class="text-lg mb-4">Doggo doggo doggo</p>
+              <p id="doggo-fact" class="fun-fact-text">Loading dog fact...</p>
+              <img src="https://place.dog/700/600" alt="An adorable dog" class="rounded-lg mt-6 shadow-md w-full max-w-lg mx-auto" onerror="this.onerror=null; this.src='https://placehold.co/600x400/cccccc/333333?text=hopefully+doggo';" />
           </div>
         </main>
       </div>
@@ -259,7 +912,238 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Mapping of section IDs to their HTML elements
+            /*
+            ====================================================================
+            INITIALIZATION
+            ====================================================================
+            */
+            const APP_VERSION = '2.0.0';
+            const BUILD_ID = '2026-THEMES';
+            
+            const body = document.body;
+            const walToggle = document.getElementById('wal-toggle');
+            const walText = document.getElementById('wal-text');
+            const walCursor = document.getElementById('wal-cursor');
+            const animationIndicator = document.getElementById('animation-indicator');
+            const squiggleSvg = document.getElementById('squiggle-svg');
+            const themeToast = document.getElementById('theme-toast');
+            const toastMessage = document.getElementById('toast-message');
+            
+            let animationsEnabled = true;
+            let currentTheme = 'default';
+
+            /*
+            ====================================================================
+            THEME SYSTEM
+            ====================================================================
+            */
+            const THEMES = {
+                default: { name: 'Default', icon: '🌸', class: '' },
+                dark: { name: 'Dark Mode', icon: '🌙', class: 'theme-dark' },
+                ocean: { name: 'Ocean', icon: '🌊', class: 'theme-ocean' },
+                forest: { name: 'Forest', icon: '🌲', class: 'theme-forest' },
+                retro: { name: 'Retro Arcade', icon: '🕹️', class: 'theme-retro' },
+                paper: { name: 'Paper', icon: '📜', class: 'theme-paper' }
+            };
+            
+            // Theme keyboard triggers
+            const THEME_CODES = {
+                'night': 'dark',
+                'swim': 'ocean',
+                'tree': 'forest',
+                'arcade': 'retro',
+                'reset': 'default'
+            };
+            
+            function setTheme(themeKey) {
+                // Remove all theme classes
+                Object.values(THEMES).forEach(t => {
+                    if (t.class) body.classList.remove(t.class);
+                });
+                
+                // Apply new theme
+                const theme = THEMES[themeKey];
+                if (theme && theme.class) {
+                    body.classList.add(theme.class);
+                }
+                
+                currentTheme = themeKey;
+                showToast(`${theme.icon} ${theme.name} activated!`);
+                
+                console.log(`[THEME] Switched to: ${theme.name}`);
+            }
+            
+            function showToast(message) {
+                toastMessage.textContent = message;
+                themeToast.classList.add('visible');
+                
+                setTimeout(() => {
+                    themeToast.classList.remove('visible');
+                }, 2500);
+            }
+            
+            /*
+            ====================================================================
+            SECRET CODE DETECTOR (KEYBOARD)
+            ====================================================================
+            */
+            let keySequence = [];
+            const MAX_KEY_LENGTH = 10;
+            
+            document.addEventListener('keydown', (e) => {
+                // Ignore if typing in an input (good practice)
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+                
+                keySequence.push(e.key.toLowerCase());
+                if (keySequence.length > MAX_KEY_LENGTH) {
+                    keySequence.shift();
+                }
+                
+                const typed = keySequence.join('');
+                
+                // Check for theme codes
+                for (const [code, themeKey] of Object.entries(THEME_CODES)) {
+                    if (typed.endsWith(code)) {
+                        setTheme(themeKey);
+                        keySequence = []; // Reset after match
+                        return;
+                    }
+                }
+                
+                // Matrix easter egg
+                if (typed.endsWith('hack')) {
+                    toggleMatrixMode();
+                    keySequence = [];
+                }
+            });
+            
+            /*
+            ====================================================================
+            SQUIGGLE INTERACTIONS (Paper Theme + Reset)
+            ====================================================================
+            */
+            let squiggleClickCount = 0;
+            let squiggleClickTimer = null;
+            
+            squiggleSvg.addEventListener('click', function(e) {
+                e.preventDefault();
+                squiggleClickCount++;
+                
+                if (squiggleClickTimer) clearTimeout(squiggleClickTimer);
+                
+                squiggleClickTimer = setTimeout(() => {
+                    // Single click = reset to default if on other theme
+                    if (squiggleClickCount === 1 && currentTheme !== 'default') {
+                        setTheme('default');
+                    }
+                    squiggleClickCount = 0;
+                }, 400);
+                
+                // Triple click = Paper theme
+                if (squiggleClickCount >= 3) {
+                    setTheme('paper');
+                    squiggleClickCount = 0;
+                    clearTimeout(squiggleClickTimer);
+                }
+            });
+            
+            // Keyboard accessibility for squiggle
+            squiggleSvg.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    squiggleSvg.click();
+                }
+            });
+
+            /*
+            ====================================================================
+            ANIMATION CONTROLLER
+            ====================================================================
+            */
+            function updateAnimationState(playIntro = false) {
+                if (animationsEnabled) {
+                    body.classList.add('animations-enabled');
+                    animationIndicator.textContent = 'fx: on';
+                    animationIndicator.classList.remove('off');
+                    animationIndicator.classList.add('on');
+                    if (playIntro) playTypewriterEffect();
+                } else {
+                    body.classList.remove('animations-enabled');
+                    animationIndicator.textContent = 'fx: off';
+                    animationIndicator.classList.remove('on');
+                    animationIndicator.classList.add('off');
+                    walText.textContent = 'Wal';
+                    walCursor.classList.remove('typing', 'done');
+                }
+            }
+            
+            // Init state + Play Typewriter immediately
+            updateAnimationState(false);
+            setTimeout(() => playTypewriterEffect(), 200);
+            
+            /*
+            ====================================================================
+            WAL TOGGLE (Animations + Matrix)
+            ====================================================================
+            */
+            let walClickCount = 0;
+            let walClickTimer = null;
+
+            walToggle.addEventListener('click', function() {
+                animationsEnabled = !animationsEnabled;
+                updateAnimationState(true);
+                
+                // Matrix trigger
+                walClickCount++;
+                if (walClickTimer) clearTimeout(walClickTimer);
+                walClickTimer = setTimeout(() => walClickCount = 0, 500);
+                
+                if (walClickCount >= 5) {
+                    toggleMatrixMode();
+                    walClickCount = 0;
+                }
+            });
+            
+            walToggle.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    walToggle.click();
+                }
+            });
+
+            /*
+            ====================================================================
+            TYPEWRITER ENGINE
+            ====================================================================
+            */
+            function playTypewriterEffect() {
+                const text = 'Wal';
+                let index = 0;
+                
+                walText.textContent = '';
+                walCursor.classList.add('typing');
+                walCursor.classList.remove('done');
+                walCursor.style.display = 'inline-block';
+                
+                function type() {
+                    if (index < text.length) {
+                        walText.textContent += text[index];
+                        index++;
+                        setTimeout(type, 150 + Math.random() * 100);
+                    } else {
+                        walCursor.classList.remove('typing');
+                        walCursor.classList.add('done');
+                    }
+                }
+                
+                setTimeout(type, 300);
+            }
+
+            /*
+            ====================================================================
+            NAVIGATION ROUTER
+            ====================================================================
+            */
             const sections = {
                 intro: document.getElementById('intro-section'),
                 bio: document.getElementById('bio-section'),
@@ -268,7 +1152,6 @@
                 doggo: document.getElementById('doggo-section'),
             };
 
-            // Mapping of navigation link IDs to their HTML elements
             const navLinks = {
                 bio: document.getElementById('bio-nav-link'),
                 cat: document.getElementById('cat-nav-link'),
@@ -276,54 +1159,215 @@
                 doggo: document.getElementById('doggo-nav-link'),
             };
 
-            /**
-             * Hides all content sections and deactivates all navigation links.
-             */
+            const factElements = {
+                cat: document.getElementById('cat-fact'),
+                bear: document.getElementById('bear-fact'),
+                doggo: document.getElementById('doggo-fact')
+            };
+
             function hideAllSections() {
-                for (const key in sections) {
-                    sections[key].classList.add('hidden');
-                }
-                for (const key in navLinks) {
-                    navLinks[key].classList.remove('active');
-                }
+                Object.values(sections).forEach(s => s.classList.remove('visible'));
+                Object.values(navLinks).forEach(l => {
+                    l.classList.remove('active');
+                    l.setAttribute('aria-current', 'false');
+                });
             }
 
-            /**
-             * Shows a specific content section and activates its corresponding navigation link.
-             * @param {string} key - The key corresponding to the section and navigation link to show/activate.
-             */
             function showSection(key) {
-                hideAllSections(); // Hide everything first
-                sections[key].classList.remove('hidden'); // Show the target section
-                if (navLinks[key]) {
-                    navLinks[key].classList.add('active'); // Activate the target nav link
-                }
+                hideAllSections();
+                requestAnimationFrame(() => {
+                    if (sections[key]) sections[key].classList.add('visible');
+                    if (navLinks[key]) {
+                        navLinks[key].classList.add('active');
+                        navLinks[key].setAttribute('aria-current', 'page');
+                    }
+                    
+                    if (key === 'cat') factElements.cat.textContent = getRandomFact(CAT_FACT_DB);
+                    else if (key === 'bear') factElements.bear.textContent = getRandomFact(BEAR_FACT_DB);
+                    else if (key === 'doggo') factElements.doggo.textContent = getRandomFact(DOG_FACT_DB);
+                });
             }
 
-            // Add click event listeners to all navigation links
-            for (const key in navLinks) {
-                navLinks[key].addEventListener('click', function(event) {
-                    event.preventDefault(); // Prevent default link behavior (page reload)
-                    if (sections[key].classList.contains('hidden')) {
-                        // If the clicked section is hidden, show it
+            Object.entries(navLinks).forEach(([key, link]) => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (!sections[key].classList.contains('visible')) {
                         showSection(key);
                     } else {
-                        // If the clicked section is already visible, toggle back to intro
                         showSection('intro');
                     }
                 });
-            }
-            
-            // Show the intro section by default when the page loads
-            showSection('intro');
+            });
 
-            // Initialize the squiggle path animation
+            // Squiggle path length
             const squigglePath = document.getElementById('squiggle-path');
-            if (squigglePath) { // Check if element exists before accessing properties
+            if (squigglePath) {
                 const length = squigglePath.getTotalLength();
                 squigglePath.style.setProperty('--squiggle-length', length);
             }
+
+            /*
+            ====================================================================
+            MATRIX RAIN
+            ====================================================================
+            */
+            let matrixInterval;
+            let isMatrixActive = false;
+
+            function toggleMatrixMode() {
+                const canvas = document.getElementById('matrix-canvas');
+                const ctx = canvas.getContext('2d');
+                
+                if (isMatrixActive) {
+                    isMatrixActive = false;
+                    body.classList.remove('matrix-mode-active');
+                    clearInterval(matrixInterval);
+                    showToast('🔴 Matrix deactivated');
+                } else {
+                    isMatrixActive = true;
+                    body.classList.add('matrix-mode-active');
+                    showToast('🟢 Matrix activated');
+                    
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
+                    
+                    const chars = 'アァカサタナハマヤャラワガザダバパABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789?!&$😛';
+                    const fontSize = 16;
+                    const columns = canvas.width / fontSize;
+                    const drops = Array(Math.floor(columns)).fill(1);
+
+                    const draw = () => {
+                        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        ctx.fillStyle = '#0F0';
+                        ctx.font = fontSize + 'px monospace';
+                        
+                        for (let i = 0; i < drops.length; i++) {
+                            const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                            drops[i]++;
+                        }
+                    };
+                    
+                    matrixInterval = setInterval(draw, 30);
+                }
+            }
+
+            /*
+            ====================================================================
+            FACTS DATABASE
+            ====================================================================
+            */
+            function getRandomFact(db) {
+                return "Fun Fact: " + db[Math.floor(Math.random() * db.length)];
+            }
+            
+            const CAT_FACT_DB = [
+                "Cats sleep for 70% of their lives.",
+                "A group of cats is called a clowder.",
+                "Cats have over 20 muscles that control their ears.",
+                "Cats cannot taste sweetness.",
+                "Cats are (to nobody's surprise) my favorite animal of all time",
+                "A cat's nose print is unique, like a human's fingerprint.",
+                "The first cat in space was a French cat named Felicette.",
+                "Cats can jump up to six times their length.",
+                "A house cat's genome is 95.6% tiger.",
+                "Cats can make over 100 different sounds.",
+                "Ancient Egyptians shaved their eyebrows when their cats died.",
+                "Isaac Newton invented the cat door.",
+                "A cat's whiskers are roughly as wide as its body.",
+                "Cats use their tails for balance and communication.",
+                "Cats spend a third of their waking hours grooming.",
+                "A cat can travel at a top speed of approximately 31 mph.",
+                "Cats have a specialized collarbone that allows them to always land on their feet.",
+                "Black cats are considered bad luck in the US, but good luck in the UK.",
+                "Cats have 32 muscles in each ear.",
+                "A cat has 230 bones in its body.",
+                "Cats can hear ultrasonic sounds.",
+                "A cat's purr vibrates at a frequency of 25 to 150 Hertz.",
+                "Cats sweat through their paws.",
+                "Kittens are born with blue eyes.",
+                "Cats can dream.",
+                "A cat's brain is 90% similar to a human's.",
+                "Cats can survive falls from high places due to their righting reflex.",
+                "Cats don't meow at other cats, only at humans.",
+                "A cat's tongue has tiny hooks called papillae.",
+                "Cats can rotate their ears 180 degrees.",
+                "A cat's purr has healing properties."
+            ];
+
+            const BEAR_FACT_DB = [
+                "Bears have excellent senses of smell, sight, and hearing.",
+                "There are eight different species of bears.",
+                "Polar bears are the largest land predators.",
+                "Bears can run up to 40 miles per hour.",
+                "Bears hibernate during the winter.",
+                "A mother bear is very protective of her cubs.",
+                "Bears can stand on their hind legs.",
+                "The sun bear is the smallest bear species.",
+                "Bears are highly intelligent animals.",
+                "Bears can climb trees.",
+                "Bears are good swimmers.",
+                "A group of bears is called a sleuth or sloth.",
+                "Bears have 42 teeth.",
+                "Bears mark their territory by rubbing against trees.",
+                "Bears can live up to 25 years in the wild.",
+                "Bears use vocalizations to communicate.",
+                "Bears have a strong memory.",
+                "A bear's diet changes with the seasons.",
+                "Teddy bears are named after President Theodore Roosevelt.",
+                "Winnie the Pooh is a famous fictional bear.",
+                "Bears can lose up to 30% of their body weight during hibernation.",
+                "Bear cubs are born blind and hairless.",
+                "Bears can smell food from miles away.",
+                "Bears are excellent fishermen.",
+                "Bears are a symbol of strength and courage.",
+                "The Spirit Bear is a rare white black bear.",
+                "Bears have individual personalities.",
+                "Bears love to scratch their backs on trees.",
+                "Bears can snore.",
+                "Protecting bears protects nature."
+            ];
+
+            const DOG_FACT_DB = [
+                "Dogs have a sense of time.",
+                "Your dog's whiskers help them 'see' in the dark.",
+                "Dogs sweat through their paws.",
+                "The average dog is as smart as a two-year-old child.",
+                "Dogs can hear four times as far as humans.",
+                "A dog's sense of smell is 10,000 to 100,000 times more acute than yours.",
+                "Dogs have three eyelids.",
+                "A dog's nose print is unique, much like a human's fingerprint.",
+                "Dalmatians are born completely white.",
+                "Dogs dream like people.",
+                "The Basenji dog breed doesn't bark, it yodels.",
+                "A dog can learn over 1000 words.",
+                "Dogs can get jealous.",
+                "Dogs can smell your feelings.",
+                "Petting a dog can lower your blood pressure.",
+                "Dogs curl up in a ball when they sleep to protect their organs.",
+                "Dogs have about 1,700 taste buds.",
+                "Stray dogs in Russia have learned how to ride the subway.",
+                "The world's oldest dog lived to be 29 years old.",
+                "Dogs can see in the dark much better than humans.",
+                "Dogs have a wet nose to help absorb scent chemicals.",
+                "Dogs have at least 18 muscles in each ear.",
+                "Dogs can help detect cancer.",
+                "Dogs can fall in love.",
+                "Dogs wag their tails to communicate.",
+                "Dogs can read human facial expressions.",
+                "Dogs love to chew on things.",
+                "Dogs need mental stimulation.",
+                "Dogs are loyal companions.",
+                "Dogs make the world a better place.",
+                "This is a rare message, I'm a dog"
+            ];
+
+            console.log(`[SYSTEM] v${APP_VERSION} loaded. Secret themes available!`);
+            console.log(`[HINT] Try typing: night, swim, tree, arcade, or reset`);
+            console.log(`[HINT] Triple-click the squiggle for Paper theme 📜`);
         });
     </script>
-  </body>
+</body>
 </html>
