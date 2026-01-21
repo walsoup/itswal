@@ -102,21 +102,21 @@
       */
       body.theme-banana {
           --color-bg-primary: #FFF9C4; /* Banana Yellow */
-          --color-accent: #4FC3F7;    /* Light Blue */
-          --color-accent-hover: #29B6F6;
+          --color-accent: #F9A825;     /* Golden Yellow */
+          --color-accent-hover: #F57F17;
           --color-text-main: #374151;
           --color-text-muted: #6B7280;
           --color-text-heading: #111827;
           --color-nav-text: #4B5563;
-          --color-social: #4FC3F7;
+          --color-social: #F9A825;     /* Golden Yellow */
           
           --gradient-1: #FFF9C4;
           --gradient-2: #FFF176;
-          --gradient-3: #E1F5FE;
-          --gradient-4: #B3E5FC;
+          --gradient-3: #FFEE58;       /* Yellow */
+          --gradient-4: #FFD54F;       /* Amber/Golden */
           
           --blob-1-color: rgba(255, 235, 59, 0.4);
-          --blob-2-color: rgba(3, 169, 244, 0.4);
+          --blob-2-color: rgba(255, 193, 7, 0.4);  /* Amber */
           
           --glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0.5) 100%);
           --glass-border: rgba(255, 255, 255, 0.6);
@@ -798,7 +798,7 @@
                 'reset': 'default'
             };
             
-            function setTheme(themeKey, save = true) {
+            function setTheme(themeKey, save = true, showNotification = true) {
                 // Remove all theme classes
                 Object.values(THEMES).forEach(t => {
                     if (t.class) body.classList.remove(t.class);
@@ -811,7 +811,10 @@
                 }
                 
                 currentTheme = themeKey;
-                showToast(`${theme.icon} ${theme.name} activated!`);
+                
+                if (showNotification) {
+                    showToast(`${theme.icon} ${theme.name} activated!`);
+                }
                 
                 console.log(`[THEME] Switched to: ${theme.name}`);
 
@@ -835,13 +838,13 @@
             const savedTheme = localStorage.getItem('wal-theme');
 
             if (savedTheme === 'dark') {
-                setTheme('dark', false);
+                setTheme('dark', false, false);
             } else {
                 // "In the default one... pick... already present or banana"
                 if (Math.random() < 0.5) {
-                    setTheme('banana', false); // Don't save random choice to allow re-roll on next load
+                    setTheme('banana', false, false); // Don't save random choice to allow re-roll on next load
                 } else {
-                    setTheme('default', false);
+                    setTheme('default', false, false);
                 }
             }
 
@@ -1152,7 +1155,14 @@
                 "Cats don't meow at other cats, only at humans.",
                 "A cat's tongue has tiny hooks called papillae.",
                 "Cats can rotate their ears 180 degrees.",
-                "A cat's purr has healing properties."
+                "A cat's purr has healing properties.",
+                "Cats can't climb down trees head-first because their claws curve the wrong way.",
+                "A cat named Stubbs was mayor of Talkeetna, Alaska for 20 years.",
+                "Cats have a third eyelid called a 'haw' to protect their eyes.",
+                "The oldest known pet cat was found in a 9,500-year-old grave in Cyprus.",
+                "A cat's heart beats nearly twice as fast as a human heart.",
+                "Cats can't see directly below their noses.",
+                "The technical term for a hairball is a 'bezoar'."
             ];
 
             const BEAR_FACT_DB = [
@@ -1185,7 +1195,15 @@
                 "Bears have individual personalities.",
                 "Bears love to scratch their backs on trees.",
                 "Bears can snore.",
-                "Protecting bears protects nature."
+                "Protecting bears protects nature.",
+                "Grizzly bears can remember the faces of other bears for years.",
+                "Polar bear fur is actually transparent, not white.",
+                "A bear's sense of smell is 7 times better than a bloodhound's.",
+                "Pandas spend about 12 hours a day eating bamboo.",
+                "Black bears aren't always black - they can be brown, cinnamon, or even white.",
+                "Bears can see in color and have excellent night vision.",
+                "A sloth bear can close its nostrils to keep out insects.",
+                "Koalas are not actually bears - they're marsupials!"
             ];
 
             const DOG_FACT_DB = [
@@ -1219,7 +1237,13 @@
                 "Dogs need mental stimulation.",
                 "Dogs are loyal companions.",
                 "Dogs make the world a better place.",
-                "This is a rare message, I'm a dog"
+                "This is a rare message, I'm a dog",
+                "Dogs can understand up to 250 words and gestures.",
+                "A dog's nose has as many as 300 million receptors compared to about 6 million in humans.",
+                "Greyhounds can reach speeds of up to 45 miles per hour.",
+                "Dogs have a 'smell memory' that can recall scents for years.",
+                "Puppies are born deaf and don't hear until they're about 21 days old.",
+                "Labradors have been the most popular dog breed in the US for over 30 years."
             ];
 
             console.log(`[SYSTEM] v${APP_VERSION} loaded.`);
