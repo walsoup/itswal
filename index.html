@@ -95,258 +95,35 @@
           --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
           --glass-shine: rgba(255, 255, 255, 0.05);
       }
-      
+
       /* --------------------------------------------------------------------------
-      THEME: OCEAN 🌊
-      Trigger: Type "swim"
+      THEME: BANANA 🍌
       --------------------------------------------------------------------------
       */
-      body.theme-ocean {
-          --color-bg-primary: #001f3f;
-          --color-accent: #00d4ff;
-          --color-accent-hover: #33ddff;
-          --color-text-main: #c5e4f3;
-          --color-text-muted: #7fdbff;
-          --color-text-heading: #ffffff;
-          --color-nav-text: #a8d8ea;
-          --color-social: #00d4ff;
+      body.theme-banana {
+          --color-bg-primary: #FFF9C4; /* Banana Yellow */
+          --color-accent: #4FC3F7;    /* Light Blue */
+          --color-accent-hover: #29B6F6;
+          --color-text-main: #374151;
+          --color-text-muted: #6B7280;
+          --color-text-heading: #111827;
+          --color-nav-text: #4B5563;
+          --color-social: #4FC3F7;
           
-          --gradient-1: #001f3f;
-          --gradient-2: #003366;
-          --gradient-3: #004080;
-          --gradient-4: #0059b3;
+          --gradient-1: #FFF9C4;
+          --gradient-2: #FFF176;
+          --gradient-3: #E1F5FE;
+          --gradient-4: #B3E5FC;
           
-          --blob-1-color: rgba(0, 212, 255, 0.4);
-          --blob-2-color: rgba(0, 100, 200, 0.5);
+          --blob-1-color: rgba(255, 235, 59, 0.4);
+          --blob-2-color: rgba(3, 169, 244, 0.4);
           
-          --glass-bg: linear-gradient(135deg, rgba(0, 50, 100, 0.5) 0%, rgba(0, 40, 80, 0.4) 50%, rgba(0, 60, 120, 0.45) 100%);
-          --glass-border: rgba(0, 212, 255, 0.3);
-          --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-          --glass-shine: rgba(0, 212, 255, 0.1);
-      }
-
-      /* Ocean Structural Overrides */
-      body.theme-ocean .main-content-box {
-          border-radius: 40px !important;
-          border: 1px solid rgba(255, 255, 255, 0.15);
-          box-shadow: 0 10px 40px rgba(0, 20, 40, 0.4), inset 0 0 20px rgba(0, 212, 255, 0.05);
-      }
-
-      body.theme-ocean img {
-          border-radius: 24px !important;
-          box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-      }
-
-      body.theme-ocean .nav-link {
-          border-radius: 20px !important;
-      }
-
-      body.theme-ocean .nav-link:hover {
-          background-color: rgba(255, 255, 255, 0.1);
+          --glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0.5) 100%);
+          --glass-border: rgba(255, 255, 255, 0.6);
+          --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+          --glass-shine: rgba(255, 255, 255, 0.4);
       }
       
-      /* --------------------------------------------------------------------------
-      THEME: FOREST 🌲
-      Trigger: Type "tree"
-      --------------------------------------------------------------------------
-      */
-      body.theme-forest {
-          --color-bg-primary: #0d1f0d;
-          --color-accent: #4ade80;
-          --color-accent-hover: #6ee7a0;
-          --color-text-main: #d1fae5;
-          --color-text-muted: #86efac;
-          --color-text-heading: #ecfdf5;
-          --color-nav-text: #a7f3d0;
-          --color-social: #4ade80;
-          
-          --gradient-1: #0d1f0d;
-          --gradient-2: #14532d;
-          --gradient-3: #166534;
-          --gradient-4: #15803d;
-          
-          --blob-1-color: rgba(74, 222, 128, 0.4);
-          --blob-2-color: rgba(34, 197, 94, 0.4);
-          
-          --glass-bg: linear-gradient(135deg, rgba(20, 60, 30, 0.5) 0%, rgba(15, 50, 25, 0.4) 50%, rgba(25, 70, 35, 0.45) 100%);
-          --glass-border: rgba(74, 222, 128, 0.3);
-          --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-          --glass-shine: rgba(74, 222, 128, 0.1);
-      }
-      
-      /* --------------------------------------------------------------------------
-      THEME: RETRO 🕹️
-      Trigger: Type "arcade"
-      --------------------------------------------------------------------------
-      */
-      body.theme-retro {
-          --color-bg-primary: #1a0a2e;
-          --color-accent: #ff2a6d;
-          --color-accent-hover: #ff5588;
-          --color-text-main: #f0e6ff;
-          --color-text-muted: #d946ef;
-          --color-text-heading: #ffffff;
-          --color-nav-text: #e879f9;
-          --color-social: #ff2a6d;
-          
-          --gradient-1: #1a0a2e;
-          --gradient-2: #2d1b4e;
-          --gradient-3: #4a1d6a;
-          --gradient-4: #7c2d8c;
-          
-          --blob-1-color: rgba(255, 42, 109, 0.5);
-          --blob-2-color: rgba(5, 217, 232, 0.5);
-          
-          --glass-bg: linear-gradient(135deg, rgba(50, 20, 80, 0.6) 0%, rgba(40, 15, 70, 0.5) 50%, rgba(60, 25, 90, 0.55) 100%);
-          --glass-border: rgba(255, 42, 109, 0.4);
-          --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 60px rgba(255, 42, 109, 0.2);
-          --glass-shine: rgba(255, 42, 109, 0.15);
-          
-          --font-main: 'VT323', monospace;
-      }
-      
-      /* Retro Structural Overrides */
-      body.theme-retro .main-content-box,
-      body.theme-retro .nav-link,
-      body.theme-retro .social-icon,
-      body.theme-retro img,
-      body.theme-retro .theme-toast {
-          border-radius: 0 !important;
-      }
-
-      body.theme-retro .main-content-box {
-          border: 2px solid var(--color-accent);
-          box-shadow: 8px 8px 0px rgba(0, 0, 0, 0.5);
-          background: rgba(26, 10, 46, 0.9);
-      }
-
-      body.theme-retro .nav-link:hover {
-          background-color: var(--color-accent);
-          color: var(--color-bg-primary);
-          box-shadow: 4px 4px 0px rgba(255, 255, 255, 0.2);
-          transform: translate(-2px, -2px);
-      }
-
-      body.theme-retro .social-icon:hover {
-          transform: translate(-2px, -2px) scale(1.1);
-          filter: drop-shadow(4px 4px 0px rgba(255, 42, 109, 0.5));
-      }
-
-      body.theme-retro .wal-title,
-      body.theme-retro h2,
-      body.theme-retro .nav-link {
-          font-family: 'VT323', monospace !important;
-          letter-spacing: 0.1em;
-      }
-      
-      body.theme-retro .wal-title {
-          text-shadow: 0 0 10px var(--color-accent), 0 0 20px var(--color-accent);
-      }
-      
-      /* Scanline effect for retro */
-      body.theme-retro::after {
-          content: '';
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: repeating-linear-gradient(
-              0deg,
-              rgba(0, 0, 0, 0.1) 0px,
-              rgba(0, 0, 0, 0.1) 1px,
-              transparent 1px,
-              transparent 2px
-          );
-          pointer-events: none;
-          z-index: 9998;
-      }
-      
-      /* --------------------------------------------------------------------------
-      THEME: PAPER 📜
-      Trigger: Triple-click the squiggle
-      --------------------------------------------------------------------------
-      */
-      body.theme-paper {
-          --color-bg-primary: #f5f0e6;
-          --color-accent: #8b4513;
-          --color-accent-hover: #a0522d;
-          --color-text-main: #3d2914;
-          --color-text-muted: #6b4423;
-          --color-text-heading: #2c1810;
-          --color-nav-text: #5d3a1a;
-          --color-social: #8b4513;
-          
-          --gradient-1: #f5f0e6;
-          --gradient-2: #ebe4d4;
-          --gradient-3: #e8dcc8;
-          --gradient-4: #f0e8d8;
-          
-          --blob-1-color: rgba(139, 69, 19, 0.15);
-          --blob-2-color: rgba(160, 82, 45, 0.15);
-          
-          --glass-bg: linear-gradient(135deg, rgba(255, 253, 245, 0.9) 0%, rgba(250, 245, 235, 0.85) 50%, rgba(255, 250, 240, 0.88) 100%);
-          --glass-border: rgba(139, 69, 19, 0.2);
-          --glass-shadow: 0 4px 20px rgba(60, 40, 20, 0.15);
-          --glass-shine: rgba(255, 255, 255, 0.5);
-          
-          --font-main: 'Playfair Display', serif;
-      }
-      
-      /* Paper Structural Overrides */
-      body.theme-paper .main-content-box {
-          border-radius: 2px !important;
-          border: 1px solid #dcdcdc;
-          background: linear-gradient(135deg, #fffdf5 0%, #f7f3e8 100%);
-          box-shadow: 2px 2px 10px rgba(0,0,0,0.1), 0 0 40px rgba(0,0,0,0.05) inset;
-      }
-
-      body.theme-paper img {
-          border-radius: 2px !important;
-          box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-          filter: sepia(30%) contrast(90%);
-          border: 4px solid #fff;
-      }
-
-      body.theme-paper .nav-link {
-          border-radius: 0 !important;
-      }
-
-      body.theme-paper .nav-link:hover {
-          background: transparent;
-          text-decoration: underline;
-          text-decoration-style: wavy;
-      }
-
-      body.theme-paper .wal-title,
-      body.theme-paper h2 {
-          font-family: 'Playfair Display', serif !important;
-          font-weight: 600;
-      }
-      
-      body.theme-paper .nav-link {
-          font-family: 'Playfair Display', serif !important;
-          font-style: italic;
-      }
-      
-      /* Paper texture overlay */
-      body.theme-paper .main-content-box::after {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-          opacity: 0.03;
-          pointer-events: none;
-          border-radius: inherit;
-      }
-      
-      /* Ink splatter decorations for paper theme */
-      body.theme-paper #squiggle-path {
-          stroke-width: 3;
-      }
 
       /* --------------------------------------------------------------------------
       BODY & LAYOUT
@@ -1012,22 +789,16 @@
             const THEMES = {
                 default: { name: 'Default', icon: '🌸', class: '' },
                 dark: { name: 'Dark Mode', icon: '🌙', class: 'theme-dark' },
-                ocean: { name: 'Ocean', icon: '🌊', class: 'theme-ocean' },
-                forest: { name: 'Forest', icon: '🌲', class: 'theme-forest' },
-                retro: { name: 'Retro Arcade', icon: '🕹️', class: 'theme-retro' },
-                paper: { name: 'Paper', icon: '📜', class: 'theme-paper' }
+                banana: { name: 'Banana', icon: '🍌', class: 'theme-banana' }
             };
             
             // Theme keyboard triggers
             const THEME_CODES = {
                 'night': 'dark',
-                'swim': 'ocean',
-                'tree': 'forest',
-                'arcade': 'retro',
                 'reset': 'default'
             };
             
-            function setTheme(themeKey) {
+            function setTheme(themeKey, save = true) {
                 // Remove all theme classes
                 Object.values(THEMES).forEach(t => {
                     if (t.class) body.classList.remove(t.class);
@@ -1043,6 +814,10 @@
                 showToast(`${theme.icon} ${theme.name} activated!`);
                 
                 console.log(`[THEME] Switched to: ${theme.name}`);
+
+                if (save) {
+                    localStorage.setItem('wal-theme', themeKey);
+                }
             }
             
             function showToast(message) {
@@ -1054,6 +829,22 @@
                 }, 2500);
             }
             
+            // Initialization Logic
+            // If saved theme is 'dark', load it.
+            // Otherwise (default, banana, or null), randomly pick default or banana.
+            const savedTheme = localStorage.getItem('wal-theme');
+
+            if (savedTheme === 'dark') {
+                setTheme('dark', false);
+            } else {
+                // "In the default one... pick... already present or banana"
+                if (Math.random() < 0.5) {
+                    setTheme('banana', false); // Don't save random choice to allow re-roll on next load
+                } else {
+                    setTheme('default', false);
+                }
+            }
+
             /*
             ====================================================================
             SECRET CODE DETECTOR (KEYBOARD)
@@ -1091,7 +882,7 @@
             
             /*
             ====================================================================
-            SQUIGGLE INTERACTIONS (Paper Theme + Reset)
+            SQUIGGLE INTERACTIONS (Reset)
             ====================================================================
             */
             let squiggleClickCount = 0;
@@ -1105,18 +896,13 @@
                 
                 squiggleClickTimer = setTimeout(() => {
                     // Single click = reset to default if on other theme
-                    if (squiggleClickCount === 1 && currentTheme !== 'default') {
-                        setTheme('default');
+                    if (squiggleClickCount === 1) {
+                         if (currentTheme !== 'default') {
+                            setTheme('default');
+                         }
                     }
                     squiggleClickCount = 0;
                 }, 400);
-                
-                // Triple click = Paper theme
-                if (squiggleClickCount >= 3) {
-                    setTheme('paper');
-                    squiggleClickCount = 0;
-                    clearTimeout(squiggleClickTimer);
-                }
             });
             
             // Keyboard accessibility for squiggle
@@ -1436,9 +1222,8 @@
                 "This is a rare message, I'm a dog"
             ];
 
-            console.log(`[SYSTEM] v${APP_VERSION} loaded. Secret themes available!`);
-            console.log(`[HINT] Try typing: night, swim, tree, arcade, or reset`);
-            console.log(`[HINT] Triple-click the squiggle for Paper theme 📜`);
+            console.log(`[SYSTEM] v${APP_VERSION} loaded.`);
+            console.log(`[HINT] Try typing: night or reset`);
         });
     </script>
 </body>
