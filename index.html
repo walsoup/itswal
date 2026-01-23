@@ -257,68 +257,28 @@
       --------------------------------------------------------------------------
       */
       .nav-link {
-        position: relative;
-        transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
-        display: inline-block;
-        padding: 0.25rem 0.5rem;
-        border-radius: 0.5rem;
+        text-decoration: none;
+        text-transform: uppercase;
+        letter-spacing: 0.3em;
+        font-size: 0.75rem; /* text-xs equivalent */
+        color: #374151;
+        font-weight: 400;
+        transition: all 0.3s ease;
         cursor: pointer;
-        text-decoration: none;
-        color: var(--color-nav-text);
+        display: inline-block;
+        padding: 0.5rem;
       }
 
+      /* Hover state */
       .nav-link:hover {
-        transform: translateY(-2px);
-        opacity: 0.8;
-      }
-      
-      /* Explicit outline removal as requested */
-      .nav-link:focus {
-        outline: none;
-      }
-      
-      .nav-link.active {
-        font-weight: 700;
-        color: var(--color-text-heading);
-      }
-      
-      /* Fallback style (No Animations) */
-      .nav-link.active {
-        text-decoration: underline;
-        text-underline-offset: 4px;
-        text-decoration-color: var(--color-accent);
-        text-decoration-thickness: 2px;
-      }
-      
-      /* Torchlight Effect (Animations Enabled) */
-      body.animations-enabled .nav-link {
-        text-decoration: none;
-      }
-      
-      body.animations-enabled .nav-link::after {
-        content: '';
-        position: absolute;
-        bottom: 7px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 95%;
-        height: 12px;
-        background-color: var(--color-accent);
-        filter: blur(8px);
-        opacity: 0;
-        transition: opacity 0.3s ease-in-out;
-        z-index: -1;
-        border-radius: 50%;
-        pointer-events: none;
+        color: #d57624;
       }
 
-      body.animations-enabled .nav-link:hover::after,
-      body.animations-enabled .nav-link:focus::after {
-        opacity: 0.6;
-      }
-      
-      body.animations-enabled .nav-link.active::after {
-        opacity: 1;
+      /* Active state */
+      .nav-link.active {
+        color: #d57624;
+        font-weight: 800;
+        letter-spacing: 0.15em;
       }
 
       /* --------------------------------------------------------------------------
@@ -696,13 +656,11 @@
     <div class="relative min-h-screen flex items-center justify-center p-4 z-10">
       <div class="max-w-6xl w-full flex flex-col md:flex-row md:items-start md:space-x-8">
         
-        <nav class="w-full md:w-1/4 mb-8 md:mb-0" aria-label="Main navigation">
-          <div class="container mx-auto flex flex-row md:flex-col justify-center md:items-center space-x-6 md:space-x-0 md:space-y-6 text-sm font-normal tracking-widest uppercase">
-            <a href="#bio" class="nav-link" id="bio-nav-link" aria-current="false">Bio</a>
-            <a href="#cat" class="nav-link" id="cat-nav-link" aria-current="false">Cat</a>
-            <a href="#bear" class="nav-link" id="bear-nav-link" aria-current="false">Bear</a>
-            <a href="#doggo" class="nav-link" id="doggo-nav-link" aria-current="false">Doggo</a>
-          </div>
+        <nav class="w-full md:w-1/4 mb-8 md:mb-0 flex flex-row md:flex-col justify-center gap-6" aria-label="Main navigation">
+            <a href="#bio" class="nav-link" id="bio-nav-link">Bio</a>
+            <a href="#cat" class="nav-link" id="cat-nav-link">Cat</a>
+            <a href="#bear" class="nav-link" id="bear-nav-link">Bear</a>
+            <a href="#doggo" class="nav-link" id="doggo-nav-link">Doggo</a>
         </nav>
 
         <main id="main-content" class="w-full md:w-3/4 rounded-2xl p-8 md:p-12 main-content-box">
@@ -739,21 +697,30 @@
               <h2 class="text-4xl md:text-5xl font-bold mb-4">Cats</h2>
               <p class="text-lg mb-4">kitty kitty kitty (I love cats sm)</p>
               <p id="cat-fact" class="fun-fact-text">Cats are my favorite animal</p>
-              <img src="https://cataas.com/cat" alt="A cute cat" class="rounded-lg mt-6 shadow-md w-full max-w-lg mx-auto" onerror="this.onerror=null; this.src='https://placehold.co/600x400/cccccc/333333?text=Cutie+Kitty';" />
+              <div class="w-full h-96 relative overflow-hidden rounded-lg mt-6 shadow-md mx-auto max-w-lg">
+                  <img src="https://cataas.com/cat" alt="A cute cat" class="absolute inset-0 w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/600x400/cccccc/333333?text=Cutie+Kitty';" />
+              </div>
+              <button id="cat-refresh" class="mt-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded text-sm transition font-medium text-gray-700 block mx-auto">Gimme another!</button>
           </div>
 
           <div id="bear-section" class="content-section">
               <h2 class="text-4xl md:text-5xl font-bold mb-4">Bears</h2>
               <p class="text-lg mb-4">Bear with me (sorry) </p>
               <p id="bear-fact" class="fun-fact-text">Loading bear fact...</p>
-              <img src="https://placebear.com/600/700" alt="A fluffy bear" class="rounded-lg mt-6 shadow-md w-full max-w-lg mx-auto" onerror="this.onerror=null; this.src='https://placehold.co/600x400/cccccc/333333?text=Bear';" />
+              <div class="w-full h-96 relative overflow-hidden rounded-lg mt-6 shadow-md mx-auto max-w-lg">
+                  <img src="https://placebear.com/600/700" alt="A fluffy bear" class="absolute inset-0 w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/600x400/cccccc/333333?text=Bear';" />
+              </div>
+              <button id="bear-refresh" class="mt-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded text-sm transition font-medium text-gray-700 block mx-auto">Gimme another!</button>
           </div>
 
           <div id="doggo-section" class="content-section">
               <h2 class="text-4xl md:text-5xl font-bold mb-4">Dogs</h2>
               <p class="text-lg mb-4">Doggo doggo doggo</p>
               <p id="doggo-fact" class="fun-fact-text">Loading dog fact...</p>
-              <img src="https://place.dog/700/600" alt="An adorable dog" class="rounded-lg mt-6 shadow-md w-full max-w-lg mx-auto" onerror="this.onerror=null; this.src='https://placehold.co/600x400/cccccc/333333?text=hopefully+doggo';" />
+              <div class="w-full h-96 relative overflow-hidden rounded-lg mt-6 shadow-md mx-auto max-w-lg">
+                  <img src="https://place.dog/700/600" alt="An adorable dog" class="absolute inset-0 w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/600x400/cccccc/333333?text=hopefully+doggo';" />
+              </div>
+              <button id="doggo-refresh" class="mt-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded text-sm transition font-medium text-gray-700 block mx-auto">Gimme another!</button>
           </div>
         </main>
       </div>
@@ -798,7 +765,7 @@
                 'reset': 'default'
             };
             
-            function setTheme(themeKey, save = true) {
+            function setTheme(themeKey, save = true, quiet = false) {
                 // Remove all theme classes
                 Object.values(THEMES).forEach(t => {
                     if (t.class) body.classList.remove(t.class);
@@ -811,7 +778,10 @@
                 }
                 
                 currentTheme = themeKey;
-                showToast(`${theme.icon} ${theme.name} activated!`);
+
+                if (!quiet) {
+                    showToast(`${theme.icon} ${theme.name} activated!`);
+                }
                 
                 console.log(`[THEME] Switched to: ${theme.name}`);
 
@@ -835,13 +805,13 @@
             const savedTheme = localStorage.getItem('wal-theme');
 
             if (savedTheme === 'dark') {
-                setTheme('dark', false);
+                setTheme('dark', false, true);
             } else {
                 // "In the default one... pick... already present or banana"
                 if (Math.random() < 0.5) {
-                    setTheme('banana', false); // Don't save random choice to allow re-roll on next load
+                    setTheme('banana', false, true); // Don't save random choice to allow re-roll on next load
                 } else {
-                    setTheme('default', false);
+                    setTheme('default', false, true);
                 }
             }
 
@@ -1010,52 +980,67 @@
                 doggo: document.getElementById('doggo-section'),
             };
 
-            const navLinks = {
-                bio: document.getElementById('bio-nav-link'),
-                cat: document.getElementById('cat-nav-link'),
-                bear: document.getElementById('bear-nav-link'),
-                doggo: document.getElementById('doggo-nav-link'),
-            };
-
             const factElements = {
                 cat: document.getElementById('cat-fact'),
                 bear: document.getElementById('bear-fact'),
                 doggo: document.getElementById('doggo-fact')
             };
 
+            function updateActiveLink() {
+                const hash = window.location.hash || '#bio';
+                const links = document.querySelectorAll('.nav-link');
+
+                links.forEach(link => {
+                    if (link.getAttribute('href') === hash) {
+                        link.classList.add('active');
+                        link.setAttribute('aria-current', 'page');
+                    } else {
+                        link.classList.remove('active');
+                        link.setAttribute('aria-current', 'false');
+                    }
+                });
+            }
+
             function hideAllSections() {
                 Object.values(sections).forEach(s => s.classList.remove('visible'));
-                Object.values(navLinks).forEach(l => {
-                    l.classList.remove('active');
-                    l.setAttribute('aria-current', 'false');
-                });
             }
 
             function showSection(key) {
                 hideAllSections();
                 requestAnimationFrame(() => {
-                    if (sections[key]) sections[key].classList.add('visible');
-                    if (navLinks[key]) {
-                        navLinks[key].classList.add('active');
-                        navLinks[key].setAttribute('aria-current', 'page');
-                    }
+                    // Default to intro/bio if key not found or empty
+                    if (!key || key === '') key = 'bio'; // 'bio' is default link
                     
+                    // Special case: clicking bio link -> #bio.
+                    // But maybe we want 'intro' for initial?
+                    // The original code had logic: if clicking active link -> go to intro?
+                    // No, "if (!sections[key].visible) showSection(key) else showSection('intro')"
+                    // With hash routing, we just show what the hash says.
+
+                    if (sections[key]) {
+                        sections[key].classList.add('visible');
+                    } else {
+                        // fallback
+                        if (sections.bio) sections.bio.classList.add('visible');
+                    }
+
                     if (key === 'cat') factElements.cat.textContent = getRandomFact(CAT_FACT_DB);
                     else if (key === 'bear') factElements.bear.textContent = getRandomFact(BEAR_FACT_DB);
                     else if (key === 'doggo') factElements.doggo.textContent = getRandomFact(DOG_FACT_DB);
                 });
             }
 
-            Object.entries(navLinks).forEach(([key, link]) => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    if (!sections[key].classList.contains('visible')) {
-                        showSection(key);
-                    } else {
-                        showSection('intro');
-                    }
-                });
-            });
+            function handleHashChange() {
+                updateActiveLink();
+                const hash = window.location.hash;
+                const key = hash ? hash.substring(1) : 'bio';
+                showSection(key);
+            }
+
+            window.addEventListener('hashchange', handleHashChange);
+
+            // Initial load
+            handleHashChange();
 
             // Squiggle path length
             const squigglePath = document.getElementById('squiggle-path');
@@ -1117,6 +1102,33 @@
             FACTS DATABASE
             ====================================================================
             */
+            /*
+            ====================================================================
+            CONTENT REFRESHER
+            ====================================================================
+            */
+            function refreshContent(type) {
+                const img = document.querySelector(`#${type}-section img`);
+                const fact = document.getElementById(`${type}-fact`);
+
+                if (type === 'cat') {
+                    img.src = `https://cataas.com/cat?t=${Date.now()}`;
+                    fact.textContent = getRandomFact(CAT_FACT_DB);
+                } else if (type === 'doggo') {
+                    img.src = `https://place.dog/700/600?t=${Date.now()}`;
+                    fact.textContent = getRandomFact(DOG_FACT_DB);
+                } else if (type === 'bear') {
+                    const w = Math.floor(Math.random() * 200) + 600;
+                    const h = Math.floor(Math.random() * 200) + 600;
+                    img.src = `https://placebear.com/${w}/${h}`;
+                    fact.textContent = getRandomFact(BEAR_FACT_DB);
+                }
+            }
+
+            document.getElementById('cat-refresh').addEventListener('click', () => refreshContent('cat'));
+            document.getElementById('bear-refresh').addEventListener('click', () => refreshContent('bear'));
+            document.getElementById('doggo-refresh').addEventListener('click', () => refreshContent('doggo'));
+
             function getRandomFact(db) {
                 return "Fun Fact: " + db[Math.floor(Math.random() * db.length)];
             }
