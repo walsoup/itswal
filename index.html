@@ -1,1242 +1,1672 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="description" content="Wal's soup" />
-    <meta name="author" content="Wal" />
-    <meta name="keywords" content="Wal, Personal Site, Portfolio, Developer, Cats, Bears, Dogs" />
-    <meta name="theme-color" content="#121212" />
-    
-    <meta property="og:title" content="itswal.me" />
-    <meta property="og:description" content="Wal's personal website" />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://itswal.me" />
-    <meta property="og:site_name" content="Wal's World" />
-    
-    <title>itswal</title>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700&family=VT323&display=swap"
-      rel="stylesheet"
-    />
 
-    <style>
-      /* --------------------------------------------------------------------------
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="description" content="Wal's soup" />
+  <meta name="author" content="Wal" />
+  <meta name="keywords" content="Wal, Personal Site, Portfolio, Developer, Cats, Bears, Dogs" />
+  <meta name="theme-color" content="#121212" />
+
+  <meta property="og:title" content="itswal.me" />
+  <meta property="og:description" content="Wal's personal website" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://itswal.me" />
+  <meta property="og:site_name" content="Wal" />
+  <meta property="og:image" content="https://itswal.me/flower.jpg" />
+
+  <title>itswal</title>
+  <link rel="icon" href="favicon.ico?v=REFRESH" sizes="any" />
+  <link rel="apple-touch-icon" href="favicon.ico?v=REFRESH" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700&family=VT323&display=swap"
+    rel="stylesheet" />
+
+  <style>
+    /* --------------------------------------------------------------------------
       RESET & BASE VARIABLES (DEFAULT THEME)
       --------------------------------------------------------------------------
       */
-      :root {
-          /* Core Colors */
-          --color-bg-primary: #121212;
-          --color-accent: #d57624;
-          --color-accent-hover: #e07b39;
-          --color-text-main: #1f2937;
-          --color-text-muted: #4b5563;
-          --color-text-heading: #1f2937;
-          --color-nav-text: #374151;
-          --color-social: #d97706;
-          --animation-speed-slow: 0.5s;
-          --animation-speed-fast: 0.2s;
-          --blob-opacity: 0.4;
-          
-          /* Gradient Colors */
-          --gradient-1: #ffdabe;
-          --gradient-2: #ffc0cb;
-          --gradient-3: #e6e6fa;
-          --gradient-4: #add8e6;
-          
-          /* Blob Colors */
-          --blob-1-color: rgba(170, 180, 200, 0.5);
-          --blob-2-color: rgba(60, 140, 130, 0.6);
-          
-          /* Glass Box */
-          --glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.35) 50%, rgba(255, 255, 255, 0.45) 100%);
-          --glass-border: rgba(255, 255, 255, 0.4);
-          --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-          --glass-shine: rgba(255, 255, 255, 0.3);
-          
-          /* Font */
-          --font-main: 'Inter', sans-serif;
-      }
+    :root {
+      /* Core Colors */
+      --color-bg-primary: #121212;
+      --color-accent: #d57624;
+      --color-accent-hover: #e07b39;
+      --color-text-main: #1f2937;
+      --color-text-muted: #4b5563;
+      --color-text-heading: #1f2937;
+      --color-nav-text: #374151;
+      --color-social: #d97706;
+      --animation-speed-slow: 0.5s;
+      --animation-speed-fast: 0.2s;
+      --blob-opacity: 0.4;
 
-      * {
-          box-sizing: border-box;
-      }
-      
-      /* --------------------------------------------------------------------------
+      /* Gradient Colors */
+      --gradient-1: #ffdabe;
+      --gradient-2: #ffc0cb;
+      --gradient-3: #e6e6fa;
+      --gradient-4: #add8e6;
+
+      /* Blob Colors */
+      --blob-1-color: rgba(170, 180, 200, 0.5);
+      --blob-2-color: rgba(60, 140, 130, 0.6);
+
+      /* Glass Box */
+      --glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.35) 50%, rgba(255, 255, 255, 0.45) 100%);
+      --glass-border: rgba(255, 255, 255, 0.4);
+      --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      --glass-shine: rgba(255, 255, 255, 0.3);
+
+      /* Font */
+      --font-main: 'Inter', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    /* --------------------------------------------------------------------------
       THEME: DARK MODE 🌙
       Trigger: Type "night"
       --------------------------------------------------------------------------
       */
-      body.theme-dark {
-          --color-bg-primary: #0a0a0f;
-          --color-accent: #ff9500;
-          --color-accent-hover: #ffaa33;
-          --color-text-main: #e0e0e0;
-          --color-text-muted: #888888;
-          --color-text-heading: #ffffff;
-          --color-nav-text: #cccccc;
-          --color-social: #ff9500;
-          
-          --gradient-1: #0f0f1a;
-          --gradient-2: #1a1a2e;
-          --gradient-3: #16213e;
-          --gradient-4: #0f0f1a;
-          
-          --blob-1-color: rgba(255, 149, 0, 0.3);
-          --blob-2-color: rgba(128, 0, 255, 0.3);
-          
-          --glass-bg: linear-gradient(135deg, rgba(30, 30, 40, 0.7) 0%, rgba(20, 20, 30, 0.6) 50%, rgba(25, 25, 35, 0.65) 100%);
-          --glass-border: rgba(255, 255, 255, 0.1);
-          --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-          --glass-shine: rgba(255, 255, 255, 0.05);
-      }
+    body.theme-dark {
+      --color-bg-primary: #0a0a0f;
+      --color-accent: #ff9500;
+      --color-accent-hover: #ffaa33;
+      --color-text-main: #e0e0e0;
+      --color-text-muted: #888888;
+      --color-text-heading: #ffffff;
+      --color-nav-text: #cccccc;
+      --color-social: #ff9500;
 
-      /* --------------------------------------------------------------------------
+      --gradient-1: #0f0f1a;
+      --gradient-2: #1a1a2e;
+      --gradient-3: #16213e;
+      --gradient-4: #0f0f1a;
+
+      --blob-1-color: rgba(255, 149, 0, 0.3);
+      --blob-2-color: rgba(128, 0, 255, 0.3);
+
+      --glass-bg: linear-gradient(135deg, rgba(30, 30, 40, 0.7) 0%, rgba(20, 20, 30, 0.6) 50%, rgba(25, 25, 35, 0.65) 100%);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      --glass-shine: rgba(255, 255, 255, 0.05);
+    }
+
+    /* --------------------------------------------------------------------------
       THEME: BANANA 🍌
       --------------------------------------------------------------------------
       */
-      body.theme-banana {
-          --color-bg-primary: #FFF9C4; /* Banana Yellow */
-          --color-accent: #4FC3F7;    /* Light Blue */
-          --color-accent-hover: #29B6F6;
-          --color-text-main: #374151;
-          --color-text-muted: #6B7280;
-          --color-text-heading: #111827;
-          --color-nav-text: #4B5563;
-          --color-social: #4FC3F7;
-          
-          --gradient-1: #FFF9C4;
-          --gradient-2: #FFF176;
-          --gradient-3: #E1F5FE;
-          --gradient-4: #B3E5FC;
-          
-          --blob-1-color: rgba(255, 235, 59, 0.4);
-          --blob-2-color: rgba(3, 169, 244, 0.4);
-          
-          --glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0.5) 100%);
-          --glass-border: rgba(255, 255, 255, 0.6);
-          --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-          --glass-shine: rgba(255, 255, 255, 0.4);
-      }
-      
+    body.theme-banana {
+      --color-bg-primary: #FFF9C4;
+      /* Banana Yellow */
+      --color-accent: #4FC3F7;
+      /* Light Blue */
+      --color-accent-hover: #29B6F6;
+      --color-text-main: #374151;
+      --color-text-muted: #6B7280;
+      --color-text-heading: #111827;
+      --color-nav-text: #4B5563;
+      --color-social: #4FC3F7;
 
-      /* --------------------------------------------------------------------------
+      --gradient-1: #FFF9C4;
+      --gradient-2: #FFF176;
+      --gradient-3: #E1F5FE;
+      --gradient-4: #B3E5FC;
+
+      --blob-1-color: rgba(255, 235, 59, 0.4);
+      --blob-2-color: rgba(3, 169, 244, 0.4);
+
+      --glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0.5) 100%);
+      --glass-border: rgba(255, 255, 255, 0.6);
+      --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      --glass-shine: rgba(255, 255, 255, 0.4);
+    }
+
+
+    /* --------------------------------------------------------------------------
       BODY & LAYOUT
       --------------------------------------------------------------------------
       */
-      body {
-        font-family: var(--font-main);
-        overflow-x: hidden;
-        overflow-y: auto;
-        position: relative;
-        background-color: var(--color-bg-primary);
-        margin: 0;
-        padding: 0;
-        min-height: 100vh;
-        transition: background-color 0.5s ease;
+    body {
+      font-family: var(--font-main);
+      overflow-x: hidden;
+      overflow-y: scroll;
+      position: relative;
+      background-color: var(--color-bg-primary);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      transition: background-color 0.5s ease;
+    }
+
+    /* Background Gradient Overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: linear-gradient(135deg,
+          var(--gradient-1) 0%,
+          var(--gradient-2) 30%,
+          var(--gradient-3) 60%,
+          var(--gradient-4) 100%);
+      background-size: 100% 100%;
+      opacity: 1;
+      transition: background 0.8s ease;
+    }
+
+    /* Active Animation State for Body */
+    body.animations-enabled::before {
+      background-size: 400% 400%;
+      animation-name: gradient;
+      animation-duration: 15s;
+      animation-timing-function: ease;
+      animation-iteration-count: infinite;
+      will-change: background-position;
+    }
+
+    @keyframes gradient {
+      0% {
+        background-position: 0% 50%;
       }
 
-      /* Background Gradient Overlay */
-      body::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: -1;
-        background: linear-gradient(
-            135deg, 
-            var(--gradient-1) 0%, 
-            var(--gradient-2) 30%, 
-            var(--gradient-3) 60%, 
-            var(--gradient-4) 100%
-        );
-        background-size: 100% 100%;
-        opacity: 1;
-        transition: background 0.8s ease;
-      }
-      
-      /* Active Animation State for Body */
-      body.animations-enabled::before {
-        background-size: 400% 400%;
-        animation-name: gradient;
-        animation-duration: 15s;
-        animation-timing-function: ease;
-        animation-iteration-count: infinite;
-        will-change: background-position;
+      50% {
+        background-position: 100% 50%;
       }
 
-      @keyframes gradient {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
+      100% {
+        background-position: 0% 50%;
       }
+    }
 
-      /* --------------------------------------------------------------------------
+    /* --------------------------------------------------------------------------
       AMBIENT BLOB SYSTEM
       --------------------------------------------------------------------------
       */
-      .blob {
-        position: absolute;
-        opacity: var(--blob-opacity);
-        z-index: 0;
-        will-change: transform;
-        backface-visibility: hidden;
-        -webkit-backface-visibility: hidden;
-        pointer-events: none;
-        transition: background 0.8s ease, opacity 0.8s ease;
-      }
-      
-      .blob-1 {
-        width: 300px;
-        height: 300px;
-        top: -100px;
-        left: -100px;
-        background: var(--blob-1-color);
-        border-top-left-radius: 40%;
-        border-top-right-radius: 60%;
-        border-bottom-right-radius: 70%;
-        border-bottom-left-radius: 30%;
-        filter: blur(25px);
-      }
-      
-      .blob-2 {
-        width: 350px;
-        height: 350px;
-        bottom: -150px;
-        right: -150px;
-        background: var(--blob-2-color);
-        border-top-left-radius: 70%;
-        border-top-right-radius: 30%;
-        border-bottom-right-radius: 40%;
-        border-bottom-left-radius: 60%;
-        filter: blur(25px);
-      }
-      
-      /* Blob Animation Definitions */
-      body.animations-enabled .blob-1 {
-        width: 450px;
-        height: 450px;
-        filter: blur(40px);
-        opacity: 0.5;
-        animation-name: blobFloat1;
-        animation-duration: 20s;
-        animation-iteration-count: infinite;
-        animation-direction: alternate;
-      }
-      
-      body.animations-enabled .blob-2 {
-        width: 550px;
-        height: 550px;
-        filter: blur(40px);
-        opacity: 0.5;
-        animation-name: blobFloat2;
-        animation-duration: 25s;
-        animation-iteration-count: infinite;
-        animation-direction: alternate-reverse;
-      }
-      
-      @keyframes blobFloat1 {
-        0% { transform: translate3d(0, 0, 0) scale(1); }
-        100% { transform: translate3d(20px, -30px, 0) scale(1.1); }
-      }
-      
-      @keyframes blobFloat2 {
-        0% { transform: translate3d(0, 0, 0) scale(1); }
-        100% { transform: translate3d(-20px, 30px, 0) scale(1.1); }
+    .blob {
+      position: absolute;
+      opacity: var(--blob-opacity);
+      z-index: 0;
+      will-change: transform;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      pointer-events: none;
+      transition: background 0.8s ease, opacity 0.8s ease;
+    }
+
+    .blob-1 {
+      width: 300px;
+      height: 300px;
+      top: -100px;
+      left: -100px;
+      background: var(--blob-1-color);
+      border-top-left-radius: 40%;
+      border-top-right-radius: 60%;
+      border-bottom-right-radius: 70%;
+      border-bottom-left-radius: 30%;
+      filter: blur(25px);
+    }
+
+    .blob-2 {
+      width: 350px;
+      height: 350px;
+      bottom: -150px;
+      right: -150px;
+      background: var(--blob-2-color);
+      border-top-left-radius: 70%;
+      border-top-right-radius: 30%;
+      border-bottom-right-radius: 40%;
+      border-bottom-left-radius: 60%;
+      filter: blur(25px);
+    }
+
+    /* Blob Animation Definitions */
+    body.animations-enabled .blob-1 {
+      width: 450px;
+      height: 450px;
+      filter: blur(40px);
+      opacity: 0.5;
+      animation-name: blobFloat1;
+      animation-duration: 20s;
+      animation-iteration-count: infinite;
+      animation-direction: alternate;
+    }
+
+    body.animations-enabled .blob-2 {
+      width: 550px;
+      height: 550px;
+      filter: blur(40px);
+      opacity: 0.5;
+      animation-name: blobFloat2;
+      animation-duration: 25s;
+      animation-iteration-count: infinite;
+      animation-direction: alternate-reverse;
+    }
+
+    @keyframes blobFloat1 {
+      0% {
+        transform: translate3d(0, 0, 0) scale(1);
       }
 
-      /* --------------------------------------------------------------------------
+      100% {
+        transform: translate3d(20px, -30px, 0) scale(1.1);
+      }
+    }
+
+    @keyframes blobFloat2 {
+      0% {
+        transform: translate3d(0, 0, 0) scale(1);
+      }
+
+      100% {
+        transform: translate3d(-20px, 30px, 0) scale(1.1);
+      }
+    }
+
+    /* --------------------------------------------------------------------------
       NAVIGATION COMPONENT
       --------------------------------------------------------------------------
       */
-      .nav-link {
-        text-decoration: none;
-        text-transform: uppercase;
-        letter-spacing: 0.3em;
-        font-size: 0.75rem; /* text-xs equivalent */
-        color: #374151;
-        font-weight: 400;
-        transition: all 0.3s ease;
-        cursor: pointer;
-        display: inline-block;
-        padding: 0.5rem;
-      }
+    .side-nav {
+      width: 11.5rem;
+      flex: 0 0 11.5rem;
+    }
 
-      /* Hover state */
-      .nav-link:hover {
-        color: #d57624;
+    @media (min-width: 768px) {
+      .side-nav {
+        position: sticky;
+        top: 2.5rem;
+        align-self: flex-start;
       }
+    }
 
-      /* Active state */
-      .nav-link.active {
-        color: #d57624;
-        font-weight: 800;
-        letter-spacing: 0.15em;
+    @media (min-width: 768px) {
+      .side-nav {
+        height: calc(100vh - 5rem);
+        display: flex;
+        align-items: flex-start;
       }
+    }
 
-      /* --------------------------------------------------------------------------
+    .nav-link {
+      position: relative;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.4em;
+      font-size: 0.75rem;
+      /* text-xs equivalent */
+      color: var(--color-nav-text);
+      font-weight: 400;
+      transition: transform 0.5s ease-in-out, color 0.5s ease-in-out;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      padding: 0.5rem 0.75rem;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      left: 46.7%;
+      transform: translateX(-50%);
+      width: 105%;
+      height: 12px;
+      background: radial-gradient(circle, var(--color-accent) 0%, rgba(213, 118, 36, 0) 70%);
+      filter: blur(7px);
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Hover state */
+    .nav-link:hover {
+      color: var(--color-accent);
+      transform: translateY(-2px);
+    }
+
+    .nav-link:hover::after,
+    .nav-link:focus-visible::after {
+      opacity: 0.65;
+    }
+
+    /* REDEFINING TRANSITION TO INCLUDE LETTER-SPACING */
+    .nav-link {
+      -webkit-transition: transform 0.5s ease-in-out, color 0.5s ease-in-out, letter-spacing 0.5s ease-in-out;
+      transition: transform 0.5s ease-in-out, color 0.5s ease-in-out, letter-spacing 0.5s ease-in-out;
+    }
+
+    /* Active state */
+    .nav-link.active {
+      color: var(--color-accent);
+      font-weight: 800;
+      letter-spacing: 0.1em;
+    }
+
+    .nav-link.active::after {
+      opacity: 0.95;
+    }
+
+    /* --------------------------------------------------------------------------
       SOCIAL MEDIA ICONS
       --------------------------------------------------------------------------
       */
-      .social-icon {
-        transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
-        color: var(--color-social);
-      }
+    .social-icon {
+      -webkit-transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
+      transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
+      color: var(--color-social);
+      /* Explicit sizing for Safari */
+      width: 1.5rem !important;
+      height: 1.5rem !important;
+      min-width: 1.5rem;
+      min-height: 1.5rem;
+    }
 
-      .social-icon:hover {
-        transform: scale(1.2);
-        color: var(--color-accent-hover);
-      }
+    .social-icon svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
 
-      /* Explicit outline removal */
-      .social-icon:focus {
-        outline: none;
-      }
+    .social-icon:hover {
+      -webkit-transform: scale(1.1);
+      transform: scale(1.1);
+      color: var(--color-accent-hover);
+    }
 
-      /* --------------------------------------------------------------------------
+    /* Explicit outline removal */
+    .social-icon:focus {
+      outline: none;
+    }
+
+    /* --------------------------------------------------------------------------
       CONTENT SECTION TRANSITIONS
       --------------------------------------------------------------------------
       */
-      .content-section {
-        opacity: 0;
-        transform: translateY(10px);
-        transition: opacity 0.3s ease-out, transform 0.3s ease-out;
-        display: none;
-      }
+    .content-section {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+      display: none;
+    }
 
-      .content-section.visible {
-        opacity: 1;
-        transform: translateY(0);
-        display: block;
-      }
-      
-      .content-section h2 {
-        color: var(--color-text-heading);
-      }
-      
-      .content-section p {
-        color: var(--color-text-main);
-      }
+    .content-section.visible {
+      opacity: 1;
+      transform: translateY(0);
+      display: block;
+    }
 
-      /* --------------------------------------------------------------------------
+    .content-section h2 {
+      color: var(--color-text-heading);
+    }
+
+    .content-section p {
+      color: var(--color-text-main);
+    }
+
+    /* --------------------------------------------------------------------------
       SQUIGGLE PATH SVG ANIMATION
       --------------------------------------------------------------------------
       */
-      /* REMOVING OUTLINE FROM SVG AS REQUESTED */
-      #squiggle-svg {
-        outline: none;
-        cursor: pointer;
-        transition: transform 0.2s ease;
-      }
-      
-      #squiggle-svg:focus {
-        outline: none;
-      }
-      
-      #squiggle-svg:hover {
-        transform: scale(1.05);
-      }
-      
-      #squiggle-path {
-        stroke: var(--color-accent);
-        stroke-width: 5;
-        stroke-linecap: round;
-        fill: none;
-        stroke-dasharray: var(--squiggle-length);
+    /* REMOVING OUTLINE FROM SVG AS REQUESTED */
+    #squiggle-svg {
+      outline: none;
+      cursor: pointer;
+      transition: none;
+    }
+
+    #squiggle-svg:focus {
+      outline: none;
+    }
+
+    /* Intentionally no hover scaling: keep squiggle size stable */
+
+    #squiggle-path {
+      stroke: var(--color-accent);
+      stroke-width: 5;
+      stroke-linecap: round;
+      fill: none;
+      stroke-dasharray: var(--squiggle-length);
+      stroke-dashoffset: 0;
+      transition: stroke 0.5s ease;
+    }
+
+    body.animations-enabled #squiggle-path {
+      stroke-dashoffset: var(--squiggle-length);
+      animation-name: draw;
+      animation-duration: 1s;
+      animation-timing-function: ease-out;
+      animation-delay: 0.8s;
+      animation-fill-mode: forwards;
+    }
+
+    @keyframes draw {
+      to {
         stroke-dashoffset: 0;
-        transition: stroke 0.5s ease;
       }
-      
-      body.animations-enabled #squiggle-path {
-        stroke-dashoffset: var(--squiggle-length);
-        animation-name: draw;
-        animation-duration: 1s;
-        animation-timing-function: ease-out;
-        animation-delay: 0.8s;
-        animation-fill-mode: forwards;
-      }
+    }
 
-      @keyframes draw {
-        to { 
-            stroke-dashoffset: 0; 
-        }
-      }
-
-      /* --------------------------------------------------------------------------
+    /* --------------------------------------------------------------------------
       FROSTED GLASS CONTAINER (NEUMORPHISM/GLASSMORPHISM)
       --------------------------------------------------------------------------
       */
-      .main-content-box {
-        position: relative;
-        background: var(--glass-bg);
-        box-shadow: var(--glass-shadow), inset 0 1px 1px rgba(255, 255, 255, 0.6), inset 0 -1px 1px rgba(255, 255, 255, 0.2);
-        border: 1px solid var(--glass-border);
-        overflow: hidden;
-        transition: background 0.5s ease, box-shadow 0.5s ease, border-color 0.5s ease;
-      }
-      
-      /* Glass Shine Effect */
-      .main-content-box::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 50%;
-        background: linear-gradient(
-          to bottom,
-          var(--glass-shine) 0%,
-          transparent 100%
-        );
-        pointer-events: none;
-        border-top-left-radius: 1rem;
-        border-top-right-radius: 1rem;
-      }
-      
-      /* Advanced Backdrop Filter */
-      body.animations-enabled .main-content-box {
-        backdrop-filter: blur(20px) saturate(180%);
-        -webkit-backdrop-filter: blur(20px) saturate(180%);
-      }
+    .main-content-box {
+      position: relative;
+      background: var(--glass-bg);
+      box-shadow: var(--glass-shadow), inset 0 1px 1px rgba(255, 255, 255, 0.6), inset 0 -1px 1px rgba(255, 255, 255, 0.2);
+      border: 1px solid var(--glass-border);
+      overflow: hidden;
+      transition: background 0.5s ease, box-shadow 0.5s ease, border-color 0.5s ease;
+    }
 
-      /* --------------------------------------------------------------------------
+    /* Glass Shine Effect */
+    .main-content-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 50%;
+      background: linear-gradient(to bottom,
+          var(--glass-shine) 0%,
+          transparent 100%);
+      pointer-events: none;
+      border-top-left-radius: 1rem;
+      border-top-right-radius: 1rem;
+    }
+
+    /* Advanced Backdrop Filter */
+    body.animations-enabled .main-content-box {
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+    }
+
+    /* --------------------------------------------------------------------------
       ACCESSIBILITY (A11Y)
       --------------------------------------------------------------------------
       */
-      .skip-link {
-        position: absolute;
-        top: -40px;
-        left: 0;
-        background-color: var(--color-accent);
-        color: white;
-        padding-top: 8px;
-        padding-bottom: 8px;
-        padding-left: 16px;
-        padding-right: 16px;
-        z-index: 100;
-        border-bottom-right-radius: 4px;
-        transition-property: top;
-        transition-duration: 0.3s;
-      }
-      .skip-link:focus {
-        top: 0;
-      }
-      
-      /* --------------------------------------------------------------------------
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      background-color: var(--color-accent);
+      color: white;
+      padding-top: 8px;
+      padding-bottom: 8px;
+      padding-left: 16px;
+      padding-right: 16px;
+      z-index: 100;
+      border-bottom-right-radius: 4px;
+      transition-property: top;
+      transition-duration: 0.3s;
+    }
+
+    .skip-link:focus {
+      top: 0;
+    }
+
+    /* --------------------------------------------------------------------------
       TYPEWRITER EFFECT LOGIC
       --------------------------------------------------------------------------
       */
-      .wal-container {
-        position: relative;
-        display: inline-block;
-        cursor: pointer;
-        user-select: none;
-        min-height: 1.2em; /* Prevents layout shift during loading */
-      }
-      
-      .wal-title {
-        font-size: inherit;
-        font-weight: bold;
-        color: var(--color-text-heading);
-        position: relative;
-        display: inline-block;
-        transition: color 0.5s ease;
-      }
-      
-      .wal-cursor {
-        display: inline-block;
-        width: 4px;
-        height: 0.9em;
-        background-color: var(--color-accent);
-        margin-left: 4px;
-        vertical-align: text-bottom;
-        opacity: 0; /* Hidden by default */
-        transition: opacity 0.2s ease, background-color 0.5s ease;
-      }
-      
-      /* Animation States */
-      body.animations-enabled .wal-cursor {
+    .wal-container {
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+      user-select: none;
+      min-height: 1.2em;
+      /* Prevents layout shift during loading */
+    }
+
+    .wal-title {
+      font-size: inherit;
+      font-weight: bold;
+      color: var(--color-text-heading);
+      position: relative;
+      display: inline-block;
+      transition: color 0.5s ease;
+    }
+
+    .wal-cursor {
+      display: inline-block;
+      width: 4px;
+      height: 0.9em;
+      background-color: var(--color-accent);
+      margin-left: 4px;
+      vertical-align: text-bottom;
+      opacity: 0;
+      /* Hidden by default */
+      transition: opacity 0.2s ease, background-color 0.5s ease;
+    }
+
+    /* Animation States */
+    body.animations-enabled .wal-cursor {
+      opacity: 1;
+      animation-name: blink;
+      animation-duration: 1s;
+      animation-timing-function: step-end;
+      animation-iteration-count: infinite;
+    }
+
+    body.animations-enabled .wal-cursor.typing {
+      animation: none;
+      opacity: 1;
+    }
+
+    /* FINAL STATE - CURSOR REMOVED */
+    body.animations-enabled .wal-cursor.done {
+      animation: none;
+      opacity: 0;
+      display: none;
+      /* Removed from flow */
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
         opacity: 1;
-        animation-name: blink;
-        animation-duration: 1s;
-        animation-timing-function: step-end;
-        animation-iteration-count: infinite;
       }
-      
-      body.animations-enabled .wal-cursor.typing {
-        animation: none;
-        opacity: 1;
-      }
-      
-      /* FINAL STATE - CURSOR REMOVED */
-      body.animations-enabled .wal-cursor.done {
-        animation: none;
+
+      50% {
         opacity: 0;
-        display: none; /* Removed from flow */
       }
-      
-      @keyframes blink {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0; }
-      }
-      
-      /* --------------------------------------------------------------------------
+    }
+
+    /* --------------------------------------------------------------------------
       SOCIAL CONTAINER ANIMATION
       --------------------------------------------------------------------------
       */
-      .social-icons-container {
-        opacity: 1;
-      }
-      
-      body.animations-enabled .social-icons-container {
+    .social-icons-container {
+      opacity: 1;
+    }
+
+    body.animations-enabled .social-icons-container {
+      opacity: 0;
+      animation-name: fadeInUp;
+      animation-duration: 0.6s;
+      animation-timing-function: ease-out;
+      animation-delay: 1.2s;
+      animation-fill-mode: forwards;
+    }
+
+    @keyframes fadeInUp {
+      from {
         opacity: 0;
-        animation-name: fadeInUp;
-        animation-duration: 0.6s;
-        animation-timing-function: ease-out;
-        animation-delay: 1.2s;
-        animation-fill-mode: forwards;
+        transform: translateY(10px);
       }
-      
-      @keyframes fadeInUp {
-        from { 
-            opacity: 0; 
-            transform: translateY(10px); 
-        }
-        to { 
-            opacity: 1; 
-            transform: translateY(0); 
-        }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
       }
-      
-      /* --------------------------------------------------------------------------
+    }
+
+    /* --------------------------------------------------------------------------
       INDICATORS & UTILITIES
       --------------------------------------------------------------------------
       */
-      .animation-indicator {
-        position: absolute;
-        top: -8px;
-        right: -30px;
-        font-size: 0.6rem;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: #9ca3af;
-        opacity: 0;
-        transition-property: opacity;
-        transition-duration: 0.3s;
-        transition-timing-function: ease;
-        pointer-events: none;
-      }
-      
-      .wal-container:hover .animation-indicator {
-        opacity: 1;
-      }
-      
-      .animation-indicator.on { 
-          color: #10b981; 
-      }
-      
-      .animation-indicator.off { 
-          color: #ef4444; 
-      }
-      
-      /* Fact Text Styling */
-      .fun-fact-text {
-          font-style: italic;
-          color: var(--color-text-muted);
-          font-size: 0.95rem;
-          margin-bottom: 0.5rem;
-          min-height: 1.5rem;
-      }
-      
-      /* --------------------------------------------------------------------------
-      THEME TOAST NOTIFICATION
+    .animation-indicator {
+      position: absolute;
+      top: -8px;
+      right: -30px;
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #9ca3af;
+      opacity: 0;
+      transition-property: opacity;
+      transition-duration: 0.3s;
+      transition-timing-function: ease;
+      pointer-events: none;
+    }
+
+    .wal-container:hover .animation-indicator {
+      opacity: 1;
+    }
+
+    .animation-indicator.on {
+      color: #10b981;
+    }
+
+    .animation-indicator.off {
+      color: #ef4444;
+    }
+
+    /* Fact Text Styling */
+    .fun-fact-text {
+      font-style: italic;
+      color: var(--color-text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+      min-height: 1.5rem;
+    }
+
+    /* --------------------------------------------------------------------------
+      REFRESH BUTTONS
       --------------------------------------------------------------------------
       */
-      .theme-toast {
-          position: fixed;
-          bottom: 20px;
-          left: 50%;
-          transform: translateX(-50%) translateY(100px);
-          background: var(--glass-bg);
-          backdrop-filter: blur(10px);
-          -webkit-backdrop-filter: blur(10px);
-          border: 1px solid var(--glass-border);
-          padding: 12px 24px;
-          border-radius: 50px;
-          font-size: 0.9rem;
-          font-weight: 500;
-          color: var(--color-text-main);
-          z-index: 10000;
-          opacity: 0;
-          transition: transform 0.4s ease, opacity 0.4s ease;
-          pointer-events: none;
-          box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-          display: flex;
-          align-items: center;
-      }
-      
-      .theme-toast.visible {
-          transform: translateX(-50%) translateY(0);
-          opacity: 1;
-      }
-      
-      .theme-toast .toast-icon {
-          margin-right: 8px;
-          font-size: 1.2rem;
-      }
+    .refresh-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px 16px;
+      border-radius: 9999px;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      background: rgba(255, 255, 255, 0.35);
+      color: var(--color-text-main);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+      transform: translateY(0);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.3s ease, border-color 0.3s ease;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
 
-      /* --------------------------------------------------------------------------
+    .refresh-btn:hover {
+      background: rgba(255, 255, 255, 0.45);
+      border-color: rgba(255, 255, 255, 0.55);
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.16);
+      transform: translateY(-1px);
+    }
+
+    .refresh-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.14);
+    }
+
+    .refresh-btn:focus-visible {
+      outline: none;
+      box-shadow:
+        0 14px 28px rgba(0, 0, 0, 0.16),
+        0 0 0 3px rgba(213, 118, 36, 0.35);
+    }
+
+    .refresh-btn .btn-icon {
+      width: 18px;
+      height: 18px;
+      display: inline-block;
+    }
+
+    /* --------------------------------------------------------------------------
+      ALBUM GALLERY
+      --------------------------------------------------------------------------
+      */
+    .album-gallery {
+      margin-top: 1.5rem;
+    }
+
+    .album-status {
+      color: var(--color-text-muted);
+      font-size: 0.95rem;
+      padding: 12px 16px;
+      border-radius: 16px;
+      border: 1px dashed rgba(255, 255, 255, 0.4);
+      background: rgba(255, 255, 255, 0.2);
+      text-align: center;
+    }
+
+    .album-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 14px;
+    }
+
+    .album-item {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--glass-border);
+      background: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .album-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 28px rgba(0, 0, 0, 0.16);
+    }
+
+    .album-item img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      aspect-ratio: 4 / 3;
+    }
+
+    /* --------------------------------------------------------------------------
+      THEME HINT (points to squiggle)
+      --------------------------------------------------------------------------
+      */
+    .theme-hint {
+      position: absolute;
+      left: calc(16px);
+      top: 50%;
+      transform: translateY(calc(-10% + 6px));
+      z-index: 50;
+      opacity: 0;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      pointer-events: none;
+    }
+
+    .theme-hint.visible {
+      opacity: 1;
+      transform: translateY(-50%);
+    }
+
+    /* Mobile: don't let the hint overlap the hero area */
+    @media (max-width: 640px) {
+      .theme-hint {
+        display: none;
+      }
+    }
+
+    .theme-hint .hint-bubble {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 9999px;
+      background: rgba(0, 0, 0, 0.55);
+      color: #fff;
+      font-size: 0.85rem;
+      line-height: 1;
+      white-space: nowrap;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      transform: translate(40px, 100%);
+    }
+
+    .theme-hint .hint-arrow {
+      width: 0;
+      height: 0;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-bottom: 10px solid rgba(0, 0, 0, 0.55);
+      margin-top: 6px;
+      margin-left: 12px;
+    }
+
+    /* --------------------------------------------------------------------------
       MATRIX MODE (HIDDEN EASTER EGG)
       --------------------------------------------------------------------------
       */
-      #matrix-canvas {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100vw;
-          height: 100vh;
-          z-index: 9999;
-          pointer-events: none; /* Let clicks pass through */
-          opacity: 0;
-          transition: opacity 1s ease;
-          display: none;
-      }
-      
-      body.matrix-mode-active #matrix-canvas {
-          display: block;
-          opacity: 0.8;
-      }
+    #matrix-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 9999;
+      pointer-events: none;
+      /* Let clicks pass through */
+      opacity: 0;
+      transition: opacity 1s ease;
+      display: none;
+    }
 
-      /* --------------------------------------------------------------------------
+    body.matrix-mode-active #matrix-canvas {
+      display: block;
+      opacity: 0.8;
+    }
+
+    /* --------------------------------------------------------------------------
       MEDIA QUERIES & RESPONSIVENESS
       --------------------------------------------------------------------------
       */
-      @media (prefers-reduced-motion: reduce) {
-        body.animations-enabled::before,
-        body.animations-enabled .blob-1,
-        body.animations-enabled .blob-2 {
-          animation: none !important;
-        }
-        body.animations-enabled #squiggle-path {
-          animation: none !important;
-          stroke-dashoffset: 0 !important;
-        }
-        .content-section, 
-        .nav-link, 
-        .social-icon,
-        .theme-toast {
-          transition: none !important;
-        }
+    @media (prefers-reduced-motion: reduce) {
+
+      body.animations-enabled::before,
+      body.animations-enabled .blob-1,
+      body.animations-enabled .blob-2 {
+        animation: none !important;
       }
-    </style>
+
+      body.animations-enabled #squiggle-path {
+        animation: none !important;
+        stroke-dashoffset: 0 !important;
+      }
+
+      .content-section,
+      .nav-link,
+      .social-icon,
+      .refresh-btn {
+        transition: none !important;
+      }
+    }
+
+    /* --------------------------------------------------------------------------
+      LIGHTBOX
+      --------------------------------------------------------------------------
+      */
+    .lightbox-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .lightbox-modal.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .lightbox-content {
+      max-width: 90%;
+      max-height: 90vh;
+      border-radius: 8px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      transform: scale(0.9);
+      transition: transform 0.3s ease;
+    }
+
+    .lightbox-modal.active .lightbox-content {
+      transform: scale(1);
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      color: white;
+      font-size: 2rem;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    .lightbox-close:hover {
+      opacity: 1;
+    }
+  </style>
 </head>
+<!-- ... existing body code ... -->
+
 <body class="text-gray-800">
 
-    <a href="#main-content" class="skip-link">Skip to main content</a>
+  <!-- Lightbox Element -->
+  <div id="lightbox" class="lightbox-modal">
+    <span class="lightbox-close">&times;</span>
+    <img class="lightbox-content" id="lightbox-img" src="" alt="Full size">
+  </div>
 
-    <div class="absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
-      <div class="blob blob-1"></div>
-      <div class="blob blob-2"></div>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <!-- ... rest of body ... -->
+
+  <!-- ... somewhere in script ... -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // ... existing init code ...
+
+      /*
+      ====================================================================
+      LIGHTBOX LOGIC
+      ====================================================================
+      */
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = document.getElementById('lightbox-img');
+      const lightboxClose = document.querySelector('.lightbox-close');
+
+      function openLightbox(src) {
+        lightboxImg.src = src;
+        lightbox.classList.add('active');
+      }
+
+      function closeLightbox() {
+        lightbox.classList.remove('active');
+        setTimeout(() => lightboxImg.src = '', 300); // Clear after fade
+      }
+
+      lightbox.addEventListener('click', (e) => {
+        if (e.target !== lightboxImg) closeLightbox();
+      });
+
+      lightboxClose.addEventListener('click', closeLightbox);
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+          closeLightbox();
+        }
+      });
+
+      // ... modify loadAlbum to add click listener ...
+    });
+  </script>
+
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <div class="absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+  </div>
+
+  <canvas id="matrix-canvas"></canvas>
+
+  <div class="relative min-h-screen flex items-center justify-center p-4 z-10">
+    <div class="max-w-6xl w-full flex flex-col md:flex-row md:items-stretch md:space-x-8">
+
+      <nav class="side-nav w-full md:w-1/4 mb-8 md:mb-0 flex flex-row md:flex-col justify-center gap-6"
+        aria-label="Main navigation">
+        <a href="#intro" class="nav-link" id="intro-nav-link">Home</a>
+        <a href="#bio" class="nav-link" id="bio-nav-link">Bio</a>
+        <a href="#cat" class="nav-link" id="cat-nav-link">Cat</a>
+        <a href="#photos" class="nav-link" id="photos-nav-link">Photos</a>
+      </nav>
+
+      <main id="main-content" class="w-full md:w-3/4 rounded-2xl p-8 md:p-12 main-content-box self-center">
+
+        <div id="intro-section" class="content-section visible">
+          <div class="mb-4">
+            <div class="wal-container" id="wal-toggle" role="button" tabindex="0" aria-label="Toggle animations">
+              <h1 class="wal-title text-5xl md:text-7xl" id="wal-text"></h1>
+              <span class="wal-cursor" id="wal-cursor"></span>
+              <span class="animation-indicator" id="animation-indicator">fx: on</span>
+            </div>
+
+            <div class="relative block">
+              <div class="theme-hint" id="theme-hint" aria-hidden="true">
+                <div class="hint-bubble">click here to cycle themes</div>
+                <div class="hint-arrow"></div>
+              </div>
+
+              <svg id="squiggle-svg" class="h-8 w-40 -mt-2" viewBox="0 0 160 30" aria-hidden="true" tabindex="0">
+                <path id="squiggle-path" d="M 5,15 C 40,30 80,-10 155,15" />
+              </svg>
+            </div>
+          </div>
+
+          <div class="social-icons-container flex items-center space-x-5 mt-6" role="list">
+            <a href="https://www.instagram.com/walsoup" class="social-icon h-6 w-6 flex items-center justify-center"
+              target="_blank" rel="noopener noreferrer" id="social-instagram">
+              <svg role="img" viewBox="-2 -2 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                preserveAspectRatio="xMinYMin">
+                <path
+                  d='M14.017 0h-8.07A5.954 5.954 0 0 0 0 5.948v8.07a5.954 5.954 0 0 0 5.948 5.947h8.07a5.954 5.954 0 0 0 5.947-5.948v-8.07A5.954 5.954 0 0 0 14.017 0zm3.94 14.017a3.94 3.94 0 0 1-3.94 3.94h-8.07a3.94 3.94 0 0 1-3.939-3.94v-8.07a3.94 3.94 0 0 1 3.94-3.939h8.07a3.94 3.94 0 0 1 3.939 3.94v8.07z' />
+                <path
+                  d='M9.982 4.819A5.17 5.17 0 0 0 4.82 9.982a5.17 5.17 0 0 0 5.163 5.164 5.17 5.17 0 0 0 5.164-5.164A5.17 5.17 0 0 0 9.982 4.82zm0 8.319a3.155 3.155 0 1 1 0-6.31 3.155 3.155 0 0 1 0 6.31z' />
+                <circle cx='15.156' cy='4.858' r='1.237' />
+              </svg>
+            </a>
+            <a href="https://github.com/walsoup/" class="social-icon h-6 w-6 flex items-center justify-center"
+              target="_blank" rel="noopener noreferrer" id="social-github"><svg fill="currentColor" viewBox="0 0 24 24">
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.378.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.942.359.308.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12.017C22 6.484 17.523 2 12 2z" />
+              </svg></a>
+            <a href="https://twitter.com/walsoup" class="social-icon h-6 w-6 flex items-center justify-center"
+              target="_blank" rel="noopener noreferrer" id="social-twitter"><svg fill="currentColor"
+                viewBox="0 0 24 24">
+                <path
+                  d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+              </svg></a>
+            <a href="https://www.linkedin.com/in/itswal/" class="social-icon h-6 w-6 flex items-center justify-center"
+              target="_blank" rel="noopener noreferrer" id="social-linkedin"><svg fill="currentColor"
+                viewBox="0 0 24 24">
+                <path
+                  d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+              </svg></a>
+          </div>
+        </div>
+
+        <div id="bio-section" class="content-section">
+          <h2 class="text-4xl md:text-5xl font-bold mb-4">About Me</h2>
+          <p class="text-lg mb-4">Just a dude looking to build his place on the internet</p>
+          <p class="text-lg mb-4">I like building things, and taking photos of cats.</p>
+          <img src="flower.jpg" alt="A beautiful flower" class="rounded-lg mt-6 shadow-md w-full max-w-lg mx-auto"
+            onerror="this.onerror=null; this.src='https://placehold.co/600x400/FFDAB9/B22222?text=A+Cool+Flower';" />
+        </div>
+
+        <div id="cat-section" class="content-section">
+          <h2 class="text-4xl md:text-5xl font-bold mb-4">Cats</h2>
+          <p class="text-lg mb-4">Some cat pics I took</p>
+
+          <div class="mb-6 p-4 rounded-lg bg-white/5 border border-white/10">
+            <p id="cat-fact" class="fun-fact-text text-center italic text-gray-400">Loading cat fact...</p>
+            <button id="cat-fact-refresh" class="refresh-btn mt-3 mx-auto block text-sm py-2 px-4">
+              Another Fact
+            </button>
+          </div>
+
+          <div class="album-gallery" id="cat-album" data-album="cats">
+            <div class="album-status" id="cat-album-status">Loading cat album…</div>
+          </div>
+        </div>
+
+        <div id="photos-section" class="content-section">
+          <h2 class="text-4xl md:text-5xl font-bold mb-4">Photos</h2>
+          <p class="text-lg mb-4">Some cool photos (shot by me and my friends)</p>
+          <div class="album-gallery" id="photos-album" data-album="photos">
+            <div class="album-status" id="photos-album-status">Waiting for album setup…</div>
+          </div>
+        </div>
+      </main>
     </div>
+  </div>
 
-    <canvas id="matrix-canvas"></canvas>
-    
-    <div class="theme-toast" id="theme-toast">
-        <span class="toast-icon">🎨</span>
-        <span class="toast-message" id="toast-message">Theme activated!</span>
-    </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      /*
+      ====================================================================
+      INITIALIZATION
+      ====================================================================
+      */
+      const APP_VERSION = '6.7';
 
-    <div class="relative min-h-screen flex items-center justify-center p-4 z-10">
-      <div class="max-w-6xl w-full flex flex-col md:flex-row md:items-start md:space-x-8">
-        
-        <nav class="w-full md:w-1/4 mb-8 md:mb-0 flex flex-row md:flex-col justify-center gap-6" aria-label="Main navigation">
-            <a href="#bio" class="nav-link" id="bio-nav-link">Bio</a>
-            <a href="#cat" class="nav-link" id="cat-nav-link">Cat</a>
-            <a href="#bear" class="nav-link" id="bear-nav-link">Bear</a>
-            <a href="#doggo" class="nav-link" id="doggo-nav-link">Doggo</a>
-        </nav>
+      const body = document.body;
+      const walToggle = document.getElementById('wal-toggle');
+      const walText = document.getElementById('wal-text');
+      const walCursor = document.getElementById('wal-cursor');
+      const animationIndicator = document.getElementById('animation-indicator');
+      const squiggleSvg = document.getElementById('squiggle-svg');
+      const themeHint = document.getElementById('theme-hint');
 
-        <main id="main-content" class="w-full md:w-3/4 rounded-2xl p-8 md:p-12 main-content-box">
-          
-          <div id="intro-section" class="content-section visible">
-              <div class="mb-4">
-                  <div class="wal-container" id="wal-toggle" role="button" tabindex="0" aria-label="Toggle animations">
-                    <h1 class="wal-title text-5xl md:text-7xl" id="wal-text"></h1>
-                    <span class="wal-cursor" id="wal-cursor"></span>
-                    <span class="animation-indicator" id="animation-indicator">fx: on</span>
-                  </div>
-                  <svg id="squiggle-svg" class="h-8 w-40 -mt-2" viewBox="0 0 160 30" aria-hidden="true" role="button" tabindex="0" aria-label="Secret theme trigger">
-                    <path id="squiggle-path" d="M 5,15 C 40,30 80,-10 155,15" />
-                  </svg>
-              </div>
+      let animationsEnabled = true;
+      let currentTheme = 'default';
 
-              <div class="social-icons-container flex items-center space-x-5 mt-6" role="list">
-                  <a href="https://www.instagram.com/walsoup" class="social-icon h-6 w-6 flex items-center justify-center" target="_blank" rel="noopener noreferrer" id="social-instagram">
-                    <svg role="img" viewBox="-2 -2 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" preserveAspectRatio="xMinYMin"><path d='M14.017 0h-8.07A5.954 5.954 0 0 0 0 5.948v8.07a5.954 5.954 0 0 0 5.948 5.947h8.07a5.954 5.954 0 0 0 5.947-5.948v-8.07A5.954 5.954 0 0 0 14.017 0zm3.94 14.017a3.94 3.94 0 0 1-3.94 3.94h-8.07a3.94 3.94 0 0 1-3.939-3.94v-8.07a3.94 3.94 0 0 1 3.94-3.939h8.07a3.94 3.94 0 0 1 3.939 3.94v8.07z'/><path d='M9.982 4.819A5.17 5.17 0 0 0 4.82 9.982a5.17 5.17 0 0 0 5.163 5.164 5.17 5.17 0 0 0 5.164-5.164A5.17 5.17 0 0 0 9.982 4.82zm0 8.319a3.155 3.155 0 1 1 0-6.31 3.155 3.155 0 0 1 0 6.31z'/><circle cx='15.156' cy='4.858' r='1.237'/></svg>
-                  </a>
-                  <a href="https://github.com/walsoup/" class="social-icon h-6 w-6 flex items-center justify-center" target="_blank" rel="noopener noreferrer" id="social-github"><svg fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.378.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.942.359.308.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12.017C22 6.484 17.523 2 12 2z" /></svg></a>
-                  <a href="https://twitter.com/walsoup" class="social-icon h-6 w-6 flex items-center justify-center" target="_blank" rel="noopener noreferrer" id="social-twitter"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
-                  <a href="https://www.linkedin.com/in/itswal/" class="social-icon h-6 w-6 flex items-center justify-center" target="_blank" rel="noopener noreferrer" id="social-linkedin"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>
-              </div>
-          </div>
+      /*
+      ====================================================================
+      LIGHTBOX LOGIC
+      ====================================================================
+      */
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = document.getElementById('lightbox-img');
+      const lightboxClose = document.querySelector('.lightbox-close');
 
-          <div id="bio-section" class="content-section">
-              <h2 class="text-4xl md:text-5xl font-bold mb-4">About Me</h2>
-              <p class="text-lg mb-4">Hey, you... still nothing here yet :&lt;</p>
-              <img src="flower.jpg" alt="A beautiful flower" class="rounded-lg mt-6 shadow-md w-full max-w-lg mx-auto" onerror="this.onerror=null; this.src='https://placehold.co/600x400/FFDAB9/B22222?text=A+Cool+Flower';" />
-          </div>
+      function openLightbox(src) {
+        if (!lightbox || !lightboxImg) return;
+        lightboxImg.src = src;
+        lightbox.classList.add('active');
+        // Prevent background scrolling
+        document.body.style.overflow = 'hidden';
+      }
 
-          <div id="cat-section" class="content-section">
-              <h2 class="text-4xl md:text-5xl font-bold mb-4">Cats</h2>
-              <p class="text-lg mb-4">kitty kitty kitty (I love cats sm)</p>
-              <p id="cat-fact" class="fun-fact-text">Cats are my favorite animal</p>
-              <div class="w-full h-96 relative overflow-hidden rounded-lg mt-6 shadow-md mx-auto max-w-lg">
-                  <img src="https://cataas.com/cat" alt="A cute cat" class="absolute inset-0 w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/600x400/cccccc/333333?text=Cutie+Kitty';" />
-              </div>
-              <button id="cat-refresh" class="mt-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded text-sm transition font-medium text-gray-700 block mx-auto">Gimme another!</button>
-          </div>
+      function closeLightbox() {
+        if (!lightbox || !lightboxImg) return;
+        lightbox.classList.remove('active');
+        // Restore background scrolling
+        document.body.style.overflow = '';
+        setTimeout(() => lightboxImg.src = '', 300);
+      }
 
-          <div id="bear-section" class="content-section">
-              <h2 class="text-4xl md:text-5xl font-bold mb-4">Bears</h2>
-              <p class="text-lg mb-4">Bear with me (sorry) </p>
-              <p id="bear-fact" class="fun-fact-text">Loading bear fact...</p>
-              <div class="w-full h-96 relative overflow-hidden rounded-lg mt-6 shadow-md mx-auto max-w-lg">
-                  <img src="https://placebear.com/600/700" alt="A fluffy bear" class="absolute inset-0 w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/600x400/cccccc/333333?text=Bear';" />
-              </div>
-              <button id="bear-refresh" class="mt-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded text-sm transition font-medium text-gray-700 block mx-auto">Gimme another!</button>
-          </div>
-
-          <div id="doggo-section" class="content-section">
-              <h2 class="text-4xl md:text-5xl font-bold mb-4">Dogs</h2>
-              <p class="text-lg mb-4">Doggo doggo doggo</p>
-              <p id="doggo-fact" class="fun-fact-text">Loading dog fact...</p>
-              <div class="w-full h-96 relative overflow-hidden rounded-lg mt-6 shadow-md mx-auto max-w-lg">
-                  <img src="https://place.dog/700/600" alt="An adorable dog" class="absolute inset-0 w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/600x400/cccccc/333333?text=hopefully+doggo';" />
-              </div>
-              <button id="doggo-refresh" class="mt-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded text-sm transition font-medium text-gray-700 block mx-auto">Gimme another!</button>
-          </div>
-        </main>
-      </div>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            /*
-            ====================================================================
-            INITIALIZATION
-            ====================================================================
-            */
-            const APP_VERSION = '2.0.0';
-            const BUILD_ID = '2026-THEMES';
-            
-            const body = document.body;
-            const walToggle = document.getElementById('wal-toggle');
-            const walText = document.getElementById('wal-text');
-            const walCursor = document.getElementById('wal-cursor');
-            const animationIndicator = document.getElementById('animation-indicator');
-            const squiggleSvg = document.getElementById('squiggle-svg');
-            const themeToast = document.getElementById('theme-toast');
-            const toastMessage = document.getElementById('toast-message');
-            
-            let animationsEnabled = true;
-            let currentTheme = 'default';
-
-            /*
-            ====================================================================
-            THEME SYSTEM
-            ====================================================================
-            */
-            const THEMES = {
-                default: { name: 'Default', icon: '🌸', class: '' },
-                dark: { name: 'Dark Mode', icon: '🌙', class: 'theme-dark' },
-                banana: { name: 'Banana', icon: '🍌', class: 'theme-banana' }
-            };
-            
-            // Theme keyboard triggers
-            const THEME_CODES = {
-                'night': 'dark',
-                'reset': 'default'
-            };
-            
-            function setTheme(themeKey, save = true, quiet = false) {
-                // Remove all theme classes
-                Object.values(THEMES).forEach(t => {
-                    if (t.class) body.classList.remove(t.class);
-                });
-                
-                // Apply new theme
-                const theme = THEMES[themeKey];
-                if (theme && theme.class) {
-                    body.classList.add(theme.class);
-                }
-                
-                currentTheme = themeKey;
-
-                if (!quiet) {
-                    showToast(`${theme.icon} ${theme.name} activated!`);
-                }
-                
-                console.log(`[THEME] Switched to: ${theme.name}`);
-
-                if (save) {
-                    localStorage.setItem('wal-theme', themeKey);
-                }
-            }
-            
-            function showToast(message) {
-                toastMessage.textContent = message;
-                themeToast.classList.add('visible');
-                
-                setTimeout(() => {
-                    themeToast.classList.remove('visible');
-                }, 2500);
-            }
-            
-            // Initialization Logic
-            // If saved theme is 'dark', load it.
-            // Otherwise (default, banana, or null), randomly pick default or banana.
-            const savedTheme = localStorage.getItem('wal-theme');
-
-            if (savedTheme === 'dark') {
-                setTheme('dark', false, true);
-            } else {
-                // "In the default one... pick... already present or banana"
-                if (Math.random() < 0.5) {
-                    setTheme('banana', false, true); // Don't save random choice to allow re-roll on next load
-                } else {
-                    setTheme('default', false, true);
-                }
-            }
-
-            /*
-            ====================================================================
-            SECRET CODE DETECTOR (KEYBOARD)
-            ====================================================================
-            */
-            let keySequence = [];
-            const MAX_KEY_LENGTH = 10;
-            
-            document.addEventListener('keydown', (e) => {
-                // Ignore if typing in an input (good practice)
-                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-                
-                keySequence.push(e.key.toLowerCase());
-                if (keySequence.length > MAX_KEY_LENGTH) {
-                    keySequence.shift();
-                }
-                
-                const typed = keySequence.join('');
-                
-                // Check for theme codes
-                for (const [code, themeKey] of Object.entries(THEME_CODES)) {
-                    if (typed.endsWith(code)) {
-                        setTheme(themeKey);
-                        keySequence = []; // Reset after match
-                        return;
-                    }
-                }
-                
-                // Matrix easter egg
-                if (typed.endsWith('hack')) {
-                    toggleMatrixMode();
-                    keySequence = [];
-                }
-            });
-            
-            /*
-            ====================================================================
-            SQUIGGLE INTERACTIONS (Reset)
-            ====================================================================
-            */
-            let squiggleClickCount = 0;
-            let squiggleClickTimer = null;
-            
-            squiggleSvg.addEventListener('click', function(e) {
-                e.preventDefault();
-                squiggleClickCount++;
-                
-                if (squiggleClickTimer) clearTimeout(squiggleClickTimer);
-                
-                squiggleClickTimer = setTimeout(() => {
-                    // Single click = reset to default if on other theme
-                    if (squiggleClickCount === 1) {
-                         if (currentTheme !== 'default') {
-                            setTheme('default');
-                         }
-                    }
-                    squiggleClickCount = 0;
-                }, 400);
-            });
-            
-            // Keyboard accessibility for squiggle
-            squiggleSvg.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    squiggleSvg.click();
-                }
-            });
-
-            /*
-            ====================================================================
-            ANIMATION CONTROLLER
-            ====================================================================
-            */
-            function updateAnimationState(playIntro = false) {
-                if (animationsEnabled) {
-                    body.classList.add('animations-enabled');
-                    animationIndicator.textContent = 'fx: on';
-                    animationIndicator.classList.remove('off');
-                    animationIndicator.classList.add('on');
-                    if (playIntro) playTypewriterEffect();
-                } else {
-                    body.classList.remove('animations-enabled');
-                    animationIndicator.textContent = 'fx: off';
-                    animationIndicator.classList.remove('on');
-                    animationIndicator.classList.add('off');
-                    walText.textContent = 'Wal';
-                    walCursor.classList.remove('typing', 'done');
-                }
-            }
-            
-            // Init state + Play Typewriter immediately
-            updateAnimationState(false);
-            setTimeout(() => playTypewriterEffect(), 200);
-            
-            /*
-            ====================================================================
-            WAL TOGGLE (Animations + Matrix)
-            ====================================================================
-            */
-            let walClickCount = 0;
-            let walClickTimer = null;
-
-            walToggle.addEventListener('click', function() {
-                animationsEnabled = !animationsEnabled;
-                updateAnimationState(true);
-                
-                // Matrix trigger
-                walClickCount++;
-                if (walClickTimer) clearTimeout(walClickTimer);
-                walClickTimer = setTimeout(() => walClickCount = 0, 500);
-                
-                if (walClickCount >= 5) {
-                    toggleMatrixMode();
-                    walClickCount = 0;
-                }
-            });
-            
-            walToggle.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    walToggle.click();
-                }
-            });
-
-            /*
-            ====================================================================
-            TYPEWRITER ENGINE
-            ====================================================================
-            */
-            function playTypewriterEffect() {
-                const text = 'Wal';
-                let index = 0;
-                
-                walText.textContent = '';
-                walCursor.classList.add('typing');
-                walCursor.classList.remove('done');
-                walCursor.style.display = 'inline-block';
-                
-                function type() {
-                    if (index < text.length) {
-                        walText.textContent += text[index];
-                        index++;
-                        setTimeout(type, 150 + Math.random() * 100);
-                    } else {
-                        walCursor.classList.remove('typing');
-                        walCursor.classList.add('done');
-                    }
-                }
-                
-                setTimeout(type, 300);
-            }
-
-            /*
-            ====================================================================
-            NAVIGATION ROUTER
-            ====================================================================
-            */
-            const sections = {
-                intro: document.getElementById('intro-section'),
-                bio: document.getElementById('bio-section'),
-                cat: document.getElementById('cat-section'),
-                bear: document.getElementById('bear-section'),
-                doggo: document.getElementById('doggo-section'),
-            };
-
-            const factElements = {
-                cat: document.getElementById('cat-fact'),
-                bear: document.getElementById('bear-fact'),
-                doggo: document.getElementById('doggo-fact')
-            };
-
-            function updateActiveLink() {
-                const hash = window.location.hash || '#bio';
-                const links = document.querySelectorAll('.nav-link');
-
-                links.forEach(link => {
-                    if (link.getAttribute('href') === hash) {
-                        link.classList.add('active');
-                        link.setAttribute('aria-current', 'page');
-                    } else {
-                        link.classList.remove('active');
-                        link.setAttribute('aria-current', 'false');
-                    }
-                });
-            }
-
-            function hideAllSections() {
-                Object.values(sections).forEach(s => s.classList.remove('visible'));
-            }
-
-            function showSection(key) {
-                hideAllSections();
-                requestAnimationFrame(() => {
-                    // Default to intro/bio if key not found or empty
-                    if (!key || key === '') key = 'bio'; // 'bio' is default link
-                    
-                    // Special case: clicking bio link -> #bio.
-                    // But maybe we want 'intro' for initial?
-                    // The original code had logic: if clicking active link -> go to intro?
-                    // No, "if (!sections[key].visible) showSection(key) else showSection('intro')"
-                    // With hash routing, we just show what the hash says.
-
-                    if (sections[key]) {
-                        sections[key].classList.add('visible');
-                    } else {
-                        // fallback
-                        if (sections.bio) sections.bio.classList.add('visible');
-                    }
-
-                    if (key === 'cat') factElements.cat.textContent = getRandomFact(CAT_FACT_DB);
-                    else if (key === 'bear') factElements.bear.textContent = getRandomFact(BEAR_FACT_DB);
-                    else if (key === 'doggo') factElements.doggo.textContent = getRandomFact(DOG_FACT_DB);
-                });
-            }
-
-            function handleHashChange() {
-                updateActiveLink();
-                const hash = window.location.hash;
-                const key = hash ? hash.substring(1) : 'bio';
-                showSection(key);
-            }
-
-            window.addEventListener('hashchange', handleHashChange);
-
-            // Initial load
-            handleHashChange();
-
-            // Squiggle path length
-            const squigglePath = document.getElementById('squiggle-path');
-            if (squigglePath) {
-                const length = squigglePath.getTotalLength();
-                squigglePath.style.setProperty('--squiggle-length', length);
-            }
-
-            /*
-            ====================================================================
-            MATRIX RAIN
-            ====================================================================
-            */
-            let matrixInterval;
-            let isMatrixActive = false;
-
-            function toggleMatrixMode() {
-                const canvas = document.getElementById('matrix-canvas');
-                const ctx = canvas.getContext('2d');
-                
-                if (isMatrixActive) {
-                    isMatrixActive = false;
-                    body.classList.remove('matrix-mode-active');
-                    clearInterval(matrixInterval);
-                    showToast('🔴 Matrix deactivated');
-                } else {
-                    isMatrixActive = true;
-                    body.classList.add('matrix-mode-active');
-                    showToast('🟢 Matrix activated');
-                    
-                    canvas.width = window.innerWidth;
-                    canvas.height = window.innerHeight;
-                    
-                    const chars = 'アァカサタナハマヤャラワガザダバパABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789?!&$😛';
-                    const fontSize = 16;
-                    const columns = canvas.width / fontSize;
-                    const drops = Array(Math.floor(columns)).fill(1);
-
-                    const draw = () => {
-                        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-                        ctx.fillRect(0, 0, canvas.width, canvas.height);
-                        ctx.fillStyle = '#0F0';
-                        ctx.font = fontSize + 'px monospace';
-                        
-                        for (let i = 0; i < drops.length; i++) {
-                            const text = chars.charAt(Math.floor(Math.random() * chars.length));
-                            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-                            drops[i]++;
-                        }
-                    };
-                    
-                    matrixInterval = setInterval(draw, 30);
-                }
-            }
-
-            /*
-            ====================================================================
-            FACTS DATABASE
-            ====================================================================
-            */
-            /*
-            ====================================================================
-            CONTENT REFRESHER
-            ====================================================================
-            */
-            function refreshContent(type) {
-                const img = document.querySelector(`#${type}-section img`);
-                const fact = document.getElementById(`${type}-fact`);
-
-                if (type === 'cat') {
-                    img.src = `https://cataas.com/cat?t=${Date.now()}`;
-                    fact.textContent = getRandomFact(CAT_FACT_DB);
-                } else if (type === 'doggo') {
-                    img.src = `https://place.dog/700/600?t=${Date.now()}`;
-                    fact.textContent = getRandomFact(DOG_FACT_DB);
-                } else if (type === 'bear') {
-                    const w = Math.floor(Math.random() * 200) + 600;
-                    const h = Math.floor(Math.random() * 200) + 600;
-                    img.src = `https://placebear.com/${w}/${h}`;
-                    fact.textContent = getRandomFact(BEAR_FACT_DB);
-                }
-            }
-
-            document.getElementById('cat-refresh').addEventListener('click', () => refreshContent('cat'));
-            document.getElementById('bear-refresh').addEventListener('click', () => refreshContent('bear'));
-            document.getElementById('doggo-refresh').addEventListener('click', () => refreshContent('doggo'));
-
-            function getRandomFact(db) {
-                return "Fun Fact: " + db[Math.floor(Math.random() * db.length)];
-            }
-            
-            const CAT_FACT_DB = [
-                "Cats sleep for 70% of their lives.",
-                "A group of cats is called a clowder.",
-                "Cats have over 20 muscles that control their ears.",
-                "Cats cannot taste sweetness.",
-                "Cats are (to nobody's surprise) my favorite animal of all time",
-                "A cat's nose print is unique, like a human's fingerprint.",
-                "The first cat in space was a French cat named Felicette.",
-                "Cats can jump up to six times their length.",
-                "A house cat's genome is 95.6% tiger.",
-                "Cats can make over 100 different sounds.",
-                "Ancient Egyptians shaved their eyebrows when their cats died.",
-                "Isaac Newton invented the cat door.",
-                "A cat's whiskers are roughly as wide as its body.",
-                "Cats use their tails for balance and communication.",
-                "Cats spend a third of their waking hours grooming.",
-                "A cat can travel at a top speed of approximately 31 mph.",
-                "Cats have a specialized collarbone that allows them to always land on their feet.",
-                "Black cats are considered bad luck in the US, but good luck in the UK.",
-                "Cats have 32 muscles in each ear.",
-                "A cat has 230 bones in its body.",
-                "Cats can hear ultrasonic sounds.",
-                "A cat's purr vibrates at a frequency of 25 to 150 Hertz.",
-                "Cats sweat through their paws.",
-                "Kittens are born with blue eyes.",
-                "Cats can dream.",
-                "A cat's brain is 90% similar to a human's.",
-                "Cats can survive falls from high places due to their righting reflex.",
-                "Cats don't meow at other cats, only at humans.",
-                "A cat's tongue has tiny hooks called papillae.",
-                "Cats can rotate their ears 180 degrees.",
-                "A cat's purr has healing properties."
-            ];
-
-            const BEAR_FACT_DB = [
-                "Bears have excellent senses of smell, sight, and hearing.",
-                "There are eight different species of bears.",
-                "Polar bears are the largest land predators.",
-                "Bears can run up to 40 miles per hour.",
-                "Bears hibernate during the winter.",
-                "A mother bear is very protective of her cubs.",
-                "Bears can stand on their hind legs.",
-                "The sun bear is the smallest bear species.",
-                "Bears are highly intelligent animals.",
-                "Bears can climb trees.",
-                "Bears are good swimmers.",
-                "A group of bears is called a sleuth or sloth.",
-                "Bears have 42 teeth.",
-                "Bears mark their territory by rubbing against trees.",
-                "Bears can live up to 25 years in the wild.",
-                "Bears use vocalizations to communicate.",
-                "Bears have a strong memory.",
-                "A bear's diet changes with the seasons.",
-                "Teddy bears are named after President Theodore Roosevelt.",
-                "Winnie the Pooh is a famous fictional bear.",
-                "Bears can lose up to 30% of their body weight during hibernation.",
-                "Bear cubs are born blind and hairless.",
-                "Bears can smell food from miles away.",
-                "Bears are excellent fishermen.",
-                "Bears are a symbol of strength and courage.",
-                "The Spirit Bear is a rare white black bear.",
-                "Bears have individual personalities.",
-                "Bears love to scratch their backs on trees.",
-                "Bears can snore.",
-                "Protecting bears protects nature."
-            ];
-
-            const DOG_FACT_DB = [
-                "Dogs have a sense of time.",
-                "Your dog's whiskers help them 'see' in the dark.",
-                "Dogs sweat through their paws.",
-                "The average dog is as smart as a two-year-old child.",
-                "Dogs can hear four times as far as humans.",
-                "A dog's sense of smell is 10,000 to 100,000 times more acute than yours.",
-                "Dogs have three eyelids.",
-                "A dog's nose print is unique, much like a human's fingerprint.",
-                "Dalmatians are born completely white.",
-                "Dogs dream like people.",
-                "The Basenji dog breed doesn't bark, it yodels.",
-                "A dog can learn over 1000 words.",
-                "Dogs can get jealous.",
-                "Dogs can smell your feelings.",
-                "Petting a dog can lower your blood pressure.",
-                "Dogs curl up in a ball when they sleep to protect their organs.",
-                "Dogs have about 1,700 taste buds.",
-                "Stray dogs in Russia have learned how to ride the subway.",
-                "The world's oldest dog lived to be 29 years old.",
-                "Dogs can see in the dark much better than humans.",
-                "Dogs have a wet nose to help absorb scent chemicals.",
-                "Dogs have at least 18 muscles in each ear.",
-                "Dogs can help detect cancer.",
-                "Dogs can fall in love.",
-                "Dogs wag their tails to communicate.",
-                "Dogs can read human facial expressions.",
-                "Dogs love to chew on things.",
-                "Dogs need mental stimulation.",
-                "Dogs are loyal companions.",
-                "Dogs make the world a better place.",
-                "This is a rare message, I'm a dog"
-            ];
-
-            console.log(`[SYSTEM] v${APP_VERSION} loaded.`);
-            console.log(`[HINT] Try typing: night or reset`);
+      if (lightbox) {
+        lightbox.addEventListener('click', (e) => {
+          if (e.target !== lightboxImg) closeLightbox();
         });
-    </script>
+
+        if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
+
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+            closeLightbox();
+          }
+        });
+      }
+
+      /*
+      ====================================================================
+      THEME SYSTEM
+      ====================================================================
+      */
+      const THEMES = {
+        default: { name: 'Default', icon: '🌸', class: '' },
+        dark: { name: 'Dark Mode', icon: '🌙', class: 'theme-dark' },
+        banana: { name: 'Banana', icon: '🍌', class: 'theme-banana' }
+      };
+
+      const THEME_ORDER = ['default', 'banana', 'dark'];
+
+      // Theme keyboard triggers
+      const THEME_CODES = {
+        'night': 'dark',
+        'reset': 'default'
+      };
+
+      function setTheme(themeKey, save = true, quiet = false) {
+        // Remove all theme classes
+        Object.values(THEMES).forEach(t => {
+          if (t.class) body.classList.remove(t.class);
+        });
+
+        // Apply new theme
+        const theme = THEMES[themeKey];
+        if (theme && theme.class) {
+          body.classList.add(theme.class);
+        }
+
+        currentTheme = themeKey;
+
+        // No toast UI: keep theme switching silent unless you want to add a different indicator.
+
+        console.log(`[THEME] Switched to: ${theme.name}`);
+
+        if (save) {
+          localStorage.setItem('wal-theme', themeKey);
+        }
+      }
+
+
+
+      /*
+      ====================================================================
+      THEME HINT (Arrow + text)
+      ====================================================================
+      */
+      const THEME_HINT_SESSION_KEY = 'wal-theme-hint-last-shown';
+      const THEME_HINT_COOLDOWN_MS = 5 * 60 * 1000; // 5 minutes
+      let themeHintHideTimer = null;
+
+      function showThemeHint() {
+        if (!themeHint) return;
+
+        const lastShownRaw = sessionStorage.getItem(THEME_HINT_SESSION_KEY);
+        const lastShown = lastShownRaw ? Number(lastShownRaw) : 0;
+        const now = Date.now();
+        if (lastShown && now - lastShown < THEME_HINT_COOLDOWN_MS) return;
+
+        themeHint.classList.add('visible');
+        sessionStorage.setItem(THEME_HINT_SESSION_KEY, String(now));
+
+        if (themeHintHideTimer) clearTimeout(themeHintHideTimer);
+        themeHintHideTimer = setTimeout(() => hideThemeHint(), 7000);
+      }
+
+      function hideThemeHint() {
+        if (!themeHint) return;
+        themeHint.classList.remove('visible');
+        if (themeHintHideTimer) {
+          clearTimeout(themeHintHideTimer);
+          themeHintHideTimer = null;
+        }
+      }
+
+      function getNextThemeKey(fromKey) {
+        const currentIndex = THEME_ORDER.indexOf(fromKey);
+        const startIndex = currentIndex >= 0 ? currentIndex : 0;
+        return THEME_ORDER[(startIndex + 1) % THEME_ORDER.length];
+      }
+
+      // Theme initialization: load saved theme when valid, otherwise default.
+      const savedTheme = localStorage.getItem('wal-theme');
+      if (savedTheme && THEMES[savedTheme]) {
+        setTheme(savedTheme, false, true);
+      } else {
+        setTheme('default', false, true);
+      }
+
+      /*
+      ====================================================================
+      SECRET CODE DETECTOR (KEYBOARD)
+      ====================================================================
+      */
+      let keySequence = [];
+      const MAX_KEY_LENGTH = 10;
+
+      document.addEventListener('keydown', (e) => {
+        // Ignore if typing in an input (good practice)
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+        keySequence.push(e.key.toLowerCase());
+        if (keySequence.length > MAX_KEY_LENGTH) {
+          keySequence.shift();
+        }
+
+        const typed = keySequence.join('');
+
+        // Check for theme codes
+        for (const [code, themeKey] of Object.entries(THEME_CODES)) {
+          if (typed.endsWith(code)) {
+            setTheme(themeKey);
+            keySequence = []; // Reset after match
+            return;
+          }
+        }
+
+        // Matrix easter egg
+        if (typed.endsWith('hack')) {
+          toggleMatrixMode();
+          keySequence = [];
+        }
+      });
+
+      /*
+      ====================================================================
+SQUIGGLE INTERACTIONS (Cycle Themes)
+      ====================================================================
+      */
+      let squiggleClickCount = 0;
+      let squiggleClickTimer = null;
+
+      squiggleSvg.addEventListener('click', function (e) {
+        e.preventDefault();
+        hideThemeHint();
+        squiggleClickCount++;
+
+        if (squiggleClickTimer) clearTimeout(squiggleClickTimer);
+
+        squiggleClickTimer = setTimeout(() => {
+          // Single click = cycle theme
+          if (squiggleClickCount === 1) {
+            const nextTheme = getNextThemeKey(currentTheme);
+            setTheme(nextTheme);
+          }
+          squiggleClickCount = 0;
+        }, 400);
+      });
+
+      // Keyboard accessibility for squiggle
+      squiggleSvg.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          squiggleSvg.click();
+        }
+      });
+
+      // If they linger on the site for a bit, give a gentle hint on Home.
+      setTimeout(() => {
+        const key = (window.location.hash || '#intro').substring(1) || 'intro';
+        if (key === 'intro') showThemeHint();
+      }, 30000);
+
+      /*
+      ====================================================================
+      ANIMATION CONTROLLER
+      ====================================================================
+      */
+      function updateAnimationState(playIntro = false) {
+        if (animationsEnabled) {
+          body.classList.add('animations-enabled');
+          animationIndicator.textContent = 'fx: on';
+          animationIndicator.classList.remove('off');
+          animationIndicator.classList.add('on');
+          if (playIntro) playTypewriterEffect();
+        } else {
+          body.classList.remove('animations-enabled');
+          animationIndicator.textContent = 'fx: off';
+          animationIndicator.classList.remove('on');
+          animationIndicator.classList.add('off');
+          walText.textContent = 'Wal';
+          walCursor.classList.remove('typing', 'done');
+        }
+      }
+
+      // Init state + Play Typewriter immediately
+      updateAnimationState(false);
+      setTimeout(() => playTypewriterEffect(), 200);
+
+      /*
+      ====================================================================
+      WAL TOGGLE (Animations + Matrix)
+      ====================================================================
+      */
+      let walClickCount = 0;
+      let walClickTimer = null;
+
+      walToggle.addEventListener('click', function () {
+        animationsEnabled = !animationsEnabled;
+        updateAnimationState(true);
+
+        // Matrix trigger
+        walClickCount++;
+        if (walClickTimer) clearTimeout(walClickTimer);
+        walClickTimer = setTimeout(() => walClickCount = 0, 500);
+
+        if (walClickCount >= 5) {
+          toggleMatrixMode();
+          walClickCount = 0;
+        }
+      });
+
+      walToggle.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          walToggle.click();
+        }
+      });
+
+      /*
+      ====================================================================
+      TYPEWRITER ENGINE
+      ====================================================================
+      */
+      function playTypewriterEffect() {
+        const text = 'Wal';
+        let index = 0;
+
+        walText.textContent = '';
+        walCursor.classList.add('typing');
+        walCursor.classList.remove('done');
+        walCursor.style.display = 'inline-block';
+
+        function type() {
+          if (index < text.length) {
+            walText.textContent += text[index];
+            index++;
+            setTimeout(type, 150 + Math.random() * 100);
+          } else {
+            walCursor.classList.remove('typing');
+            walCursor.classList.add('done');
+          }
+        }
+
+        setTimeout(type, 300);
+      }
+
+      const CAT_FACT_DB = [
+        "Cats spend 70% of their lives sleeping.",
+        "A cat has 32 muscles in each ear.",
+        "Cats have 4 rows of whiskers.",
+        "A group of kittens is called a kindle.",
+        "A group of cats is called a clowder.",
+        "Cats can't taste sweetness.",
+        "Isaac Newton invented the cat flap.",
+        "Cats can jump up to 6 times their height.",
+        "A cat's nose print is unique, like a human fingerprint.",
+        "Cats have 230 bones, while humans have 206.",
+        "Cats communicate with their tails.",
+        "A house cat is genetically 95.6% tiger.",
+        "Cats can rotate their ears 180 degrees.",
+        "The oldest known pet cat was found in a 9,500-year-old grave in Cyprus.",
+        "Black cats are considered good luck in Japan.",
+        "Cats usually have 12 whiskers on each side of their face.",
+        "A cat's purr vibrates at a frequency of 25 to 150 Hertz.",
+        "Cats have a dominant paw, just like humans are left or right-handed.",
+        "Meowing is a behavior cats developed exclusively to communicate with humans.",
+        "Cats can dream.",
+        "A cat's brain is 90% similar to a human's.",
+        "Cats can run up to 30 mph.",
+        "Cats sweat through their paws.",
+        "A female cat is called a queen or molly.",
+        "A male cat is called a tom.",
+        "The first cat in space was a French cat named Felicette.",
+        "Cats use their whiskers to determine if they can fit through a space."
+      ];
+
+      function getRandomFact(db) {
+        return "Fun Fact: " + db[Math.floor(Math.random() * db.length)];
+      }
+
+      /*
+      ====================================================================
+      NAVIGATION ROUTER
+      ====================================================================
+      */
+      const sections = {
+        intro: document.getElementById('intro-section'),
+        bio: document.getElementById('bio-section'),
+        cat: document.getElementById('cat-section'),
+        photos: document.getElementById('photos-section'),
+      };
+
+      const factElements = {
+        cat: document.getElementById('cat-fact')
+      };
+
+      /*
+      ====================================================================
+      GOOGLE PHOTOS ALBUMS (via external API endpoint)
+      ====================================================================
+      */
+      /*
+      ====================================================================
+      GOOGLE DRIVE INTEGRATION (Client-Side)
+      ====================================================================
+      */
+      // 1. Get an API Key from console.cloud.google.com
+      // 2. Enable "Google Drive API"
+      // 3. Paste it below:
+      const GOOGLE_API_KEY = 'AIzaSyAEbEBmVAwuVBwcEer9DMraWmZ0Em1oJjs';
+
+      // Folder IDs provided by you:
+      const DRIVE_FOLDERS = {
+        cats: '1Mt8jmm2s-qgYHm_JtZk_0zGkMZcrWCDM',
+        photos: '1W7LdvjdSli5ZCtpIaGJQZvsZhnGU1dg5'
+      };
+
+      const albumState = {
+        cats: { loaded: false },
+        photos: { loaded: false }
+      };
+
+      async function fetchDriveFiles(folderId) {
+        if (!GOOGLE_API_KEY || GOOGLE_API_KEY.includes('PASTE_YOUR')) {
+          throw new Error('Please paste your valid Google API Key in index.html line ~1287');
+        }
+
+        // Query: IS in folder AND is an image AND not trashed
+        const query = `'${folderId}' in parents and mimeType contains 'image/' and trashed = false`;
+        const fields = 'files(id, name, thumbnailLink, mimeType)';
+        // Using strict search and specific fields for efficiency
+        const url = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}&key=${GOOGLE_API_KEY}&fields=${encodeURIComponent(fields)}&pageSize=100`;
+
+        const response = await fetch(url);
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`Drive API Error: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        return data.files || [];
+      }
+
+      async function loadAlbum(albumKey) {
+        if (albumState[albumKey]?.loaded) return;
+
+        const containerId = albumKey === 'cats' ? 'cat-album' : 'photos-album';
+        const statusId = albumKey === 'cats' ? 'cat-album-status' : 'photos-album-status';
+        const container = document.getElementById(containerId);
+        const status = document.getElementById(statusId);
+
+        if (!container || !status) return;
+
+        status.textContent = 'Loading album from Drive…';
+
+        try {
+          const folderId = DRIVE_FOLDERS[albumKey];
+          if (!folderId) throw new Error('Unknown album folder');
+
+          const items = await fetchDriveFiles(folderId);
+
+          if (!items.length) {
+            status.textContent = 'No photos found in this Drive folder.';
+            return;
+          }
+
+          // Randomize order for that "alive" feel
+          items.sort(() => Math.random() - 0.5);
+
+          const grid = document.createElement('div');
+          grid.className = 'album-grid';
+
+          items.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'album-item';
+
+            // High-res hack: substitute =s... with =s1200 for better quality than default thumbnail
+            let src = item.thumbnailLink;
+            if (src && src.includes('=s')) {
+              src = src.replace(/=s\d+/, '=s1200');
+            }
+
+            const img = document.createElement('img');
+            img.alt = item.name || 'Photo';
+            img.loading = 'lazy';
+            img.src = src;
+
+            // Add Lightbox interaction
+            img.style.cursor = 'pointer';
+            img.addEventListener('click', () => openLightbox(src));
+
+            card.appendChild(img);
+            grid.appendChild(card);
+          });
+
+          container.innerHTML = '';
+          container.appendChild(grid);
+          albumState[albumKey].loaded = true;
+        } catch (error) {
+          console.error(error);
+          status.innerHTML = `Error: ${error.message}<br><small>Check console for details.</small>`;
+        }
+      }
+
+      function updateActiveLink() {
+        const hash = window.location.hash || '#intro';
+        const links = document.querySelectorAll('.nav-link');
+
+        links.forEach(link => {
+          if (link.getAttribute('href') === hash) {
+            link.classList.add('active');
+            link.setAttribute('aria-current', 'page');
+          } else {
+            link.classList.remove('active');
+            link.setAttribute('aria-current', 'false');
+          }
+        });
+      }
+
+      function hideAllSections() {
+        Object.values(sections).forEach(s => s.classList.remove('visible'));
+      }
+
+      function showSection(key) {
+        hideAllSections();
+        requestAnimationFrame(() => {
+          if (!key || key === '') key = 'intro';
+
+          if (sections[key]) {
+            sections[key].classList.add('visible');
+          } else if (sections.intro) {
+            sections.intro.classList.add('visible');
+          }
+
+          if (key === 'cat') {
+            factElements.cat.textContent = getRandomFact(CAT_FACT_DB);
+            loadAlbum('cats');
+          }
+          if (key === 'photos') loadAlbum('photos');
+        });
+      }
+
+      function handleHashChange() {
+        updateActiveLink();
+        const hash = window.location.hash;
+        const key = hash ? hash.substring(1) : 'intro';
+        showSection(key);
+
+        // If they return to Home after navigating elsewhere, point at the squiggle.
+        if (key === 'intro') {
+          const prevKey = sessionStorage.getItem('wal-prev-section');
+          if (prevKey && prevKey !== 'intro') {
+            showThemeHint();
+          }
+        }
+
+        sessionStorage.setItem('wal-prev-section', key);
+      }
+
+      window.addEventListener('hashchange', handleHashChange);
+
+      // Initial load
+      handleHashChange();
+
+      // Squiggle path length
+      const squigglePath = document.getElementById('squiggle-path');
+      if (squigglePath) {
+        const length = squigglePath.getTotalLength();
+        squigglePath.style.setProperty('--squiggle-length', length);
+      }
+
+      /*
+      ====================================================================
+      MATRIX RAIN
+      ====================================================================
+      */
+      let matrixInterval;
+      let isMatrixActive = false;
+
+      function toggleMatrixMode() {
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+
+        if (isMatrixActive) {
+          isMatrixActive = false;
+          body.classList.remove('matrix-mode-active');
+          clearInterval(matrixInterval);
+          console.log('[MATRIX] Deactivated');
+        } else {
+          isMatrixActive = true;
+          body.classList.add('matrix-mode-active');
+          console.log('[MATRIX] Activated');
+
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+
+          const chars = 'アァカサタナハマヤャラワガザダバパABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789?!&$😛';
+          const fontSize = 16;
+          const columns = canvas.width / fontSize;
+          const drops = Array(Math.floor(columns)).fill(1);
+
+          const draw = () => {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#0F0';
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+              const text = chars.charAt(Math.floor(Math.random() * chars.length));
+              ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+              if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+              drops[i]++;
+            }
+          };
+
+          matrixInterval = setInterval(draw, 30);
+        }
+      }
+
+      /*
+      ====================================================================
+      CONTENT REFRESHER
+      ====================================================================
+      */
+      function refreshCatFact() {
+        const fact = document.getElementById('cat-fact');
+        if (fact) fact.textContent = getRandomFact(CAT_FACT_DB);
+      }
+
+      const catRefreshBtn = document.getElementById('cat-fact-refresh');
+      if (catRefreshBtn) {
+        catRefreshBtn.addEventListener('click', refreshCatFact);
+      }
+
+      console.log(`[SYSTEM] v${APP_VERSION} loaded.`);
+      console.log(`[HINT] Try typing: night or reset. Click the squiggle to cycle themes.`);
+    });
+  </script>
 </body>
+
 </html>
