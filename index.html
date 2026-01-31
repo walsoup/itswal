@@ -1506,20 +1506,23 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
             const card = document.createElement('div');
             card.className = 'album-item';
 
-            // High-res hack: substitute =s... with =s1200 for better quality than default thumbnail
-            let src = item.thumbnailLink;
-            if (src && src.includes('=s')) {
-              src = src.replace(/=s\d+/, '=s1200');
+            // Optimized: Use smaller size for grid, larger for lightbox
+            let thumbSrc = item.thumbnailLink;
+            let fullSrc = item.thumbnailLink;
+
+            if (thumbSrc && thumbSrc.includes('=s')) {
+              thumbSrc = thumbSrc.replace(/=s\d+/, '=s400');
+              fullSrc = fullSrc.replace(/=s\d+/, '=s1200');
             }
 
             const img = document.createElement('img');
             img.alt = item.name || 'Photo';
             img.loading = 'lazy';
-            img.src = src;
+            img.src = thumbSrc;
 
             // Add Lightbox interaction
             img.style.cursor = 'pointer';
-            img.addEventListener('click', () => openLightbox(src));
+            img.addEventListener('click', () => openLightbox(fullSrc));
 
             card.appendChild(img);
             grid.appendChild(card);
