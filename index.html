@@ -21,7 +21,6 @@
   <link rel="apple-touch-icon" href="favicon.ico?v=REFRESH" />
 
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -1428,93 +1427,50 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
 
       /*
       ====================================================================
-      GOOGLE PHOTOS INTEGRATION (Client-Side via Google Identity Services)
+      GOOGLE PHOTOS ALBUMS (via external API endpoint)
       ====================================================================
-      // 1. Go to console.cloud.google.com → APIs & Services → Credentials
-      // 2. Enable "Photos Library API"
-      // 3. Create an OAuth 2.0 Client ID (Web application) and paste it below:
       */
-      const GOOGLE_CLIENT_ID = 'AIzaSyAEbEBmVAwuVBwcEer9DMraWmZ0Em1oJjs';
+      /*
+      ====================================================================
+      GOOGLE DRIVE INTEGRATION (Client-Side)
+      ====================================================================
+      */
+      // 1. Get an API Key from console.cloud.google.com
+      // 2. Enable "Google Drive API"
+      // 3. Paste it below:
+      const GOOGLE_API_KEY = 'AIzaSyAEbEBmVAwuVBwcEer9DMraWmZ0Em1oJjs';
 
-      // Title substrings used to find albums in your Google Photos library
-      // (case-insensitive, matches if the album title contains the string)
-      const PHOTO_ALBUM_TITLES = {
-        cats: 'cats',
-        photos: 'photos'
+      // Folder IDs provided by you:
+      const DRIVE_FOLDERS = {
+        cats: '1Mt8jmm2s-qgYHm_JtZk_0zGkMZcrWCDM',
+        photos: '1W7LdvjdSli5ZCtpIaGJQZvsZhnGU1dg5'
       };
-
-      const PHOTOS_SCOPE = 'https://www.googleapis.com/auth/photoslibrary.readonly';
 
       const albumState = {
         cats: { loaded: false },
         photos: { loaded: false }
       };
 
-      let _photosToken = null;
-      let _tokenClient = null;
-
-      function ensureTokenClient() {
-        if (_tokenClient) return _tokenClient;
-        if (typeof google === 'undefined' || !google.accounts?.oauth2) {
-          throw new Error('Google Identity Services not loaded. Check the GIS script tag.');
+      async function fetchDriveFiles(folderId) {
+        if (!GOOGLE_API_KEY || GOOGLE_API_KEY.includes('PASTE_YOUR')) {
+          throw new Error('Please paste your valid Google API Key in index.html line ~1287');
         }
-        _tokenClient = google.accounts.oauth2.initTokenClient({
-          client_id: GOOGLE_CLIENT_ID,
-          scope: PHOTOS_SCOPE,
-          callback: () => {} // overridden per-request in getPhotosToken()
-        });
-        return _tokenClient;
-      }
 
-      async function getPhotosToken() {
-        if (_photosToken) return _photosToken;
-        return new Promise((resolve, reject) => {
-          const client = ensureTokenClient();
-          client.callback = (resp) => {
-            if (resp.error) {
-              reject(new Error(`Auth error: ${resp.error}`));
-            } else {
-              _photosToken = resp.access_token;
-              resolve(_photosToken);
-            }
-          };
-          // prompt: '' → reuses an existing session silently; shows the account
-          // picker only when the user has not yet granted consent.
-          client.requestAccessToken({ prompt: '' });
-        });
-      }
+        // Query: IS in folder AND is an image AND not trashed
+        const query = `'${folderId}' in parents and mimeType contains 'image/' and trashed = false`;
+        const fields = 'files(id, name, thumbnailLink, mimeType)';
+        // Using strict search and specific fields for efficiency
+        const url = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}&key=${GOOGLE_API_KEY}&fields=${encodeURIComponent(fields)}&pageSize=100`;
 
-      async function fetchAlbumId(titleHint) {
-        const token = await getPhotosToken();
-        let pageToken = '';
-        do {
-          const url = 'https://photoslibrary.googleapis.com/v1/albums?pageSize=50' +
-            (pageToken ? `&pageToken=${encodeURIComponent(pageToken)}` : '');
-          const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
-          if (!res.ok) throw new Error(`Photos API Error: ${res.status} ${res.statusText}`);
-          const data = await res.json();
-          const album = (data.albums || []).find(
-            a => a.title?.toLowerCase().includes(titleHint.toLowerCase())
-          );
-          if (album) return album.id;
-          pageToken = data.nextPageToken || '';
-        } while (pageToken);
-        throw new Error(`Album not found: "${titleHint}". Check your album title in Google Photos.`);
-      }
+        const response = await fetch(url);
 
-      async function fetchPhotosMediaItems(albumId) {
-        const token = await getPhotosToken();
-        const res = await fetch('https://photoslibrary.googleapis.com/v1/mediaItems:search', {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ albumId, pageSize: 100 })
-        });
-        if (!res.ok) throw new Error(`Photos API Error: ${res.status} ${res.statusText}`);
-        const data = await res.json();
-        return data.mediaItems || [];
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`Drive API Error: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        return data.files || [];
       }
 
       async function loadAlbum(albumKey) {
@@ -1527,17 +1483,16 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
 
         if (!container || !status) return;
 
-        status.textContent = 'Loading album from Google Photos…';
+        status.textContent = 'Loading album from Drive…';
 
         try {
-          const titleHint = PHOTO_ALBUM_TITLES[albumKey];
-          if (!titleHint) throw new Error('Unknown album key');
+          const folderId = DRIVE_FOLDERS[albumKey];
+          if (!folderId) throw new Error('Unknown album folder');
 
-          const albumId = await fetchAlbumId(titleHint);
-          const items = await fetchPhotosMediaItems(albumId);
+          const items = await fetchDriveFiles(folderId);
 
           if (!items.length) {
-            status.textContent = 'No photos found in this album.';
+            status.textContent = 'No photos found in this Drive folder.';
             return;
           }
 
@@ -1551,13 +1506,14 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
             const card = document.createElement('div');
             card.className = 'album-item';
 
-            // Append size parameters to baseUrl for display quality.
-            // Note: baseUrl values are valid for ~1 hour after the API response;
-            // reload the section to refresh them if images stop loading.
-            const src = `${item.baseUrl}=w1200-h900`;
+            // High-res hack: substitute =s... with =s1200 for better quality than default thumbnail
+            let src = item.thumbnailLink;
+            if (src && src.includes('=s')) {
+              src = src.replace(/=s\d+/, '=s1200');
+            }
 
             const img = document.createElement('img');
-            img.alt = item.filename || 'Photo';
+            img.alt = item.name || 'Photo';
             img.loading = 'lazy';
             img.src = src;
 
