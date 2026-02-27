@@ -1606,7 +1606,7 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
       MATRIX RAIN
       ====================================================================
       */
-      let matrixInterval;
+      let matrixAnimationId;
       let isMatrixActive = false;
 
       function toggleMatrixMode() {
@@ -1616,7 +1616,7 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
         if (isMatrixActive) {
           isMatrixActive = false;
           body.classList.remove('matrix-mode-active');
-          clearInterval(matrixInterval);
+          cancelAnimationFrame(matrixAnimationId);
           console.log('[MATRIX] Deactivated');
         } else {
           isMatrixActive = true;
@@ -1630,22 +1630,38 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
           const fontSize = 16;
           const columns = canvas.width / fontSize;
           const drops = Array(Math.floor(columns)).fill(1);
+          let lastTime = 0;
+          const fpsInterval = 30; // approx 30ms per frame to match setInterval(30)
 
-          const draw = () => {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#0F0';
-            ctx.font = fontSize + 'px monospace';
+          const draw = (currentTime) => {
+            if (!isMatrixActive) return;
 
-            for (let i = 0; i < drops.length; i++) {
-              const text = chars.charAt(Math.floor(Math.random() * chars.length));
-              ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-              if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-              drops[i]++;
+            matrixAnimationId = requestAnimationFrame(draw);
+
+            // Handle the case where currentTime is undefined (initial call)
+            if (currentTime === undefined) currentTime = performance.now();
+
+            if (!lastTime) lastTime = currentTime;
+            const elapsed = currentTime - lastTime;
+
+            if (elapsed > fpsInterval) {
+              lastTime = currentTime - (elapsed % fpsInterval);
+
+              ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+              ctx.fillRect(0, 0, canvas.width, canvas.height);
+              ctx.fillStyle = '#0F0';
+              ctx.font = fontSize + 'px monospace';
+
+              for (let i = 0; i < drops.length; i++) {
+                const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+              }
             }
           };
 
-          matrixInterval = setInterval(draw, 30);
+          matrixAnimationId = requestAnimationFrame(draw);
         }
       }
 
