@@ -1451,9 +1451,25 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
         photos: { loaded: false }
       };
 
+      const CACHE_DURATION = 3600000; // 1 hour
+
       async function fetchDriveFiles(folderId) {
         if (!GOOGLE_API_KEY || GOOGLE_API_KEY.includes('PASTE_YOUR')) {
           throw new Error('Please paste your valid Google API Key in index.html line ~1287');
+        }
+
+        const cacheKey = `wal-drive-cache-${folderId}`;
+        try {
+          const cached = localStorage.getItem(cacheKey);
+          if (cached) {
+            const { timestamp, files } = JSON.parse(cached);
+            if (Date.now() - timestamp < CACHE_DURATION) {
+              console.log(`[CACHE] Hit for ${folderId}`);
+              return files;
+            }
+          }
+        } catch (e) {
+          console.warn('[CACHE] Error reading from localStorage', e);
         }
 
         // Query: IS in folder AND is an image AND not trashed
@@ -1470,7 +1486,19 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
         }
 
         const data = await response.json();
-        return data.files || [];
+        const files = data.files || [];
+
+        try {
+          localStorage.setItem(cacheKey, JSON.stringify({
+            timestamp: Date.now(),
+            files: files
+          }));
+          console.log(`[CACHE] Saved for ${folderId}`);
+        } catch (e) {
+          console.warn('[CACHE] Error saving to localStorage', e);
+        }
+
+        return files;
       }
 
       async function loadAlbum(albumKey) {
