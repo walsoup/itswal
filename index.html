@@ -1473,6 +1473,17 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
         return data.files || [];
       }
 
+      function shuffleArray(array) {
+        let currentIndex = array.length, randomIndex;
+        while (currentIndex != 0) {
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex--;
+          [array[currentIndex], array[randomIndex]] = [
+            array[randomIndex], array[currentIndex]];
+        }
+        return array;
+      }
+
       async function loadAlbum(albumKey) {
         if (albumState[albumKey]?.loaded) return;
 
@@ -1497,7 +1508,7 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
           }
 
           // Randomize order for that "alive" feel
-          items.sort(() => Math.random() - 0.5);
+          shuffleArray(items);
 
           const grid = document.createElement('div');
           grid.className = 'album-grid';
