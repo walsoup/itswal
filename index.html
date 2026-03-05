@@ -71,34 +71,192 @@
     }
 
     /* --------------------------------------------------------------------------
-      THEME: DARK MODE 🌙
+      THEME: DARK MODE 🌙 (tried to make it look like Apple's liquid glass lmfao)
       Trigger: Type "night"
       --------------------------------------------------------------------------
       */
     body.theme-dark {
-      --color-bg-primary: #0a0a0f;
-      --color-accent: #ff9500;
-      --color-accent-hover: #ffaa33;
-      --color-text-main: #e0e0e0;
-      --color-text-muted: #888888;
+      --color-bg-primary: #050508;
+      --color-accent: #ffffff; 
+      --color-accent-hover: #e2e8f0;
+      --color-text-main: #f1f5f9;
+      --color-text-muted: #94a3b8;
       --color-text-heading: #ffffff;
-      --color-nav-text: #cccccc;
-      --color-social: #ff9500;
+      --color-nav-text: #94a3b8;
+      --color-social: #ffffff;
 
-      --gradient-1: #0f0f1a;
-      --gradient-2: #1a1a2e;
-      --gradient-3: #16213e;
-      --gradient-4: #0f0f1a;
+      --gradient-1: #050508;
+      --gradient-2: #07070a;
+      --gradient-3: #0a0a0f;
+      --gradient-4: #050508;
 
-      --blob-1-color: rgba(255, 149, 0, 0.3);
-      --blob-2-color: rgba(128, 0, 255, 0.3);
-
-      --glass-bg: linear-gradient(135deg, rgba(30, 30, 40, 0.7) 0%, rgba(20, 20, 30, 0.6) 50%, rgba(25, 25, 35, 0.65) 100%);
-      --glass-border: rgba(255, 255, 255, 0.1);
-      --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-      --glass-shine: rgba(255, 255, 255, 0.05);
+      /* Zero light blobs */
+      --blob-1-color: transparent;
+      --blob-2-color: transparent;
     }
 
+    /* -------------------------------------------
+       1. GLOBAL LIQUID PROPERTIES
+       ------------------------------------------- */
+    body.theme-dark .main-content-box,
+    body.theme-dark .nav-link,
+    body.theme-dark .refresh-btn,
+    body.theme-dark .album-item,
+    body.theme-dark .bg-white\/5,
+    body.theme-dark .album-status {
+      border: none !important; 
+      /* THIS IS THE FIX: 'background' instead of 'background-color' obliterates the old frosted gradient */
+      background: transparent !important; 
+      /* Absolute zero blur or frosted glass */
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+
+    /* Kill all pseudo-overlays */
+    body.theme-dark .main-content-box::before,
+    body.theme-dark .nav-link::before,
+    body.theme-dark .refresh-btn::before,
+    body.theme-dark .album-item::before { 
+      display: none !important; 
+    }
+
+    /* -------------------------------------------
+       2. MAIN CONTENT BOX (Literally just a giant Nav Link)
+       ------------------------------------------- */
+    body.theme-dark .main-content-box {
+      box-shadow: 
+        0px 20px 50px rgba(0, 0, 0, 0.8),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+        inset 0 0 24px -6px rgba(255, 255, 255, 0.4),
+        inset 0 0 12px -2px rgba(0, 0, 0, 0.8) !important; 
+      border-radius: 40px;
+    }
+
+    /* -------------------------------------------
+       3. NAV LINKS (Clear Droplets)
+       ------------------------------------------- */
+    body.theme-dark .side-nav {
+      background: transparent;
+      padding: 0;
+      gap: 16px;
+      box-shadow: none;
+      align-items: center; 
+      justify-content: center;
+    }
+
+    body.theme-dark .nav-link {
+      position: relative;
+      border-radius: 999px;
+      padding: 12px 28px;
+      height: fit-content; 
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      color: var(--color-nav-text);
+      z-index: 1;
+        
+      box-shadow: 
+        0px 8px 24px rgba(0, 0, 0, 0.5),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+        inset 0 0 16px -4px rgba(255, 255, 255, 0.4),
+        inset 0 0 8px -2px rgba(0, 0, 0, 0.8) !important;
+        
+      transition: all 0.4s cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    body.theme-dark .nav-link:hover,
+    body.theme-dark .nav-link.active {
+      color: #ffffff;
+      /* Very faint glass density when active/hovered */
+      background: rgba(255, 255, 255, 0.03) !important;
+      
+      box-shadow: 
+        0px 12px 32px rgba(0, 0, 0, 0.6),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.2),
+        inset 0 0 24px -4px rgba(255, 255, 255, 0.5),
+        inset 0 0 12px -2px rgba(0, 0, 0, 0.9) !important;
+        
+      transform: translateY(-2px) scale(1.05);
+    }
+
+    /* -------------------------------------------
+       4. BUTTONS (Refractive Blobs)
+       ------------------------------------------- */
+    body.theme-dark .refresh-btn {
+      color: #ffffff;
+      border-radius: 999px;
+      box-shadow: 
+        0px 8px 20px rgba(0, 0, 0, 0.4),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+        inset 0 0 16px -4px rgba(255, 255, 255, 0.4),
+        inset 0 0 8px -2px rgba(0, 0, 0, 0.8) !important;
+      transition: all 0.4s ease;
+    }
+
+    body.theme-dark .refresh-btn:hover {
+      background: rgba(255, 255, 255, 0.03) !important;
+      transform: translateY(-2px);
+      box-shadow: 
+        0px 12px 28px rgba(0, 0, 0, 0.5),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.2),
+        inset 0 0 24px -4px rgba(255, 255, 255, 0.5),
+        inset 0 0 12px -2px rgba(0, 0, 0, 0.9) !important;
+    }
+
+    /* -------------------------------------------
+       5. ALBUM IMAGES (Submerged Layer)
+       ------------------------------------------- */
+    body.theme-dark .album-item {
+      position: relative;
+      border-radius: 24px;
+      box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.6);
+      overflow: hidden; 
+    }
+
+    body.theme-dark .album-item::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: inherit;
+      z-index: 2;
+      box-shadow: 
+        inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+        inset 0 0 24px -6px rgba(255, 255, 255, 0.4),
+        inset 0 0 12px -2px rgba(0, 0, 0, 0.8);
+    }
+
+    body.theme-dark .album-item img {
+      position: relative;
+      z-index: 1;
+      opacity: 0.9; 
+      transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    body.theme-dark .album-item:hover img {
+      opacity: 1;
+      transform: scale(1.08);
+    }
+
+    /* -------------------------------------------
+       6. UTILITIES & SUB-BOXES
+       ------------------------------------------- */
+    body.theme-dark .bg-white\/5,
+    body.theme-dark .album-status {
+      background: transparent !important;
+      box-shadow: 
+        inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+        inset 0 0 16px -4px rgba(255, 255, 255, 0.2) !important;
+      border-radius: 20px;
+    }
+
+    body.theme-dark #cat-fact { color: #cbd5e1; }
+    
+    body.theme-dark .social-icon { color: #94a3b8; }
+    body.theme-dark .social-icon:hover {
+      color: #ffffff;
+      transform: scale(1.15);
+      filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.4));
+    }
         /* --------------------------------------------------------------------------
       THEME: BANANA 🍌 (M3 Expressive cuz why not :3)
       --------------------------------------------------------------------------
@@ -174,7 +332,7 @@
       z-index: -1;
       transform: scaleX(0);
       transform-origin: left;
-      transition: transform 1.5s cubic-bezier(0.2, 0, 0, 1);
+      transition: transform 0.1s cubic-bezier(0.2, 0, 0, 1);
     }
 
     body.theme-banana .nav-link:hover {
