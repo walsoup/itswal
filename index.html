@@ -1655,7 +1655,7 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
 
         function type() {
           if (index < text.length) {
-            walText.textContent += text[index];
+            walText.textContent = text.substring(0, index + 1);
             index++;
             setTimeout(type, 150 + Math.random() * 100);
           } else {
