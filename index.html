@@ -1597,8 +1597,20 @@
             try {
               track.currentTime = time;
             } catch (_) {
+              if (track.readyState >= 1) {
+                const normalizedTime = Number.isFinite(track.duration) && track.duration > 0
+                  ? time % track.duration
+                  : time;
+                try {
+                  track.currentTime = normalizedTime;
+                  return;
+                } catch (_) {}
+              }
               const applyWhenReady = () => {
-                try { track.currentTime = time; } catch (_) {}
+                const normalizedTime = Number.isFinite(track.duration) && track.duration > 0
+                  ? time % track.duration
+                  : time;
+                try { track.currentTime = normalizedTime; } catch (_) {}
               };
               track.addEventListener('loadedmetadata', applyWhenReady, { once: true });
             }
@@ -1613,6 +1625,13 @@
               : null;
             const nextTime = targetDuration ? sourceTime % targetDuration : sourceTime;
             this.trySetTrackTime(targetTrack, nextTime);
+            if (!targetDuration) {
+              const normalizeWhenReady = () => {
+                if (!(Number.isFinite(targetTrack.duration) && targetTrack.duration > 0)) return;
+                this.trySetTrackTime(targetTrack, sourceTime % targetTrack.duration);
+              };
+              targetTrack.addEventListener('loadedmetadata', normalizeWhenReady, { once: true });
+            }
           }
         }
 
