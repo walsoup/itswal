@@ -1592,6 +1592,26 @@
             return this.defaultFadeDurationMs;
           }
 
+          onTrackMetadataReady(track, callback) {
+            if (!track || typeof callback !== 'function') return;
+            if (track.readyState >= 1) {
+              callback();
+              return;
+            }
+
+            const onReady = () => {
+              clearTimeout(timeoutId);
+              track.removeEventListener('loadedmetadata', onReady);
+              callback();
+            };
+
+            const timeoutId = setTimeout(() => {
+              track.removeEventListener('loadedmetadata', onReady);
+            }, 10000);
+
+            track.addEventListener('loadedmetadata', onReady, { once: true });
+          }
+
           trySetTrackTime(track, time) {
             if (!track || !Number.isFinite(time) || time < 0) return;
             try {
@@ -1609,7 +1629,7 @@
                 }
               }
               console.debug('[AUDIO] Seek failed, will retry on metadata load', error);
-              const applyWhenReady = () => {
+              this.onTrackMetadataReady(track, () => {
                 const normalizedTime = Number.isFinite(track.duration) && track.duration > 0
                   ? time % track.duration
                   : time;
@@ -1618,8 +1638,7 @@
                 } catch (metadataError) {
                   console.debug('[AUDIO] Failed to seek track after metadata loaded', metadataError);
                 }
-              };
-              track.addEventListener('loadedmetadata', applyWhenReady, { once: true });
+              });
             }
           }
 
@@ -1633,11 +1652,10 @@
             const nextTime = targetDuration ? sourceTime % targetDuration : sourceTime;
             this.trySetTrackTime(targetTrack, nextTime);
             if (!targetDuration) {
-              const normalizeWhenReady = () => {
+              this.onTrackMetadataReady(targetTrack, () => {
                 if (!(Number.isFinite(targetTrack.duration) && targetTrack.duration > 0)) return;
                 this.trySetTrackTime(targetTrack, sourceTime % targetTrack.duration);
-              };
-              targetTrack.addEventListener('loadedmetadata', normalizeWhenReady, { once: true });
+              });
             }
           }
         }
