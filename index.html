@@ -1425,6 +1425,7 @@
             this.isMuted = false;
             this.fadeRaf = null;
             this.activeFade = null;
+            this.metadataLoadTimeoutMs = 10000;
             this.userUnlockHandler = null;
             this.tracks = {};
             // cats and photos share the same track (photos), so no separate cats tab
@@ -1601,13 +1602,12 @@
 
             const onReady = () => {
               clearTimeout(timeoutId);
-              track.removeEventListener('loadedmetadata', onReady);
               callback();
             };
 
             const timeoutId = setTimeout(() => {
               track.removeEventListener('loadedmetadata', onReady);
-            }, 10000);
+            }, this.metadataLoadTimeoutMs);
 
             track.addEventListener('loadedmetadata', onReady, { once: true });
           }
@@ -1649,8 +1649,8 @@
             const targetDuration = Number.isFinite(targetTrack.duration) && targetTrack.duration > 0
               ? targetTrack.duration
               : null;
-            const nextTime = targetDuration ? sourceTime % targetDuration : sourceTime;
-            this.trySetTrackTime(targetTrack, nextTime);
+            const normalizedTime = targetDuration ? sourceTime % targetDuration : sourceTime;
+            this.trySetTrackTime(targetTrack, normalizedTime);
             if (!targetDuration) {
               this.onTrackMetadataReady(targetTrack, () => {
                 if (!(Number.isFinite(targetTrack.duration) && targetTrack.duration > 0)) return;
