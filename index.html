@@ -1412,7 +1412,7 @@
       BACKGROUND AUDIO ENGINE
       ====================================================================
       */
-      const AudioContextBridge = (() => {
+      const BackgroundAudioManager = (() => {
         let providerInstance = null;
 
         class BackgroundAudioProvider {
@@ -1422,7 +1422,7 @@
             this.currentTab = 'home';
             this.currentTrackKey = null;
             this.isMuted = false;
-            this.fadeTimer = null;
+            this.fadeRaf = null;
             this.userUnlockHandler = null;
             this.tracks = {};
             this.trackKeys = [];
@@ -1486,8 +1486,6 @@
           attachFirstInteractionUnlock() {
             if (this.userUnlockHandler) return;
             this.userUnlockHandler = async () => {
-              document.removeEventListener('click', this.userUnlockHandler, true);
-              document.removeEventListener('touchstart', this.userUnlockHandler, true);
               this.userUnlockHandler = null;
               try {
                 await this.tryAutoplay();
@@ -1528,9 +1526,9 @@
             const prevKey = this.currentTrackKey;
             const prevTrack = prevKey ? this.getTrack(...prevKey.split(':')) : null;
 
-            if (this.fadeTimer) {
-              clearInterval(this.fadeTimer);
-              this.fadeTimer = null;
+            if (this.fadeRaf) {
+              cancelAnimationFrame(this.fadeRaf);
+              this.fadeRaf = null;
             }
 
             if (this.isMuted) {
@@ -1562,8 +1560,7 @@
               prevTrack.volume = 1 - ratio;
               nextTrack.volume = ratio;
               if (ratio >= 1) {
-                clearInterval(this.fadeTimer);
-                this.fadeTimer = null;
+                this.fadeRaf = null;
                 this.trackKeys.forEach(key => {
                   const [t, s] = key.split(':');
                   const track = this.getTrack(t, s);
@@ -1571,7 +1568,9 @@
                   track.volume = key === nextKey ? 1 : 0;
                 });
                 this.currentTrackKey = nextKey;
+                return;
               }
+              this.fadeRaf = requestAnimationFrame(step);
             };
 
             this.trackKeys.forEach(key => {
@@ -1581,7 +1580,6 @@
               if (key !== prevKey && key !== nextKey) track.volume = 0;
             });
             step();
-            this.fadeTimer = setInterval(step, 16);
           }
 
           updateFromUiTheme(themeKey) {
@@ -1605,7 +1603,7 @@
 
         function useBackgroundAudio() {
           if (!providerInstance) {
-            throw new Error('Background audio provider has not been initialized.');
+            throw new Error('Background audio provider has not been initialized. Call createAudioProvider() first.');
           }
           return providerInstance;
         }
@@ -1613,7 +1611,7 @@
         return { createAudioProvider, useBackgroundAudio };
       })();
 
-      const audioProvider = AudioContextBridge.createAudioProvider();
+      const audioProvider = BackgroundAudioManager.createAudioProvider();
 
       /*
       ====================================================================
@@ -2133,7 +2131,7 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
         updateActiveLink();
         const hash = window.location.hash;
         const key = hash ? hash.substring(1) : 'intro';
-        const audio = AudioContextBridge.useBackgroundAudio();
+        const audio = BackgroundAudioManager.useBackgroundAudio();
         const targetTab = audio.resolveTab(key);
         audio.crossfadeTo(audio.currentTheme, targetTab);
         showSection(key);
@@ -2226,14 +2224,14 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
 
       if (audioToggleBtn) {
         const syncAudioButtonUi = () => {
-          const muted = AudioContextBridge.useBackgroundAudio().isMuted;
+          const muted = BackgroundAudioManager.useBackgroundAudio().isMuted;
           audioToggleBtn.textContent = muted ? '🔇' : '🔊';
           audioToggleBtn.setAttribute('aria-label', muted ? 'Unmute background audio' : 'Mute background audio');
           audioToggleBtn.setAttribute('title', muted ? 'Unmute background audio' : 'Mute background audio');
         };
         syncAudioButtonUi();
         audioToggleBtn.addEventListener('click', () => {
-          AudioContextBridge.useBackgroundAudio().toggleMuted();
+          BackgroundAudioManager.useBackgroundAudio().toggleMuted();
           syncAudioButtonUi();
         });
       }
