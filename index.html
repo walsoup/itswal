@@ -1596,7 +1596,7 @@
             if (!track || !Number.isFinite(time) || time < 0) return;
             try {
               track.currentTime = time;
-            } catch (_) {
+            } catch (error) {
               if (track.readyState >= 1) {
                 const normalizedTime = Number.isFinite(track.duration) && track.duration > 0
                   ? time % track.duration
@@ -1604,13 +1604,20 @@
                 try {
                   track.currentTime = normalizedTime;
                   return;
-                } catch (_) {}
+                } catch (readyError) {
+                  console.debug('[AUDIO] seek retry with ready metadata failed', readyError);
+                }
               }
+              console.debug('[AUDIO] seek failed, will retry on metadata load', error);
               const applyWhenReady = () => {
                 const normalizedTime = Number.isFinite(track.duration) && track.duration > 0
                   ? time % track.duration
                   : time;
-                try { track.currentTime = normalizedTime; } catch (_) {}
+                try {
+                  track.currentTime = normalizedTime;
+                } catch (metadataError) {
+                  console.debug('[AUDIO] seek on metadata load failed', metadataError);
+                }
               };
               track.addEventListener('loadedmetadata', applyWhenReady, { once: true });
             }
