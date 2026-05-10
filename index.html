@@ -1425,7 +1425,8 @@
       const themeHint = document.getElementById('theme-hint');
 
       let animationsEnabled = true;
-      let currentTheme = 'banana';
+      const DEFAULT_UI_THEME = 'banana';
+      let currentTheme = DEFAULT_UI_THEME;
       const audioToggleBtn = document.getElementById('audio-toggle-btn');
 
       /*
@@ -1764,7 +1765,7 @@
       // Theme keyboard triggers
       const THEME_CODES = {
         'night': 'dark',
-        'reset': 'banana'
+        'reset': DEFAULT_UI_THEME
       };
 
       function setTheme(themeKey, save = true, quiet = false) {
@@ -1837,7 +1838,7 @@
       if (savedTheme && THEMES[savedTheme]) {
         setTheme(savedTheme, false, true);
       } else {
-        setTheme('banana', false, true);
+        setTheme(DEFAULT_UI_THEME, false, true);
       }
 
       /*
