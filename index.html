@@ -1417,12 +1417,14 @@
 
         class BackgroundAudioProvider {
           constructor() {
-            this.fadeDurationMs = 500;
+            this.standardFadeDurationMs = 900;
+            this.spaceFadeDurationMs = 1800;
             this.currentTheme = 'expressive';
             this.currentTab = 'home';
             this.currentTrackKey = null;
             this.isMuted = false;
             this.fadeRaf = null;
+            this.activeFade = null;
             this.userUnlockHandler = null;
             this.tracks = {};
             // cats and photos share the same track (photos), so no separate cats tab
@@ -1518,13 +1520,20 @@
             if (!nextTrack) return;
 
             const prevTrack = prevKey ? this.getTrack(...prevKey.split(':')) : null;
+            const prevTheme = prevKey ? prevKey.split(':')[0] : null;
 
             if (this.fadeRaf) {
               cancelAnimationFrame(this.fadeRaf);
               this.fadeRaf = null;
+              if (this.activeFade?.from) {
+                this.activeFade.from.volume = 0;
+                this.activeFade.from.pause();
+              }
+              this.activeFade = null;
             }
 
             this.currentTrackKey = nextKey;
+            this.syncTimestamp(prevTrack, nextTrack);
 
             if (this.isMuted) {
               if (prevTrack) { prevTrack.volume = 0; prevTrack.pause(); }
@@ -1544,9 +1553,10 @@
             const prevStartVol = prevTrack.volume;
             nextTrack.volume = 0;
             nextTrack.play().catch(() => {});
+            this.activeFade = { from: prevTrack, to: nextTrack };
 
             const start = performance.now();
-            const duration = this.fadeDurationMs;
+            const duration = this.getFadeDurationMs(prevTheme, theme);
             const step = () => {
               const elapsed = performance.now() - start;
               const ratio = Math.min(1, elapsed / duration);
@@ -1554,6 +1564,7 @@
               nextTrack.volume = ratio;
               if (ratio >= 1) {
                 this.fadeRaf = null;
+                this.activeFade = null;
                 prevTrack.volume = 0;
                 prevTrack.pause();
                 nextTrack.volume = 1;
@@ -1572,6 +1583,36 @@
           updateFromUiSection(sectionKey) {
             const resolvedTab = this.resolveTab(sectionKey);
             this.crossfadeTo(this.currentTheme, resolvedTab);
+          }
+
+          getFadeDurationMs(prevTheme, nextTheme) {
+            if (prevTheme === 'space' || nextTheme === 'space') {
+              return this.spaceFadeDurationMs;
+            }
+            return this.standardFadeDurationMs;
+          }
+
+          trySetTrackTime(track, time) {
+            if (!track || !Number.isFinite(time) || time < 0) return;
+            try {
+              track.currentTime = time;
+            } catch (_) {
+              const applyWhenReady = () => {
+                try { track.currentTime = time; } catch (_) {}
+              };
+              track.addEventListener('loadedmetadata', applyWhenReady, { once: true });
+            }
+          }
+
+          syncTimestamp(sourceTrack, targetTrack) {
+            if (!sourceTrack || !targetTrack) return;
+            const sourceTime = sourceTrack.currentTime;
+            if (!Number.isFinite(sourceTime) || sourceTime < 0) return;
+            const targetDuration = Number.isFinite(targetTrack.duration) && targetTrack.duration > 0
+              ? targetTrack.duration
+              : null;
+            const nextTime = targetDuration ? sourceTime % targetDuration : sourceTime;
+            this.trySetTrackTime(targetTrack, nextTime);
           }
         }
 
