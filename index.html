@@ -1425,9 +1425,9 @@
             this.fadeRaf = null;
             this.userUnlockHandler = null;
             this.tracks = {};
-            this.trackKeys = [];
+            // cats and photos share the same track (photos), so no separate cats tab
             this.themeKeys = ['expressive', 'space', 'pink'];
-            this.tabKeys = ['home', 'bio', 'cats', 'photos'];
+            this.tabKeys = ['home', 'bio', 'photos'];
             this.themeMap = {
               default: 'expressive',
               dark: 'space',
@@ -1436,7 +1436,7 @@
             this.sectionMap = {
               intro: 'home',
               bio: 'bio',
-              cat: 'cats',
+              cat: 'photos',
               photos: 'photos'
             };
           }
@@ -1445,13 +1445,11 @@
             this.themeKeys.forEach(theme => {
               this.tracks[theme] = {};
               this.tabKeys.forEach(tab => {
-                const key = `${theme}:${tab}`;
                 const audio = new Audio(`audio/tracks/itswal_${theme}_${tab}.mp3`);
                 audio.preload = 'auto';
                 audio.loop = true;
                 audio.volume = 0;
                 this.tracks[theme][tab] = audio;
-                this.trackKeys.push(key);
               });
             });
 
@@ -1473,14 +1471,12 @@
           }
 
           async tryAutoplay() {
-            const players = [];
-            this.themeKeys.forEach(theme => {
-              this.tabKeys.forEach(tab => {
-                players.push(this.getTrack(theme, tab).play());
-              });
-            });
-            await Promise.all(players);
-            this.crossfadeTo(this.currentTheme, this.currentTab);
+            // Only play the active track — never run multiple streams simultaneously
+            const track = this.getTrack(this.currentTheme, this.currentTab);
+            if (!track) return;
+            track.volume = this.isMuted ? 0 : 1;
+            await track.play();
+            this.currentTrackKey = `${this.currentTheme}:${this.currentTab}`;
           }
 
           attachFirstInteractionUnlock() {
@@ -1500,15 +1496,8 @@
 
           setMuted(muted) {
             this.isMuted = muted;
-            if (this.isMuted) {
-              this.trackKeys.forEach(key => {
-                const [theme, tab] = key.split(':');
-                const track = this.getTrack(theme, tab);
-                if (track) track.volume = 0;
-              });
-            } else {
-              this.crossfadeTo(this.currentTheme, this.currentTab);
-            }
+            const current = this.currentTrackKey ? this.getTrack(...this.currentTrackKey.split(':')) : null;
+            if (current) current.volume = muted ? 0 : 1;
           }
 
           toggleMuted() {
@@ -1519,11 +1508,15 @@
           crossfadeTo(theme, tab) {
             this.currentTheme = theme;
             this.currentTab = tab;
+            const nextKey = `${theme}:${tab}`;
+            const prevKey = this.currentTrackKey;
+
+            // Same track — nothing to do
+            if (nextKey === prevKey) return;
+
             const nextTrack = this.getTrack(theme, tab);
             if (!nextTrack) return;
 
-            const nextKey = `${theme}:${tab}`;
-            const prevKey = this.currentTrackKey;
             const prevTrack = prevKey ? this.getTrack(...prevKey.split(':')) : null;
 
             if (this.fadeRaf) {
@@ -1531,54 +1524,43 @@
               this.fadeRaf = null;
             }
 
+            this.currentTrackKey = nextKey;
+
             if (this.isMuted) {
-              this.trackKeys.forEach(key => {
-                const [t, s] = key.split(':');
-                const track = this.getTrack(t, s);
-                if (track) track.volume = 0;
-              });
-              this.currentTrackKey = nextKey;
+              if (prevTrack) { prevTrack.volume = 0; prevTrack.pause(); }
+              nextTrack.volume = 0;
+              nextTrack.play().catch(() => {});
               return;
             }
 
-            if (!prevTrack || prevTrack === nextTrack) {
-              this.trackKeys.forEach(key => {
-                const [t, s] = key.split(':');
-                const track = this.getTrack(t, s);
-                if (!track) return;
-                track.volume = key === nextKey ? 1 : 0;
-              });
-              this.currentTrackKey = nextKey;
+            // No previous track — just start next at full volume
+            if (!prevTrack) {
+              nextTrack.volume = 1;
+              nextTrack.play().catch(() => {});
               return;
             }
+
+            // Crossfade: start next track alongside current, then pause current when done
+            const prevStartVol = prevTrack.volume;
+            nextTrack.volume = 0;
+            nextTrack.play().catch(() => {});
 
             const start = performance.now();
             const duration = this.fadeDurationMs;
             const step = () => {
               const elapsed = performance.now() - start;
               const ratio = Math.min(1, elapsed / duration);
-              prevTrack.volume = 1 - ratio;
+              prevTrack.volume = prevStartVol * (1 - ratio);
               nextTrack.volume = ratio;
               if (ratio >= 1) {
                 this.fadeRaf = null;
-                this.trackKeys.forEach(key => {
-                  const [t, s] = key.split(':');
-                  const track = this.getTrack(t, s);
-                  if (!track) return;
-                  track.volume = key === nextKey ? 1 : 0;
-                });
-                this.currentTrackKey = nextKey;
+                prevTrack.volume = 0;
+                prevTrack.pause();
+                nextTrack.volume = 1;
                 return;
               }
               this.fadeRaf = requestAnimationFrame(step);
             };
-
-            this.trackKeys.forEach(key => {
-              const [t, s] = key.split(':');
-              const track = this.getTrack(t, s);
-              if (!track) return;
-              if (key !== prevKey && key !== nextKey) track.volume = 0;
-            });
             step();
           }
 
