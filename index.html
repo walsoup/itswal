@@ -935,6 +935,32 @@
       color: #ef4444;
     }
 
+    .audio-toggle-btn {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      z-index: 1200;
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 9999px;
+      background: rgba(0, 0, 0, 0.35);
+      color: #fff;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    .audio-toggle-btn:hover {
+      transform: translateY(-1px);
+      opacity: 0.95;
+    }
+
     /* Fact Text Styling */
     .fun-fact-text {
       font-style: italic;
@@ -1257,6 +1283,7 @@
   </div>
 
   <canvas id="matrix-canvas"></canvas>
+  <button id="audio-toggle-btn" class="audio-toggle-btn" aria-label="Mute background audio" title="Mute background audio">🔊</button>
 
   <div class="relative min-h-screen flex items-center justify-center p-4 z-10">
     <div class="max-w-6xl w-full flex flex-col md:flex-row md:items-stretch md:space-x-8">
@@ -1378,6 +1405,215 @@
 
       let animationsEnabled = true;
       let currentTheme = 'default';
+      const audioToggleBtn = document.getElementById('audio-toggle-btn');
+
+      /*
+      ====================================================================
+      BACKGROUND AUDIO ENGINE
+      ====================================================================
+      */
+      const AudioContextBridge = (() => {
+        let providerInstance = null;
+
+        class BackgroundAudioProvider {
+          constructor() {
+            this.fadeDurationMs = 500;
+            this.currentTheme = 'expressive';
+            this.currentTab = 'home';
+            this.currentTrackKey = null;
+            this.isMuted = false;
+            this.fadeTimer = null;
+            this.userUnlockHandler = null;
+            this.tracks = {};
+            this.trackKeys = [];
+            this.themeKeys = ['expressive', 'space', 'pink'];
+            this.tabKeys = ['home', 'bio', 'cats', 'photos'];
+            this.themeMap = {
+              default: 'expressive',
+              dark: 'space',
+              banana: 'pink'
+            };
+            this.sectionMap = {
+              intro: 'home',
+              bio: 'bio',
+              cat: 'cats',
+              photos: 'photos'
+            };
+          }
+
+          init() {
+            this.themeKeys.forEach(theme => {
+              this.tracks[theme] = {};
+              this.tabKeys.forEach(tab => {
+                const key = `${theme}:${tab}`;
+                const audio = new Audio(`audio/tracks/itswal_${theme}_${tab}.mp3`);
+                audio.preload = 'auto';
+                audio.loop = true;
+                audio.volume = 0;
+                this.tracks[theme][tab] = audio;
+                this.trackKeys.push(key);
+              });
+            });
+
+            this.tryAutoplay().catch(() => {
+              this.attachFirstInteractionUnlock();
+            });
+          }
+
+          getTrack(theme, tab) {
+            return this.tracks?.[theme]?.[tab] || null;
+          }
+
+          resolveTheme(themeKey) {
+            return this.themeMap[themeKey] || 'expressive';
+          }
+
+          resolveTab(sectionKey) {
+            return this.sectionMap[sectionKey] || 'home';
+          }
+
+          async tryAutoplay() {
+            const players = [];
+            this.themeKeys.forEach(theme => {
+              this.tabKeys.forEach(tab => {
+                players.push(this.getTrack(theme, tab).play());
+              });
+            });
+            await Promise.all(players);
+            this.crossfadeTo(this.currentTheme, this.currentTab);
+          }
+
+          attachFirstInteractionUnlock() {
+            if (this.userUnlockHandler) return;
+            this.userUnlockHandler = async () => {
+              document.removeEventListener('click', this.userUnlockHandler, true);
+              document.removeEventListener('touchstart', this.userUnlockHandler, true);
+              this.userUnlockHandler = null;
+              try {
+                await this.tryAutoplay();
+              } catch (e) {
+                console.warn('[AUDIO] unlock failed', e);
+              }
+            };
+
+            document.addEventListener('click', this.userUnlockHandler, { once: true, capture: true, passive: true });
+            document.addEventListener('touchstart', this.userUnlockHandler, { once: true, capture: true, passive: true });
+          }
+
+          setMuted(muted) {
+            this.isMuted = muted;
+            if (this.isMuted) {
+              this.trackKeys.forEach(key => {
+                const [theme, tab] = key.split(':');
+                const track = this.getTrack(theme, tab);
+                if (track) track.volume = 0;
+              });
+            } else {
+              this.crossfadeTo(this.currentTheme, this.currentTab);
+            }
+          }
+
+          toggleMuted() {
+            this.setMuted(!this.isMuted);
+            return this.isMuted;
+          }
+
+          crossfadeTo(theme, tab) {
+            this.currentTheme = theme;
+            this.currentTab = tab;
+            const nextTrack = this.getTrack(theme, tab);
+            if (!nextTrack) return;
+
+            const nextKey = `${theme}:${tab}`;
+            const prevKey = this.currentTrackKey;
+            const prevTrack = prevKey ? this.getTrack(...prevKey.split(':')) : null;
+
+            if (this.fadeTimer) {
+              clearInterval(this.fadeTimer);
+              this.fadeTimer = null;
+            }
+
+            if (this.isMuted) {
+              this.trackKeys.forEach(key => {
+                const [t, s] = key.split(':');
+                const track = this.getTrack(t, s);
+                if (track) track.volume = 0;
+              });
+              this.currentTrackKey = nextKey;
+              return;
+            }
+
+            if (!prevTrack || prevTrack === nextTrack) {
+              this.trackKeys.forEach(key => {
+                const [t, s] = key.split(':');
+                const track = this.getTrack(t, s);
+                if (!track) return;
+                track.volume = key === nextKey ? 1 : 0;
+              });
+              this.currentTrackKey = nextKey;
+              return;
+            }
+
+            const start = performance.now();
+            const duration = this.fadeDurationMs;
+            const step = () => {
+              const elapsed = performance.now() - start;
+              const ratio = Math.min(1, elapsed / duration);
+              prevTrack.volume = 1 - ratio;
+              nextTrack.volume = ratio;
+              if (ratio >= 1) {
+                clearInterval(this.fadeTimer);
+                this.fadeTimer = null;
+                this.trackKeys.forEach(key => {
+                  const [t, s] = key.split(':');
+                  const track = this.getTrack(t, s);
+                  if (!track) return;
+                  track.volume = key === nextKey ? 1 : 0;
+                });
+                this.currentTrackKey = nextKey;
+              }
+            };
+
+            this.trackKeys.forEach(key => {
+              const [t, s] = key.split(':');
+              const track = this.getTrack(t, s);
+              if (!track) return;
+              if (key !== prevKey && key !== nextKey) track.volume = 0;
+            });
+            step();
+            this.fadeTimer = setInterval(step, 16);
+          }
+
+          updateFromUiTheme(themeKey) {
+            const resolvedTheme = this.resolveTheme(themeKey);
+            this.crossfadeTo(resolvedTheme, this.currentTab);
+          }
+
+          updateFromUiSection(sectionKey) {
+            const resolvedTab = this.resolveTab(sectionKey);
+            this.crossfadeTo(this.currentTheme, resolvedTab);
+          }
+        }
+
+        function createAudioProvider() {
+          if (!providerInstance) {
+            providerInstance = new BackgroundAudioProvider();
+            providerInstance.init();
+          }
+          return providerInstance;
+        }
+
+        function useBackgroundAudio() {
+          if (!providerInstance) {
+            throw new Error('Background audio provider has not been initialized.');
+          }
+          return providerInstance;
+        }
+
+        return { createAudioProvider, useBackgroundAudio };
+      })();
+
+      const audioProvider = AudioContextBridge.createAudioProvider();
 
       /*
       ====================================================================
@@ -1450,6 +1686,7 @@
         }
 
         currentTheme = themeKey;
+        audioProvider.updateFromUiTheme(themeKey);
 
         // No toast UI: keep theme switching silent unless you want to add a different indicator.
 
@@ -1896,6 +2133,9 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
         updateActiveLink();
         const hash = window.location.hash;
         const key = hash ? hash.substring(1) : 'intro';
+        const audio = AudioContextBridge.useBackgroundAudio();
+        const targetTab = audio.resolveTab(key);
+        audio.crossfadeTo(audio.currentTheme, targetTab);
         showSection(key);
 
         // If they return to Home after navigating elsewhere, point at the squiggle.
@@ -1982,6 +2222,20 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
       const catRefreshBtn = document.getElementById('cat-fact-refresh');
       if (catRefreshBtn) {
         catRefreshBtn.addEventListener('click', refreshCatFact);
+      }
+
+      if (audioToggleBtn) {
+        const syncAudioButtonUi = () => {
+          const muted = AudioContextBridge.useBackgroundAudio().isMuted;
+          audioToggleBtn.textContent = muted ? '🔇' : '🔊';
+          audioToggleBtn.setAttribute('aria-label', muted ? 'Unmute background audio' : 'Mute background audio');
+          audioToggleBtn.setAttribute('title', muted ? 'Unmute background audio' : 'Mute background audio');
+        };
+        syncAudioButtonUi();
+        audioToggleBtn.addEventListener('click', () => {
+          AudioContextBridge.useBackgroundAudio().toggleMuted();
+          syncAudioButtonUi();
+        });
       }
 
       console.log(`[SYSTEM] v${APP_VERSION} loaded.`);
