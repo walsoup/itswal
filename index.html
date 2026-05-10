@@ -64,6 +64,13 @@
 
       /* Font */
       --font-main: 'Inter', sans-serif;
+
+      /* Audio Toggle */
+      --audio-btn-bg: rgba(255, 255, 255, 0.55);
+      --audio-btn-border: rgba(255, 255, 255, 0.45);
+      --audio-btn-color: #374151;
+      --audio-btn-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+      --audio-btn-hover-bg: rgba(255, 255, 255, 0.75);
     }
 
     * {
@@ -93,6 +100,12 @@
       /* Zero light blobs */
       --blob-1-color: transparent;
       --blob-2-color: transparent;
+
+      --audio-btn-bg: rgba(255, 255, 255, 0.08);
+      --audio-btn-border: rgba(255, 255, 255, 0.18);
+      --audio-btn-color: #f8fafc;
+      --audio-btn-shadow: 0 12px 28px rgba(0, 0, 0, 0.55);
+      --audio-btn-hover-bg: rgba(255, 255, 255, 0.14);
     }
 
     /* -------------------------------------------
@@ -282,6 +295,12 @@
       --glass-border: transparent;
       --glass-shadow: 0 8px 32px rgba(134, 185, 16, 0.15);
       --glass-shine: transparent;
+
+      --audio-btn-bg: #C4EE5B;
+      --audio-btn-border: rgba(134, 185, 16, 0.4);
+      --audio-btn-color: #121F00;
+      --audio-btn-shadow: 0 10px 24px rgba(134, 185, 16, 0.22);
+      --audio-btn-hover-bg: #A7D142;
     }
 
     body.theme-banana .main-content-box {
@@ -942,23 +961,25 @@
       z-index: 1200;
       width: 42px;
       height: 42px;
-      border: 1px solid rgba(255, 255, 255, 0.35);
+      border: 1px solid var(--audio-btn-border);
       border-radius: 9999px;
-      background: rgba(0, 0, 0, 0.35);
-      color: #fff;
+      background: var(--audio-btn-bg);
+      color: var(--audio-btn-color);
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       font-size: 1rem;
+      box-shadow: var(--audio-btn-shadow);
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
-      transition: transform 0.15s ease, opacity 0.15s ease;
+      transition: transform 0.15s ease, opacity 0.15s ease, background 0.2s ease;
     }
 
     .audio-toggle-btn:hover {
       transform: translateY(-1px);
       opacity: 0.95;
+      background: var(--audio-btn-hover-bg);
     }
 
     /* Fact Text Styling */
@@ -1404,7 +1425,8 @@
       const themeHint = document.getElementById('theme-hint');
 
       let animationsEnabled = true;
-      let currentTheme = 'default';
+      const DEFAULT_UI_THEME = 'banana';
+      let currentTheme = DEFAULT_UI_THEME;
       const audioToggleBtn = document.getElementById('audio-toggle-btn');
 
       /*
@@ -1417,12 +1439,15 @@
 
         class BackgroundAudioProvider {
           constructor() {
-            this.fadeDurationMs = 500;
+            this.defaultFadeDurationMs = 900;
+            this.spaceThemeFadeDurationMs = 1800;
             this.currentTheme = 'expressive';
             this.currentTab = 'home';
             this.currentTrackKey = null;
             this.isMuted = false;
             this.fadeRaf = null;
+            this.activeFade = null;
+            this.metadataLoadTimeoutMs = 10000;
             this.userUnlockHandler = null;
             this.tracks = {};
             // cats and photos share the same track (photos), so no separate cats tab
@@ -1518,13 +1543,20 @@
             if (!nextTrack) return;
 
             const prevTrack = prevKey ? this.getTrack(...prevKey.split(':')) : null;
+            const prevTheme = prevKey ? prevKey.split(':')[0] : null;
 
             if (this.fadeRaf) {
               cancelAnimationFrame(this.fadeRaf);
               this.fadeRaf = null;
+              if (this.activeFade?.from) {
+                this.activeFade.from.volume = 0;
+                this.activeFade.from.pause();
+              }
+              this.activeFade = null;
             }
 
             this.currentTrackKey = nextKey;
+            this.syncTimestamp(prevTrack, nextTrack);
 
             if (this.isMuted) {
               if (prevTrack) { prevTrack.volume = 0; prevTrack.pause(); }
@@ -1544,9 +1576,10 @@
             const prevStartVol = prevTrack.volume;
             nextTrack.volume = 0;
             nextTrack.play().catch(() => {});
+            this.activeFade = { from: prevTrack, to: nextTrack };
 
             const start = performance.now();
-            const duration = this.fadeDurationMs;
+            const duration = this.getFadeDurationMs(prevTheme, theme);
             const step = () => {
               const elapsed = performance.now() - start;
               const ratio = Math.min(1, elapsed / duration);
@@ -1554,6 +1587,7 @@
               nextTrack.volume = ratio;
               if (ratio >= 1) {
                 this.fadeRaf = null;
+                this.activeFade = null;
                 prevTrack.volume = 0;
                 prevTrack.pause();
                 nextTrack.volume = 1;
@@ -1572,6 +1606,87 @@
           updateFromUiSection(sectionKey) {
             const resolvedTab = this.resolveTab(sectionKey);
             this.crossfadeTo(this.currentTheme, resolvedTab);
+          }
+
+          getFadeDurationMs(prevTheme, nextTheme) {
+            if (prevTheme === 'space' || nextTheme === 'space') {
+              return this.spaceThemeFadeDurationMs;
+            }
+            return this.defaultFadeDurationMs;
+          }
+
+          onTrackMetadataReady(track, callback) {
+            if (!track || typeof callback !== 'function') return;
+            if (track.readyState >= 1) {
+              callback();
+              return;
+            }
+
+            let settled = false;
+            const finish = () => {
+              if (settled) return;
+              settled = true;
+              clearTimeout(timeoutId);
+              track.removeEventListener('loadedmetadata', onReady);
+              callback();
+            };
+
+            const onReady = () => {
+              finish();
+            };
+
+            const timeoutId = setTimeout(() => {
+              finish();
+            }, this.metadataLoadTimeoutMs);
+
+            track.addEventListener('loadedmetadata', onReady, { once: true });
+          }
+
+          trySetTrackTime(track, time) {
+            if (!track || !Number.isFinite(time) || time < 0) return;
+            try {
+              track.currentTime = time;
+            } catch (error) {
+              if (track.readyState >= 1) {
+                const normalizedTime = Number.isFinite(track.duration) && track.duration > 0
+                  ? time % track.duration
+                  : time;
+                try {
+                  track.currentTime = normalizedTime;
+                  return;
+                } catch (readyError) {
+                  console.debug('[AUDIO] Failed to seek after retrying with loaded metadata', readyError);
+                }
+              }
+              console.debug('[AUDIO] Seek failed, will retry on metadata load', error);
+              this.onTrackMetadataReady(track, () => {
+                const normalizedTime = Number.isFinite(track.duration) && track.duration > 0
+                  ? time % track.duration
+                  : time;
+                try {
+                  track.currentTime = normalizedTime;
+                } catch (metadataError) {
+                  console.debug('[AUDIO] Failed to seek track after metadata loaded', metadataError);
+                }
+              });
+            }
+          }
+
+          syncTimestamp(sourceTrack, targetTrack) {
+            if (!sourceTrack || !targetTrack) return;
+            const sourceTime = sourceTrack.currentTime;
+            if (!Number.isFinite(sourceTime) || sourceTime < 0) return;
+            const targetDuration = Number.isFinite(targetTrack.duration) && targetTrack.duration > 0
+              ? targetTrack.duration
+              : null;
+            const normalizedTime = targetDuration ? sourceTime % targetDuration : sourceTime;
+            this.trySetTrackTime(targetTrack, normalizedTime);
+            if (!targetDuration) {
+              this.onTrackMetadataReady(targetTrack, () => {
+                if (!(Number.isFinite(targetTrack.duration) && targetTrack.duration > 0)) return;
+                this.trySetTrackTime(targetTrack, sourceTime % targetTrack.duration);
+              });
+            }
           }
         }
 
@@ -1642,7 +1757,7 @@
       const THEMES = {
         default: { name: 'Default', icon: '🌸', class: '' },
         dark: { name: 'Dark Mode', icon: '🌙', class: 'theme-dark' },
-        banana: { name: 'Banana', icon: '🍌', class: 'theme-banana' }
+        banana: { name: 'M3 Expressive', icon: '🍌', class: 'theme-banana' }
       };
 
       const THEME_ORDER = ['default', 'banana', 'dark'];
@@ -1650,7 +1765,7 @@
       // Theme keyboard triggers
       const THEME_CODES = {
         'night': 'dark',
-        'reset': 'default'
+        'reset': DEFAULT_UI_THEME
       };
 
       function setTheme(themeKey, save = true, quiet = false) {
@@ -1723,7 +1838,7 @@
       if (savedTheme && THEMES[savedTheme]) {
         setTheme(savedTheme, false, true);
       } else {
-        setTheme('default', false, true);
+        setTheme(DEFAULT_UI_THEME, false, true);
       }
 
       /*
