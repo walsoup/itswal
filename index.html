@@ -1621,13 +1621,21 @@
               return;
             }
 
-            const onReady = () => {
+            let settled = false;
+            const finish = () => {
+              if (settled) return;
+              settled = true;
               clearTimeout(timeoutId);
+              track.removeEventListener('loadedmetadata', onReady);
               callback();
             };
 
+            const onReady = () => {
+              finish();
+            };
+
             const timeoutId = setTimeout(() => {
-              track.removeEventListener('loadedmetadata', onReady);
+              finish();
             }, this.metadataLoadTimeoutMs);
 
             track.addEventListener('loadedmetadata', onReady, { once: true });
