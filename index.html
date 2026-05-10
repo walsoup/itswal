@@ -1417,8 +1417,8 @@
 
         class BackgroundAudioProvider {
           constructor() {
-            this.standardFadeDurationMs = 900;
-            this.spaceFadeDurationMs = 1800;
+            this.defaultFadeDurationMs = 900;
+            this.darkThemeFadeDurationMs = 1800;
             this.currentTheme = 'expressive';
             this.currentTab = 'home';
             this.currentTrackKey = null;
@@ -1587,9 +1587,9 @@
 
           getFadeDurationMs(prevTheme, nextTheme) {
             if (prevTheme === 'space' || nextTheme === 'space') {
-              return this.spaceFadeDurationMs;
+              return this.darkThemeFadeDurationMs;
             }
-            return this.standardFadeDurationMs;
+            return this.defaultFadeDurationMs;
           }
 
           trySetTrackTime(track, time) {
@@ -1605,7 +1605,7 @@
                   track.currentTime = normalizedTime;
                   return;
                 } catch (readyError) {
-                  console.debug('[AUDIO] seek retry with ready metadata failed', readyError);
+                  console.debug('[AUDIO] failed to seek after retrying with loaded metadata', readyError);
                 }
               }
               console.debug('[AUDIO] seek failed, will retry on metadata load', error);
@@ -1616,7 +1616,7 @@
                 try {
                   track.currentTime = normalizedTime;
                 } catch (metadataError) {
-                  console.debug('[AUDIO] seek on metadata load failed', metadataError);
+                  console.debug('[AUDIO] failed to seek track after metadata loaded', metadataError);
                 }
               };
               track.addEventListener('loadedmetadata', applyWhenReady, { once: true });
