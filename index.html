@@ -1561,7 +1561,7 @@
           // enough data to start playing (canplaythrough). Resolves immediately if
           // the element is already buffered (readyState >= HAVE_ENOUGH_DATA).
           _arm(el) {
-            if (el.readyState >= 4) return Promise.resolve(); // already ready
+            if (el.readyState >= HTMLMediaElement.HAVE_ENOUGH_DATA) return Promise.resolve(); // already ready
             el.preload = 'auto';
             if (el.networkState === HTMLMediaElement.NETWORK_EMPTY) {
               return Promise.reject(new Error('[Jukebox] Audio element has no src'));
@@ -1714,7 +1714,7 @@
               // Best-effort seek sync; ignore failures if metadata/seek state is not ready yet.
               try { to.currentTime = to.duration > 0 ? t % to.duration : t; } catch {}
             };
-            to.readyState >= 1
+            to.readyState >= HTMLMediaElement.HAVE_METADATA
               ? apply()
               : to.addEventListener('loadedmetadata', apply, { once: true });
           }
@@ -1729,7 +1729,7 @@
                 const trackUrl = url(this._theme, tab);
                 const el = this._getOrCreate(trackUrl);
                 // Do not downgrade preload state for currently active or incoming slot elements.
-                if (el === this._active.el || el === this._idle.el) continue;
+                if (el === this._active.el || el === this._idle.el || el === this._fadingTo?.el) continue;
                 el.preload = 'metadata'; // header only — not full stream
               }
             };
