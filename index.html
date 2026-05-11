@@ -1474,6 +1474,7 @@
             this._ready   = false;               // true once first play succeeds
 
             this._fadeRaf     = null;
+            this._fading      = false;           // true from _crossfade entry until fade fully settles
             this._fadingFrom  = null;
             this._fadingTo    = null;
             this._pending     = null;            // { theme, tab } queued during a fade
@@ -1510,6 +1511,7 @@
             if (this._fadeRaf) {
               cancelAnimationFrame(this._fadeRaf);
               this._fadeRaf = null;
+              this._fading  = false;
 
               if (this._fadingFrom) {
                 this._fadingFrom.el.volume = 0;
@@ -1558,11 +1560,11 @@
           }
 
           // _arm: upgrades an Audio element to preload=auto and waits until it has
-          // enough data to start playing (canplaythrough). Resolves immediately if
-          // the element is already buffered (readyState >= HAVE_ENOUGH_DATA).
+          // enough data to start playing (canplay). Resolves immediately if
+          // the element is already buffered (readyState >= HAVE_FUTURE_DATA).
           _arm(el) {
-            // Skip arming when the element is already buffered and playable.
-            if (el.readyState >= HTMLMediaElement.HAVE_ENOUGH_DATA) return Promise.resolve();
+            // Skip arming when the element is already sufficiently buffered.
+            if (el.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) return Promise.resolve();
             el.preload = 'auto';
             if (el.networkState === HTMLMediaElement.NETWORK_EMPTY) {
               return Promise.reject(new Error('[Jukebox] Audio element is not initialized'));
@@ -1570,9 +1572,9 @@
             el.load();
             return new Promise((resolve, reject) => {
               const onOk  = () => { el.removeEventListener('error', onErr); resolve(); };
-              const onErr = () => { el.removeEventListener('canplaythrough', onOk); reject(); };
-              el.addEventListener('canplaythrough', onOk, { once: true });
-              el.addEventListener('error',          onErr, { once: true });
+              const onErr = () => { el.removeEventListener('canplay', onOk); reject(); };
+              el.addEventListener('canplay', onOk, { once: true });
+              el.addEventListener('error',   onErr, { once: true });
             });
           }
 
@@ -1600,7 +1602,7 @@
 
             // If a crossfade is mid-flight, queue this as pending (latest wins).
             // The fade completion handler will pick it up.
-            if (this._fadeRaf !== null) {
+            if (this._fading) {
               this._pending = { theme: nextTheme, tab: nextTab };
               return;
             }
@@ -1611,6 +1613,8 @@
           // ── Internal: crossfade ──────────────────────────────────────────────────
 
           _crossfade(nextTheme, nextTab) {
+            this._fading = true;                 // block _request re-entry immediately (sync)
+
             const prevTheme = this._theme;
             const prevTab   = this._tab;
 
@@ -1635,23 +1639,25 @@
               fromSlot.el.volume = 0;
               fromSlot.el.pause();
               nextEl.preload = 'auto';
+              nextEl.load();                     // trigger fetch; setting preload alone is not enough
               nextEl.volume  = 0;
               nextEl.play().catch(() => {});
               this._swapSlots();
               this._scheduleAdjacentPrefetch();
+              this._fading = false;
               return;
             }
 
             // ── Audible path: arm incoming track, then rAF fade
-            // Begin loading immediately; start fade animation once we have data.
-            // If the element is already cached and buffered, _arm resolves instantly.
+            // Begin loading immediately; start fade animation only once the track is
+            // actually playing. If arm or play fails, abort cleanly without touching
+            // the outgoing track.
             nextEl.preload = 'auto';
             nextEl.volume  = 0;
 
             this._arm(nextEl)
               .then(() => nextEl.play())
-              .catch(() => {}) // autoplay block handled elsewhere
-              .finally(() => {
+              .then(() => {
                 const duration  = this._fadeDuration(prevTheme, nextTheme);
                 const fromVol   = fromSlot.el.volume;
                 const start     = performance.now();
@@ -1672,6 +1678,7 @@
                     nextEl.volume      = 1;
 
                     this._fadeRaf    = null;
+                    this._fading     = false;
                     this._fadingFrom = null;
                     this._fadingTo   = null;
 
@@ -1691,6 +1698,14 @@
                 };
 
                 this._fadeRaf = requestAnimationFrame(step);
+              })
+              .catch(() => {
+                // arm or play failed — abort cleanly, leave outgoing track untouched
+                this._fading = false;
+                this._theme  = prevTheme;
+                this._tab    = prevTab;
+                this._active = fromSlot;
+                this._idle   = toSlot;
               });
           }
 
