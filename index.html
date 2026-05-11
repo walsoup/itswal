@@ -1861,10 +1861,10 @@
             if (!from || !to || from === to) return;
             this._clearPendingSyncListener();
             const baseTime = Number.isFinite(targetTimeSec) ? targetTimeSec : from.currentTime;
-            const t = Math.max(0, baseTime + leadSeconds);
+            const syncTargetTime = Math.max(0, baseTime + leadSeconds);
             const apply = () => {
               // Best-effort seek sync; ignore failures if metadata/seek state is not ready yet.
-              try { to.currentTime = this._normalizePosition(t, to.duration); }
+              try { to.currentTime = this._normalizePosition(syncTargetTime, to.duration); }
               catch (error) { this._debugSyncWarning('Incoming-track seek failed during crossfade sync', error); }
             };
             if (to.readyState >= HTMLMediaElement.HAVE_METADATA) {
@@ -1890,7 +1890,7 @@
 
           _normalizePosition(timeSec, durationSec) {
             if (!Number.isFinite(timeSec)) return 0;
-            if (!Number.isFinite(durationSec) || durationSec <= 0) return Math.max(0, timeSec);
+            if (!Number.isFinite(durationSec) || durationSec <= 0) return 0;
             return Math.max(0, timeSec) % durationSec;
           }
 
