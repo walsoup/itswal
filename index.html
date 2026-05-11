@@ -1549,13 +1549,12 @@
             if (!this._cache.has(trackUrl)) {
               const el = new Audio();
               el.preload = 'none';
+              el.src     = trackUrl;
               el.loop    = true;
               el.volume  = 0;
               this._cache.set(trackUrl, el);
             }
-            const el = this._cache.get(trackUrl);
-            if (!el.src) el.src = trackUrl;
-            return el;
+            return this._cache.get(trackUrl);
           }
 
           // _arm: upgrades an Audio element to preload=auto and waits until it has
@@ -1564,8 +1563,7 @@
           _arm(el) {
             if (el.readyState >= 4) return Promise.resolve(); // already ready
             el.preload = 'auto';
-            if (!el.src || el.networkState === HTMLMediaElement.NETWORK_EMPTY) {
-              // src wasn't set yet (shouldn't happen but guard anyway)
+            if (el.networkState === HTMLMediaElement.NETWORK_EMPTY) {
               return Promise.reject(new Error('[Jukebox] Audio element has no src'));
             }
             el.load();
@@ -1729,6 +1727,7 @@
               for (const tab of tabs) {
                 const trackUrl = url(this._theme, tab);
                 const el = this._getOrCreate(trackUrl);
+                if (el === this._active.el || el === this._idle.el) continue;
                 el.preload = 'metadata'; // header only — not full stream
               }
             };
