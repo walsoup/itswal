@@ -1573,7 +1573,7 @@
             // Skip arming when the element is already sufficiently buffered.
             if (el.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) return Promise.resolve();
             if (!el.src) {
-              return Promise.reject(new Error('[Jukebox] Audio element is not initialized'));
+              return Promise.reject(new Error('[Jukebox] Audio element has no source URL set'));
             }
             el.preload = 'auto';
             el.load();
@@ -1688,13 +1688,11 @@
 
             this._arm(nextEl)
               .then(() => {
-                if (!this._fading || fadeNonce !== this._fadeNonce) {
-                  throw new Error('[Jukebox] Stale fade before play');
-                }
+                if (!this._fading || fadeNonce !== this._fadeNonce) return null;
                 return nextEl.play();
               })
-              .then(() => {
-                if (!this._fading || fadeNonce !== this._fadeNonce) return;
+              .then((playResult) => {
+                if (playResult === null || !this._fading || fadeNonce !== this._fadeNonce) return;
                 const duration  = this._fadeDuration(prevTheme, nextTheme);
                 const fromVol   = fromSlot.el.volume;
                 const start     = performance.now();
