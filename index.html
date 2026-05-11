@@ -1570,11 +1570,11 @@
           // enough data to start playing (canplay). Resolves immediately if
           // the element is already buffered (readyState >= HAVE_FUTURE_DATA).
           _arm(el) {
+            // Skip arming when the element is already sufficiently buffered.
+            if (el.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) return Promise.resolve();
             if (!el.src) {
               return Promise.reject(new Error('[Jukebox] Audio element has no source URL set'));
             }
-            // Skip arming when the element is already sufficiently buffered.
-            if (el.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) return Promise.resolve();
             el.preload = 'auto';
             el.load();
             return new Promise((resolve, reject) => {
@@ -1841,7 +1841,11 @@
               document.removeEventListener('touchstart', unlock, opts);
             };
             const unlock = () => {
-              if (didUnlock || this._ready) return;
+              if (didUnlock) return;
+              if (this._ready) {
+                detachListeners();
+                return;
+              }
               didUnlock = true;
               detachListeners();
               this._prime(this._theme, this._tab, this._active)
