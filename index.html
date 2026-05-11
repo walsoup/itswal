@@ -1636,7 +1636,6 @@
               fromSlot.el.volume = 0;
               fromSlot.el.pause();
               nextEl.preload = 'auto';
-              if (!nextEl.src) nextEl.src = trackUrl;
               nextEl.volume  = 0;
               nextEl.play().catch(() => {});
               this._swapSlots();
@@ -1648,7 +1647,6 @@
             // Begin loading immediately; start fade animation once we have data.
             // If the element is already cached and buffered, _arm resolves instantly.
             nextEl.preload = 'auto';
-            if (!nextEl.src) nextEl.src = trackUrl;
             nextEl.volume  = 0;
 
             this._arm(nextEl)
@@ -1724,7 +1722,7 @@
 
           // After a track settles, softly prefetch adjacent tracks (same theme,
           // other tabs) at metadata-only level so duration is available for syncTime
-            // but no full decode buffer is allocated yet.
+          // but no full decode buffer is allocated yet.
           _scheduleAdjacentPrefetch() {
             const doIt = () => {
               const tabs = TAB_KEYS.filter(t => t !== this._tab);
