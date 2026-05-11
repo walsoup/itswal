@@ -1561,10 +1561,11 @@
           // enough data to start playing (canplaythrough). Resolves immediately if
           // the element is already buffered (readyState >= HAVE_ENOUGH_DATA).
           _arm(el) {
-            if (el.readyState >= HTMLMediaElement.HAVE_ENOUGH_DATA) return Promise.resolve(); // Skip arming: element is already buffered and playable.
+            // Skip arming when the element is already buffered and playable.
+            if (el.readyState >= HTMLMediaElement.HAVE_ENOUGH_DATA) return Promise.resolve();
             el.preload = 'auto';
             if (el.networkState === HTMLMediaElement.NETWORK_EMPTY) {
-              return Promise.reject(new Error('[Jukebox] Audio element not initialized or failed to load'));
+              return Promise.reject(new Error('[Jukebox] Audio element is not initialized'));
             }
             el.load();
             return new Promise((resolve, reject) => {
