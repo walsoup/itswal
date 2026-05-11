@@ -1531,7 +1531,16 @@
             this._transition  = null;            // current fade context for abort/restore
             this._syncTarget  = null;            // element with pending loadedmetadata listener
             this._syncHandler = null;            // pending loadedmetadata listener fn
-            this._tabSessionId = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+            const randomSuffix = (() => {
+              try {
+                const bytes = new Uint32Array(2);
+                crypto.getRandomValues(bytes);
+                return `${bytes[0].toString(36)}${bytes[1].toString(36)}`;
+              } catch {
+                return Math.random().toString(36).slice(2);
+              }
+            })();
+            this._tabSessionId = `${Date.now().toString(36)}-${randomSuffix}`;
             this._syncChannel = null;
             this._syncTicker  = null;
             this._isApplyingRemote = false;
@@ -1852,10 +1861,10 @@
             if (!from || !to || from === to) return;
             this._clearPendingSyncListener();
             const baseTime = Number.isFinite(targetTimeSec) ? targetTimeSec : from.currentTime;
-            const t = Math.max(0, baseTime + Math.max(0, leadSeconds));
+            const t = Math.max(0, baseTime + leadSeconds);
             const apply = () => {
               // Best-effort seek sync; ignore failures if metadata/seek state is not ready yet.
-              try { to.currentTime = this._normalizePosition(t, to.duration); } catch {}
+              try { to.currentTime = this._normalizePosition(t, to.duration); } catch { /* Seek can fail transiently on media state changes. */ }
             };
             if (to.readyState >= HTMLMediaElement.HAVE_METADATA) {
               apply();
@@ -1892,7 +1901,7 @@
               if (!Number.isFinite(normalized)) return;
               // Skip tiny corrections to prevent audible jitter from frequent seeks.
               if (Math.abs((el.currentTime || 0) - normalized) < SYNC_DRIFT_SEC) return;
-              try { el.currentTime = normalized; } catch {}
+              try { el.currentTime = normalized; } catch { /* Seek can fail transiently on media state changes. */ }
             };
             if (el.readyState >= HTMLMediaElement.HAVE_METADATA) {
               apply();
@@ -1926,10 +1935,10 @@
             if (!payload) return;
             try {
               localStorage.setItem(SYNC_STORAGE_KEY, JSON.stringify(payload));
-            } catch {}
+            } catch { /* Ignore storage failures (quota/privacy mode) and keep local playback unaffected. */ }
             try {
               this._syncChannel?.postMessage(payload);
-            } catch {}
+            } catch { /* Ignore channel failures; storage listener fallback can still sync other tabs. */ }
           }
 
           _applyRemoteState(payload) {
