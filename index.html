@@ -1431,281 +1431,232 @@
 
       /*
       ====================================================================
-      BACKGROUND AUDIO ENGINE
+      BACKGROUND AUDIO MANAGER
       ====================================================================
       */
       const BackgroundAudioManager = (() => {
-        let providerInstance = null;
-
-        class BackgroundAudioProvider {
+      
+        // ---- Config ----
+      
+        const THEME_MAP    = { default: 'expressive', dark: 'space', banana: 'pink' };
+        const SECTION_MAP  = { intro: 'home', bio: 'bio', cat: 'photos', photos: 'photos' };
+        const THEME_KEYS   = ['expressive', 'space', 'pink'];
+        const TAB_KEYS     = ['home', 'bio', 'photos'];
+        const FADE_MS      = { default: 900, space: 1800 };
+      
+        // ---- AudioManager class ----
+      
+        class AudioManager {
           constructor() {
-            this.defaultFadeDurationMs = 900;
-            this.spaceThemeFadeDurationMs = 1800;
-            this.currentTheme = 'expressive';
-            this.currentTab = 'home';
-            this.currentTrackKey = null;
-            this.isMuted = false;
-            this.fadeRaf = null;
-            this.activeFade = null;
-            this.metadataLoadTimeoutMs = 10000;
-            this.userUnlockHandler = null;
-            this.tracks = {};
-            // cats and photos share the same track (photos), so no separate cats tab
-            this.themeKeys = ['expressive', 'space', 'pink'];
-            this.tabKeys = ['home', 'bio', 'photos'];
-            this.themeMap = {
-              default: 'expressive',
-              dark: 'space',
-              banana: 'pink'
-            };
-            this.sectionMap = {
-              intro: 'home',
-              bio: 'bio',
-              cat: 'photos',
-              photos: 'photos'
-            };
+            this.tracks      = {};       // tracks[theme][tab] = HTMLAudioElement
+            this.theme       = 'expressive';
+            this.tab         = 'home';
+            this.isMuted     = false;
+            this.fadeRaf     = null;
+            this.activeFade  = null;     // { from: Audio, to: Audio }
           }
-
+      
+          // ---- Init ----
+      
           init() {
-            this.themeKeys.forEach(theme => {
+            for (const theme of THEME_KEYS) {
               this.tracks[theme] = {};
-              this.tabKeys.forEach(tab => {
+              for (const tab of TAB_KEYS) {
                 const audio = new Audio(`audio/tracks/itswal_${theme}_${tab}.mp3`);
                 audio.preload = 'auto';
-                audio.loop = true;
-                audio.volume = 0;
+                audio.loop    = true;
+                audio.volume  = 0;
                 this.tracks[theme][tab] = audio;
-              });
-            });
-
-            this.tryAutoplay().catch(() => {
-              this.attachFirstInteractionUnlock();
-            });
-          }
-
-          getTrack(theme, tab) {
-            return this.tracks?.[theme]?.[tab] || null;
-          }
-
-          resolveTheme(themeKey) {
-            return this.themeMap[themeKey] || 'expressive';
-          }
-
-          resolveTab(sectionKey) {
-            return this.sectionMap[sectionKey] || 'home';
-          }
-
-          async tryAutoplay() {
-            // Only play the active track — never run multiple streams simultaneously
-            const track = this.getTrack(this.currentTheme, this.currentTab);
-            if (!track) return;
-            track.volume = this.isMuted ? 0 : 1;
-            await track.play();
-            this.currentTrackKey = `${this.currentTheme}:${this.currentTab}`;
-          }
-
-          attachFirstInteractionUnlock() {
-            if (this.userUnlockHandler) return;
-            this.userUnlockHandler = async () => {
-              this.userUnlockHandler = null;
-              try {
-                await this.tryAutoplay();
-              } catch (e) {
-                console.warn('[AUDIO] unlock failed', e);
               }
-            };
-
-            document.addEventListener('click', this.userUnlockHandler, { once: true, capture: true, passive: true });
-            document.addEventListener('touchstart', this.userUnlockHandler, { once: true, capture: true, passive: true });
+            }
+      
+            // Try autoplay; on failure wait for first user gesture.
+            // NOTE: browsers block audible autoplay without a prior user gesture.
+            // Starting muted and unlocking on first interaction is the only
+            // reliable cross-browser approach.
+            this._tryPlay().catch(() => this._waitForInteraction());
           }
-
+      
+          // ---- Public API ----
+      
+          onThemeChange(uiTheme) {
+            const next = THEME_MAP[uiTheme] ?? 'expressive';
+            this._crossfade(next, this.tab);
+          }
+      
+          onSectionChange(sectionKey) {
+            const next = SECTION_MAP[sectionKey] ?? 'home';
+            this._crossfade(this.theme, next);
+          }
+      
           setMuted(muted) {
             this.isMuted = muted;
-            const current = this.currentTrackKey ? this.getTrack(...this.currentTrackKey.split(':')) : null;
+      
+            if (this.activeFade) {
+              // Cancel the fade cleanly and settle on the target track
+              const { to } = this.activeFade;
+              this._cancelFade();
+              if (to) {
+                to.volume = muted ? 0 : 1;
+                to.play().catch(() => {});
+              }
+              return;
+            }
+      
+            const current = this._getTrack(this.theme, this.tab);
             if (current) current.volume = muted ? 0 : 1;
           }
-
+      
           toggleMuted() {
             this.setMuted(!this.isMuted);
             return this.isMuted;
           }
-
-          crossfadeTo(theme, tab) {
-            this.currentTheme = theme;
-            this.currentTab = tab;
-            const nextKey = `${theme}:${tab}`;
-            const prevKey = this.currentTrackKey;
-
-            // Same track — nothing to do
-            if (nextKey === prevKey) return;
-
-            const nextTrack = this.getTrack(theme, tab);
-            if (!nextTrack) return;
-
-            const prevTrack = prevKey ? this.getTrack(...prevKey.split(':')) : null;
-            const prevTheme = prevKey ? prevKey.split(':')[0] : null;
-
+      
+          // ---- Private ----
+      
+          _getTrack(theme, tab) {
+            return this.tracks?.[theme]?.[tab] ?? null;
+          }
+      
+          async _tryPlay() {
+            const track = this._getTrack(this.theme, this.tab);
+            if (!track) return;
+            track.volume = this.isMuted ? 0 : 1;
+            await track.play(); // throws if browser blocks it
+          }
+      
+          _waitForInteraction() {
+            const unlock = () => this._tryPlay().catch(() => {});
+            const opts   = { once: true, capture: true, passive: true };
+            document.addEventListener('click',      unlock, opts);
+            document.addEventListener('touchstart', unlock, opts);
+          }
+      
+          _cancelFade() {
             if (this.fadeRaf) {
               cancelAnimationFrame(this.fadeRaf);
               this.fadeRaf = null;
-              if (this.activeFade?.from) {
-                this.activeFade.from.volume = 0;
-                this.activeFade.from.pause();
-              }
+            }
+            if (this.activeFade) {
+              const { from, to } = this.activeFade;
+              // Silence and stop both sides so neither becomes a ghost track
+              if (from) { from.volume = 0; from.pause(); }
+              if (to)   { to.volume   = 0; to.pause();   }
               this.activeFade = null;
             }
-
-            this.currentTrackKey = nextKey;
-            this.syncTimestamp(prevTrack, nextTrack);
-
+          }
+      
+          _fadeDuration(fromTheme, toTheme) {
+            return (fromTheme === 'space' || toTheme === 'space')
+              ? FADE_MS.space
+              : FADE_MS.default;
+          }
+      
+          _syncTime(from, to) {
+            if (!from || !to) return;
+            const t = from.currentTime;
+      
+            const apply = () => {
+              try {
+                to.currentTime = to.duration > 0 ? t % to.duration : t;
+              } catch {
+                // if seek still fails just let it start from wherever
+              }
+            };
+      
+            if (to.readyState >= 1) {
+              apply();
+            } else {
+              to.addEventListener('loadedmetadata', apply, { once: true });
+            }
+          }
+      
+          _crossfade(nextTheme, nextTab) {
+            // No-op guard BEFORE mutating state
+            if (nextTheme === this.theme && nextTab === this.tab) return;
+      
+            const prevTheme = this.theme;
+            const prevTab   = this.tab;
+            const prevTrack = this._getTrack(prevTheme, prevTab);
+            const nextTrack = this._getTrack(nextTheme, nextTab);
+      
+            if (!nextTrack) return;
+      
+            // Cancel any in-progress fade. Both the old from/to get silenced.
+            // prevTrack might be the old "to" that was fading in, that's fine,
+            // we captured it above and will use it as the new from.
+            this._cancelFade();
+      
+            // Update state
+            this.theme = nextTheme;
+            this.tab   = nextTab;
+      
+            this._syncTime(prevTrack, nextTrack);
+      
+            // Muted: just swap silently
             if (this.isMuted) {
               if (prevTrack) { prevTrack.volume = 0; prevTrack.pause(); }
               nextTrack.volume = 0;
               nextTrack.play().catch(() => {});
               return;
             }
-
-            // No previous track — just start next at full volume
+      
+            // No previous track: start next at full volume immediately
             if (!prevTrack) {
               nextTrack.volume = 1;
               nextTrack.play().catch(() => {});
               return;
             }
-
-            // Crossfade: start next track alongside current, then pause current when done
-            const prevStartVol = prevTrack.volume;
+      
+            // Crossfade
+            const fromVol  = prevTrack.volume; // might be mid-fade from a cancelled fade
+            const duration = this._fadeDuration(prevTheme, nextTheme);
+            const start    = performance.now();
+      
             nextTrack.volume = 0;
             nextTrack.play().catch(() => {});
             this.activeFade = { from: prevTrack, to: nextTrack };
-
-            const start = performance.now();
-            const duration = this.getFadeDurationMs(prevTheme, theme);
+      
             const step = () => {
-              const elapsed = performance.now() - start;
-              const ratio = Math.min(1, elapsed / duration);
-              prevTrack.volume = prevStartVol * (1 - ratio);
+              const ratio = Math.min(1, (performance.now() - start) / duration);
+      
+              prevTrack.volume = fromVol * (1 - ratio);
               nextTrack.volume = ratio;
+      
               if (ratio >= 1) {
-                this.fadeRaf = null;
-                this.activeFade = null;
                 prevTrack.volume = 0;
                 prevTrack.pause();
                 nextTrack.volume = 1;
+                this.fadeRaf    = null;
+                this.activeFade = null;
                 return;
               }
+      
               this.fadeRaf = requestAnimationFrame(step);
             };
-            step();
-          }
-
-          updateFromUiTheme(themeKey) {
-            const resolvedTheme = this.resolveTheme(themeKey);
-            this.crossfadeTo(resolvedTheme, this.currentTab);
-          }
-
-          updateFromUiSection(sectionKey) {
-            const resolvedTab = this.resolveTab(sectionKey);
-            this.crossfadeTo(this.currentTheme, resolvedTab);
-          }
-
-          getFadeDurationMs(prevTheme, nextTheme) {
-            if (prevTheme === 'space' || nextTheme === 'space') {
-              return this.spaceThemeFadeDurationMs;
-            }
-            return this.defaultFadeDurationMs;
-          }
-
-          onTrackMetadataReady(track, callback) {
-            if (!track || typeof callback !== 'function') return;
-            if (track.readyState >= 1) {
-              callback();
-              return;
-            }
-
-            let settled = false;
-            const finish = () => {
-              if (settled) return;
-              settled = true;
-              clearTimeout(timeoutId);
-              track.removeEventListener('loadedmetadata', onReady);
-              callback();
-            };
-
-            const onReady = () => {
-              finish();
-            };
-
-            const timeoutId = setTimeout(() => {
-              finish();
-            }, this.metadataLoadTimeoutMs);
-
-            track.addEventListener('loadedmetadata', onReady, { once: true });
-          }
-
-          trySetTrackTime(track, time) {
-            if (!track || !Number.isFinite(time) || time < 0) return;
-            try {
-              track.currentTime = time;
-            } catch (error) {
-              if (track.readyState >= 1) {
-                const normalizedTime = Number.isFinite(track.duration) && track.duration > 0
-                  ? time % track.duration
-                  : time;
-                try {
-                  track.currentTime = normalizedTime;
-                  return;
-                } catch (readyError) {
-                  console.debug('[AUDIO] Failed to seek after retrying with loaded metadata', readyError);
-                }
-              }
-              console.debug('[AUDIO] Seek failed, will retry on metadata load', error);
-              this.onTrackMetadataReady(track, () => {
-                const normalizedTime = Number.isFinite(track.duration) && track.duration > 0
-                  ? time % track.duration
-                  : time;
-                try {
-                  track.currentTime = normalizedTime;
-                } catch (metadataError) {
-                  console.debug('[AUDIO] Failed to seek track after metadata loaded', metadataError);
-                }
-              });
-            }
-          }
-
-          syncTimestamp(sourceTrack, targetTrack) {
-            if (!sourceTrack || !targetTrack) return;
-            const sourceTime = sourceTrack.currentTime;
-            if (!Number.isFinite(sourceTime) || sourceTime < 0) return;
-            const targetDuration = Number.isFinite(targetTrack.duration) && targetTrack.duration > 0
-              ? targetTrack.duration
-              : null;
-            const normalizedTime = targetDuration ? sourceTime % targetDuration : sourceTime;
-            this.trySetTrackTime(targetTrack, normalizedTime);
-            if (!targetDuration) {
-              this.onTrackMetadataReady(targetTrack, () => {
-                if (!(Number.isFinite(targetTrack.duration) && targetTrack.duration > 0)) return;
-                this.trySetTrackTime(targetTrack, sourceTime % targetTrack.duration);
-              });
-            }
+      
+            this.fadeRaf = requestAnimationFrame(step);
           }
         }
-
-        function createAudioProvider() {
-          if (!providerInstance) {
-            providerInstance = new BackgroundAudioProvider();
-            providerInstance.init();
+      
+        // ---- Singleton ----
+      
+        let instance = null;
+      
+        return {
+          createAudioProvider() {
+            if (!instance) {
+              instance = new AudioManager();
+              instance.init();
+            }
+            return instance;
+          },
+          useBackgroundAudio() {
+            if (!instance) throw new Error('[Audio] Call createAudioProvider() first.');
+            return instance;
           }
-          return providerInstance;
-        }
-
-        function useBackgroundAudio() {
-          if (!providerInstance) {
-            throw new Error('Background audio provider has not been initialized. Call createAudioProvider() first.');
-          }
-          return providerInstance;
-        }
-
-        return { createAudioProvider, useBackgroundAudio };
+        };
+      
       })();
 
       const audioProvider = BackgroundAudioManager.createAudioProvider();
@@ -1781,7 +1732,7 @@
         }
 
         currentTheme = themeKey;
-        audioProvider.updateFromUiTheme(themeKey);
+        audioProvider.onThemeChange(themeKey);
 
         // No toast UI: keep theme switching silent unless you want to add a different indicator.
 
@@ -2228,9 +2179,7 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
         updateActiveLink();
         const hash = window.location.hash;
         const key = hash ? hash.substring(1) : 'intro';
-        const audio = BackgroundAudioManager.useBackgroundAudio();
-        const targetTab = audio.resolveTab(key);
-        audio.crossfadeTo(audio.currentTheme, targetTab);
+        BackgroundAudioManager.useBackgroundAudio().onSectionChange(key);
         showSection(key);
 
         // If they return to Home after navigating elsewhere, point at the squiggle.
