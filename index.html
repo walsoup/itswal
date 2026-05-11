@@ -1486,10 +1486,11 @@
         const SECTION_MAP = { intro: 'home', bio: 'bio', cat: 'photos', photos: 'photos' };
         const TAB_KEYS    = ['home', 'bio', 'photos'];
         const FADE_MS     = { default: 900, space: 1800 };
-        const SYNC_CHANNEL_NAME = 'wal-jukebox-sync-v1';
-        const SYNC_STORAGE_KEY  = 'wal-jukebox-sync-state-v1';
-        const SYNC_DRIFT_SEC    = 0.35;
-        const SYNC_TICK_MS      = 1500;
+        const syncChannelName = 'wal-jukebox-sync-v1';
+        const syncStorageKey  = 'wal-jukebox-sync-state-v1';
+        const syncDriftSec    = 0.35;
+        const syncTickMs      = 1500;
+        const maxSyncLagSec   = 10;
         const BASE        = 'audio/tracks/';
 
         const url = (theme, tab) => `${BASE}itswal_${theme}_${tab}.mp3`;
@@ -1895,7 +1896,7 @@
           }
 
           _debugSyncWarning(message, error) {
-            if (!window.location.hostname.includes('localhost')) return;
+            if (!(window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) return;
             console.warn(`[Jukebox sync] ${message}`, error);
           }
 
@@ -1906,7 +1907,7 @@
               const normalized = this._normalizePosition(targetTimeSec, el.duration);
               if (!Number.isFinite(normalized)) return;
               // Skip tiny corrections to prevent audible jitter from frequent seeks.
-              if (Math.abs((el.currentTime || 0) - normalized) < SYNC_DRIFT_SEC) return;
+              if (Math.abs((el.currentTime || 0) - normalized) < syncDriftSec) return;
               try { el.currentTime = normalized; }
               catch (error) { this._debugSyncWarning('Active-track seek failed during drift correction', error); }
             };
@@ -1941,7 +1942,7 @@
             const payload = this._getSyncStatePayload();
             if (!payload) return;
             try {
-              localStorage.setItem(SYNC_STORAGE_KEY, JSON.stringify(payload));
+              localStorage.setItem(syncStorageKey, JSON.stringify(payload));
             } catch (error) { this._debugSyncWarning('Failed to persist sync state to localStorage', error); }
             try {
               this._syncChannel?.postMessage(payload);
@@ -1954,7 +1955,7 @@
             const rawElapsedSec = Number.isFinite(emittedAt)
               ? (Date.now() - emittedAt) / 1000
               : 0;
-            const elapsedSec = Math.min(10, Math.max(0, rawElapsedSec));
+            const elapsedSec = Math.min(maxSyncLagSec, Math.max(0, rawElapsedSec));
             const remotePos = Number(payload.positionSec);
             const targetTimeSec = Number.isFinite(remotePos) ? remotePos + elapsedSec : null;
 
@@ -1979,7 +1980,7 @@
           _setupCrossTabSync() {
             if (typeof BroadcastChannel !== 'undefined') {
               try {
-                this._syncChannel = new BroadcastChannel(SYNC_CHANNEL_NAME);
+                this._syncChannel = new BroadcastChannel(syncChannelName);
                 this._syncChannel.addEventListener('message', (event) => this._applyRemoteState(event.data));
               } catch {
                 this._syncChannel = null;
@@ -1987,18 +1988,18 @@
             }
 
             window.addEventListener('storage', (event) => {
-              if (event.key !== SYNC_STORAGE_KEY || !event.newValue) return;
+              if (event.key !== syncStorageKey || !event.newValue) return;
               try {
                 this._applyRemoteState(JSON.parse(event.newValue));
               } catch {}
             });
 
             try {
-              const stored = localStorage.getItem(SYNC_STORAGE_KEY);
+              const stored = localStorage.getItem(syncStorageKey);
               if (stored) this._applyRemoteState(JSON.parse(stored));
             } catch {}
 
-            this._syncTicker = setInterval(() => this._publishSyncState(), SYNC_TICK_MS);
+            this._syncTicker = setInterval(() => this._publishSyncState(), syncTickMs);
           }
 
           // After a track settles, softly prefetch adjacent tracks (same theme,
