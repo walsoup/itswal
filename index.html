@@ -1553,7 +1553,9 @@
               el.volume  = 0;
               this._cache.set(trackUrl, el);
             }
-            return this._cache.get(trackUrl);
+            const el = this._cache.get(trackUrl);
+            if (!el.src) el.src = trackUrl;
+            return el;
           }
 
           // _arm: upgrades an Audio element to preload=auto and waits until it has
@@ -1580,7 +1582,6 @@
           async _prime(theme, tab, slot) {
             const trackUrl = url(theme, tab);
             const el = this._getOrCreate(trackUrl);
-            if (!el.src) el.src = trackUrl; // set src if not already set
 
             slot.el    = el;
             slot.theme = theme;
@@ -1623,7 +1624,6 @@
             // Wire the idle slot to the incoming Audio element
             const trackUrl  = url(nextTheme, nextTab);
             const nextEl    = this._getOrCreate(trackUrl);
-            if (!nextEl.src) nextEl.src = trackUrl;
             toSlot.el       = nextEl;
             toSlot.theme    = nextTheme;
             toSlot.tab      = nextTab;
@@ -1728,14 +1728,8 @@
               const tabs = TAB_KEYS.filter(t => t !== this._tab);
               for (const tab of tabs) {
                 const trackUrl = url(this._theme, tab);
-                if (!this._cache.has(trackUrl)) {
-                  const el    = new Audio();
-                  el.preload  = 'metadata'; // header only — not full stream
-                  el.src      = trackUrl;
-                  el.loop     = true;
-                  el.volume   = 0;
-                  this._cache.set(trackUrl, el);
-                }
+                const el = this._getOrCreate(trackUrl);
+                el.preload = 'metadata'; // header only — not full stream
               }
             };
 
