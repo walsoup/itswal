@@ -1531,7 +1531,7 @@
             this._transition  = null;            // current fade context for abort/restore
             this._syncTarget  = null;            // element with pending loadedmetadata listener
             this._syncHandler = null;            // pending loadedmetadata listener fn
-            this._syncId      = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+            this._tabSessionId = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
             this._syncChannel = null;
             this._syncTicker  = null;
             this._isApplyingRemote = false;
@@ -1855,7 +1855,7 @@
             const t = Math.max(0, baseTime + Math.max(0, leadSeconds));
             const apply = () => {
               // Best-effort seek sync; ignore failures if metadata/seek state is not ready yet.
-              try { to.currentTime = to.duration > 0 ? ((t % to.duration) + to.duration) % to.duration : t; } catch {}
+              try { to.currentTime = this._normalizePosition(t, to.duration); } catch {}
             };
             if (to.readyState >= HTMLMediaElement.HAVE_METADATA) {
               apply();
@@ -1878,13 +1878,19 @@
             this._syncHandler = null;
           }
 
+          _normalizePosition(timeSec, durationSec) {
+            if (!Number.isFinite(timeSec)) return 0;
+            if (!Number.isFinite(durationSec) || durationSec <= 0) return Math.max(0, timeSec);
+            return Math.max(0, timeSec) % durationSec;
+          }
+
           _syncActiveToTarget(targetTimeSec) {
             if (!Number.isFinite(targetTimeSec) || !this._active?.el) return;
             const el = this._active.el;
             const apply = () => {
-              const duration = el.duration;
-              const normalized = duration > 0 ? ((targetTimeSec % duration) + duration) % duration : targetTimeSec;
+              const normalized = this._normalizePosition(targetTimeSec, el.duration);
               if (!Number.isFinite(normalized)) return;
+              // Skip tiny corrections to prevent audible jitter from frequent seeks.
               if (Math.abs((el.currentTime || 0) - normalized) < SYNC_DRIFT_SEC) return;
               try { el.currentTime = normalized; } catch {}
             };
@@ -1905,7 +1911,7 @@
           _getSyncStatePayload() {
             if (!this._ready || !this._active?.el) return null;
             return {
-              source: this._syncId,
+              source: this._tabSessionId,
               emittedAt: Date.now(),
               theme: this._theme,
               tab: this._tab,
@@ -1927,7 +1933,7 @@
           }
 
           _applyRemoteState(payload) {
-            if (!payload || payload.source === this._syncId) return;
+            if (!payload || payload.source === this._tabSessionId) return;
             const emittedAt = Number(payload.emittedAt);
             const elapsedSec = Number.isFinite(emittedAt)
               ? Math.max(0, (Date.now() - emittedAt) / 1000)
