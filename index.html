@@ -1478,6 +1478,10 @@
             this._fadingFrom  = null;
             this._fadingTo    = null;
             this._pending     = null;            // { theme, tab } queued during a fade
+            this._fadeNonce   = 0;               // invalidates stale async fade chains
+            this._transition  = null;            // current fade context for abort/restore
+            this._syncTarget  = null;            // element with pending loadedmetadata listener
+            this._syncHandler = null;            // pending loadedmetadata listener fn
           }
 
           // ── Public API (identical surface to old AudioManager) ──────────────────
@@ -1507,30 +1511,33 @@
           setMuted(muted) {
             this._isMuted = muted;
 
-            // Abort any running fade cleanly before applying mute state
-            if (this._fadeRaf) {
-              cancelAnimationFrame(this._fadeRaf);
-              this._fadeRaf = null;
-              this._fading  = false;
+            // Abort any fade state (including pre-rAF loading window) before applying mute
+            if (this._fading) {
+              this._fadeNonce++;
+              this._clearPendingSyncListener();
+              if (this._fadeRaf) {
+                cancelAnimationFrame(this._fadeRaf);
+                this._fadeRaf = null;
+              }
 
-              if (this._fadingFrom) {
-                this._fadingFrom.el.volume = 0;
-                this._fadingFrom.el.pause();
-                this._fadingFrom = null;
+              // Restore pre-fade routing state so active/idle/theme/tab stay consistent
+              if (this._transition) {
+                this._theme  = this._transition.prevTheme;
+                this._tab    = this._transition.prevTab;
+                this._active = this._transition.fromSlot;
+                this._idle   = this._transition.toSlot;
               }
+
               if (this._fadingTo) {
-                // The incoming track becomes the new active
-                this._fadingTo.el.volume = muted ? 0 : 1;
-                if (muted) {
-                  this._fadingTo.el.pause();
-                } else {
-                  this._fadingTo.el.play().catch(() => {});
-                }
-                this._fadingTo = null;
-                this._swapSlots();
+                this._fadingTo.el.volume = 0;
+                this._fadingTo.el.pause();
               }
-              this._pending = null;
-              return;
+
+              this._fadingFrom = null;
+              this._fadingTo   = null;
+              this._transition = null;
+              this._fading     = false;
+              this._pending    = null;
             }
 
             // No fade in flight — just act on active slot
@@ -1565,10 +1572,10 @@
           _arm(el) {
             // Skip arming when the element is already sufficiently buffered.
             if (el.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) return Promise.resolve();
-            el.preload = 'auto';
             if (el.networkState === HTMLMediaElement.NETWORK_EMPTY) {
               return Promise.reject(new Error('[Jukebox] Audio element is not initialized'));
             }
+            el.preload = 'auto';
             el.load();
             return new Promise((resolve, reject) => {
               const onOk  = () => { el.removeEventListener('error', onErr); resolve(); };
@@ -1592,13 +1599,28 @@
 
             el.volume = this._isMuted ? 0 : 1;
             if (!this._isMuted) await el.play();
+            this._theme = theme;
+            this._tab   = tab;
             this._ready = true;
+
+            // Replay latest pre-ready request once first track is unlocked.
+            if (this._pending) {
+              const { theme: pendingTheme, tab: pendingTab } = this._pending;
+              this._pending = null;
+              if (pendingTheme !== this._theme || pendingTab !== this._tab) {
+                this._request(pendingTheme, pendingTab);
+              }
+            }
           }
 
           // ── Internal: change routing ─────────────────────────────────────────────
 
           _request(nextTheme, nextTab) {
             if (nextTheme === this._theme && nextTab === this._tab) return;
+            if (!this._ready) {
+              this._pending = { theme: nextTheme, tab: nextTab };
+              return;
+            }
 
             // If a crossfade is mid-flight, queue this as pending (latest wins).
             // The fade completion handler will pick it up.
@@ -1630,6 +1652,8 @@
             toSlot.el       = nextEl;
             toSlot.theme    = nextTheme;
             toSlot.tab      = nextTab;
+            const fadeNonce = ++this._fadeNonce;
+            this._transition = { prevTheme, prevTab, fromSlot, toSlot };
 
             // Sync playback position before starting
             this._syncTime(fromSlot.el, nextEl);
@@ -1643,8 +1667,15 @@
               nextEl.volume  = 0;
               nextEl.play().catch(() => {});
               this._swapSlots();
-              this._scheduleAdjacentPrefetch();
+              this._transition = null;
               this._fading = false;
+              if (this._pending) {
+                const { theme, tab } = this._pending;
+                this._pending = null;
+                this._crossfade(theme, tab);
+              } else {
+                this._scheduleAdjacentPrefetch();
+              }
               return;
             }
 
@@ -1656,8 +1687,14 @@
             nextEl.volume  = 0;
 
             this._arm(nextEl)
-              .then(() => nextEl.play())
               .then(() => {
+                if (!this._fading || fadeNonce !== this._fadeNonce) {
+                  throw new Error('[Jukebox] Stale fade before play');
+                }
+                return nextEl.play();
+              })
+              .then(() => {
+                if (!this._fading || fadeNonce !== this._fadeNonce) return;
                 const duration  = this._fadeDuration(prevTheme, nextTheme);
                 const fromVol   = fromSlot.el.volume;
                 const start     = performance.now();
@@ -1666,6 +1703,10 @@
                 this._fadingTo   = toSlot;
 
                 const step = () => {
+                  if (!this._fading || fadeNonce !== this._fadeNonce) {
+                    this._fadeRaf = null;
+                    return;
+                  }
                   const ratio = Math.min(1, (performance.now() - start) / duration);
 
                   fromSlot.el.volume = fromVol * (1 - ratio);
@@ -1681,15 +1722,17 @@
                     this._fading     = false;
                     this._fadingFrom = null;
                     this._fadingTo   = null;
+                    this._transition = null;
 
                     this._swapSlots();
-                    this._scheduleAdjacentPrefetch();
 
                     // Drain pending queue
                     if (this._pending) {
                       const { theme, tab } = this._pending;
                       this._pending = null;
                       this._crossfade(theme, tab);
+                    } else {
+                      this._scheduleAdjacentPrefetch();
                     }
                     return;
                   }
@@ -1700,7 +1743,16 @@
                 this._fadeRaf = requestAnimationFrame(step);
               })
               .catch(() => {
+                if (fadeNonce !== this._fadeNonce) return;
                 // arm or play failed — abort cleanly, leave outgoing track untouched
+                this._clearPendingSyncListener();
+                if (this._fadingTo) {
+                  this._fadingTo.el.volume = 0;
+                  this._fadingTo.el.pause();
+                }
+                this._fadingTo   = null;
+                this._fadingFrom = null;
+                this._transition = null;
                 this._fading = false;
                 this._theme  = prevTheme;
                 this._tab    = prevTab;
@@ -1729,6 +1781,7 @@
 
           _syncTime(from, to) {
             if (!from || !to || from === to) return;
+            this._clearPendingSyncListener();
             const t = from.currentTime;
             const apply = () => {
               // Best-effort seek sync; ignore failures if metadata/seek state is not ready yet.
@@ -1737,8 +1790,22 @@
             if (to.readyState >= HTMLMediaElement.HAVE_METADATA) {
               apply();
             } else {
-              to.addEventListener('loadedmetadata', apply, { once: true });
+              const onLoadedMetadata = () => {
+                this._clearPendingSyncListener();
+                apply();
+              };
+              this._syncTarget  = to;
+              this._syncHandler = onLoadedMetadata;
+              to.addEventListener('loadedmetadata', onLoadedMetadata);
             }
+          }
+
+          _clearPendingSyncListener() {
+            if (this._syncTarget && this._syncHandler) {
+              this._syncTarget.removeEventListener('loadedmetadata', this._syncHandler);
+            }
+            this._syncTarget  = null;
+            this._syncHandler = null;
           }
 
           // After a track settles, softly prefetch adjacent tracks (same theme,
@@ -1764,10 +1831,19 @@
           // Registers a one-shot interaction listener that retries playback.
           // Called when init() is blocked by autoplay policy.
           _waitForInteraction() {
+            let didUnlock = false;
+            const opts = { capture: true, passive: true };
             const unlock = () => {
-              this._prime(this._theme, this._tab, this._active).catch(() => {});
+              if (didUnlock || this._ready) return;
+              didUnlock = true;
+              document.removeEventListener('click', unlock, opts);
+              document.removeEventListener('touchstart', unlock, opts);
+              this._prime(this._theme, this._tab, this._active)
+                .catch(() => {
+                  didUnlock = false;
+                  this._waitForInteraction();
+                });
             };
-            const opts = { once: true, capture: true, passive: true };
             document.addEventListener('click',      unlock, opts);
             document.addEventListener('touchstart', unlock, opts);
           }
