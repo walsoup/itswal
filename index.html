@@ -1795,7 +1795,7 @@
               };
               this._syncTarget  = to;
               this._syncHandler = onLoadedMetadata;
-              to.addEventListener('loadedmetadata', onLoadedMetadata);
+              to.addEventListener('loadedmetadata', onLoadedMetadata, { once: true });
             }
           }
 
