@@ -1570,11 +1570,11 @@
           // enough data to start playing (canplay). Resolves immediately if
           // the element is already buffered (readyState >= HAVE_FUTURE_DATA).
           _arm(el) {
-            // Skip arming when the element is already sufficiently buffered.
-            if (el.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) return Promise.resolve();
             if (!el.src) {
               return Promise.reject(new Error('[Jukebox] Audio element has no source URL set'));
             }
+            // Skip arming when the element is already sufficiently buffered.
+            if (el.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) return Promise.resolve();
             el.preload = 'auto';
             el.load();
             return new Promise((resolve, reject) => {
@@ -1685,14 +1685,15 @@
             // the outgoing track.
             nextEl.preload = 'auto';
             nextEl.volume  = 0;
+            const ABORTED_FADE = Symbol('ABORTED_FADE');
 
             this._arm(nextEl)
               .then(() => {
-                if (!this._fading || fadeNonce !== this._fadeNonce) return null;
+                if (!this._fading || fadeNonce !== this._fadeNonce) return ABORTED_FADE;
                 return nextEl.play();
               })
               .then((playResult) => {
-                if (playResult === null || !this._fading || fadeNonce !== this._fadeNonce) return;
+                if (playResult === ABORTED_FADE || !this._fading || fadeNonce !== this._fadeNonce) return;
                 const duration  = this._fadeDuration(prevTheme, nextTheme);
                 const fromVol   = fromSlot.el.volume;
                 const start     = performance.now();
@@ -1831,19 +1832,25 @@
           _waitForInteraction() {
             let didUnlock = false;
             const opts = { capture: true, passive: true };
+            const attachListeners = () => {
+              document.addEventListener('click',      unlock, opts);
+              document.addEventListener('touchstart', unlock, opts);
+            };
+            const detachListeners = () => {
+              document.removeEventListener('click', unlock, opts);
+              document.removeEventListener('touchstart', unlock, opts);
+            };
             const unlock = () => {
               if (didUnlock || this._ready) return;
               didUnlock = true;
-              document.removeEventListener('click', unlock, opts);
-              document.removeEventListener('touchstart', unlock, opts);
+              detachListeners();
               this._prime(this._theme, this._tab, this._active)
                 .catch(() => {
                   didUnlock = false;
-                  this._waitForInteraction();
+                  attachListeners();
                 });
             };
-            document.addEventListener('click',      unlock, opts);
-            document.addEventListener('touchstart', unlock, opts);
+            attachListeners();
           }
         }
 
