@@ -1864,7 +1864,8 @@
             const t = Math.max(0, baseTime + leadSeconds);
             const apply = () => {
               // Best-effort seek sync; ignore failures if metadata/seek state is not ready yet.
-              try { to.currentTime = this._normalizePosition(t, to.duration); } catch { /* Seek can fail transiently on media state changes. */ }
+              try { to.currentTime = this._normalizePosition(t, to.duration); }
+              catch (error) { this._debugSyncWarning('Incoming-track seek failed during crossfade sync', error); }
             };
             if (to.readyState >= HTMLMediaElement.HAVE_METADATA) {
               apply();
@@ -1893,6 +1894,11 @@
             return Math.max(0, timeSec) % durationSec;
           }
 
+          _debugSyncWarning(message, error) {
+            if (!window.location.hostname.includes('localhost')) return;
+            console.warn(`[Jukebox sync] ${message}`, error);
+          }
+
           _syncActiveToTarget(targetTimeSec) {
             if (!Number.isFinite(targetTimeSec) || !this._active?.el) return;
             const el = this._active.el;
@@ -1901,7 +1907,8 @@
               if (!Number.isFinite(normalized)) return;
               // Skip tiny corrections to prevent audible jitter from frequent seeks.
               if (Math.abs((el.currentTime || 0) - normalized) < SYNC_DRIFT_SEC) return;
-              try { el.currentTime = normalized; } catch { /* Seek can fail transiently on media state changes. */ }
+              try { el.currentTime = normalized; }
+              catch (error) { this._debugSyncWarning('Active-track seek failed during drift correction', error); }
             };
             if (el.readyState >= HTMLMediaElement.HAVE_METADATA) {
               apply();
@@ -1935,10 +1942,10 @@
             if (!payload) return;
             try {
               localStorage.setItem(SYNC_STORAGE_KEY, JSON.stringify(payload));
-            } catch { /* Ignore storage failures (quota/privacy mode) and keep local playback unaffected. */ }
+            } catch (error) { this._debugSyncWarning('Failed to persist sync state to localStorage', error); }
             try {
               this._syncChannel?.postMessage(payload);
-            } catch { /* Ignore channel failures; storage listener fallback can still sync other tabs. */ }
+            } catch (error) { this._debugSyncWarning('Failed to broadcast sync state over BroadcastChannel', error); }
           }
 
           _applyRemoteState(payload) {
