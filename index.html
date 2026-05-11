@@ -1711,6 +1711,7 @@
             if (!from || !to || from === to) return;
             const t = from.currentTime;
             const apply = () => {
+              // Best-effort seek sync; ignore failures if metadata/seek state is not ready yet.
               try { to.currentTime = to.duration > 0 ? t % to.duration : t; } catch {}
             };
             to.readyState >= 1
@@ -1727,6 +1728,7 @@
               for (const tab of tabs) {
                 const trackUrl = url(this._theme, tab);
                 const el = this._getOrCreate(trackUrl);
+                // Do not downgrade preload state for currently active or incoming slot elements.
                 if (el === this._active.el || el === this._idle.el) continue;
                 el.preload = 'metadata'; // header only — not full stream
               }
