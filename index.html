@@ -1951,9 +1951,10 @@
           _applyRemoteState(payload) {
             if (!payload || payload.source === this._tabSessionId) return;
             const emittedAt = Number(payload.emittedAt);
-            const elapsedSec = Number.isFinite(emittedAt)
-              ? Math.max(0, (Date.now() - emittedAt) / 1000)
+            const rawElapsedSec = Number.isFinite(emittedAt)
+              ? (Date.now() - emittedAt) / 1000
               : 0;
+            const elapsedSec = Math.min(10, Math.max(0, rawElapsedSec));
             const remotePos = Number(payload.positionSec);
             const targetTimeSec = Number.isFinite(remotePos) ? remotePos + elapsedSec : null;
 
