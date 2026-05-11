@@ -1572,7 +1572,7 @@
           _arm(el) {
             // Skip arming when the element is already sufficiently buffered.
             if (el.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) return Promise.resolve();
-            if (el.networkState === HTMLMediaElement.NETWORK_EMPTY) {
+            if (!el.src) {
               return Promise.reject(new Error('[Jukebox] Audio element is not initialized'));
             }
             el.preload = 'auto';
