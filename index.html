@@ -6,11 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="description" content="Wal's soup" />
   <meta name="author" content="Wal" />
-  <meta name="keywords" content="Wal, Personal Site, Portfolio, Developer, Cats, Bears, Dogs" />
+  <meta name="keywords" content="Like... my shit" />
   <meta name="theme-color" content="#121212" />
 
   <meta property="og:title" content="itswal.me" />
-  <meta property="og:description" content="Wal's personal website" />
+  <meta property="og:description" content="My personal website" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://itswal.me" />
   <meta property="og:site_name" content="Wal" />
@@ -1419,25 +1419,25 @@
 
         <div id="bio-section" class="content-section">
           <h2 class="text-4xl md:text-5xl font-bold mb-4">About Me</h2>
-          <p class="text-lg mb-4">Just a person trying to make something</p>
-          <p class="text-lg mb-4">I like building things, and taking photos of cats.</p>
+          <p class="text-lg mb-4">every elegant solution eventually creates a new, much worse problem.</p>
+          <p class="text-lg mb-4">I like taking photos of cats (among other things), and building stuff to kill time</p>
           <img src="flower.jpg" alt="A beautiful flower" class="rounded-lg mt-6 shadow-md w-full max-w-lg mx-auto"
             onerror="this.onerror=null; this.src='https://placehold.co/600x400/FFDAB9/B22222?text=A+Cool+Flower';" />
         </div>
 
         <div id="cat-section" class="content-section">
           <h2 class="text-4xl md:text-5xl font-bold mb-4">Cats</h2>
-          <p class="text-lg mb-4">Some cat pics I took</p>
+          <p class="text-lg mb-4">some cat pics I took</p>
 
           <div class="mb-6 p-4 rounded-lg bg-white/5 border border-white/10">
-            <p id="cat-fact" class="fun-fact-text text-center italic text-gray-400">Loading cat fact...</p>
+            <p id="cat-fact" class="fun-fact-text text-center italic text-gray-400">1 cat fact coming your way...</p>
             <button id="cat-fact-refresh" class="refresh-btn mt-3 mx-auto block text-sm py-2 px-4">
-              Another Fact
+              another fact pls
             </button>
           </div>
 
           <div class="album-gallery" id="cat-album" data-album="cats">
-            <div class="album-status" id="cat-album-status">Loading cat album…</div>
+            <div class="album-status" id="cat-album-status">Cat delivery …</div>
           </div>
         </div>
 
@@ -1445,7 +1445,7 @@
           <h2 class="text-4xl md:text-5xl font-bold mb-4">Photos</h2>
           <p class="text-lg mb-4">Some cool photos (shot by me and my friends)</p>
           <div class="album-gallery" id="photos-album" data-album="photos">
-            <div class="album-status" id="photos-album-status">Waiting for album setup…</div>
+            <div class="album-status" id="photos-album-status">Shitty ass internet…</div>
           </div>
         </div>
       </main>
@@ -2115,7 +2115,7 @@
 
       /*
       ====================================================================
-      THEME SYSTEM
+      THEME SYSTEM (emojis aren't used anymore but eh)
       ====================================================================
       */
       const THEMES = {
@@ -2146,8 +2146,6 @@
 
         currentTheme = themeKey;
         audioProvider.onThemeChange(themeKey);
-
-        // No toast UI: keep theme switching silent unless you want to add a different indicator.
 
         console.log(`[THEME] Switched to: ${theme.name}`);
 
@@ -2214,7 +2212,7 @@
       const MAX_KEY_LENGTH = 10;
 
       document.addEventListener('keydown', (e) => {
-        // Ignore if typing in an input (good practice)
+        // Ignore if typing in an input (good practice allegedly)
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
         keySequence.push(e.key.toLowerCase());
@@ -2233,7 +2231,7 @@
           }
         }
 
-        // Matrix easter egg
+        // Matrix easter egg :3
         if (typed.endsWith('hack')) {
           toggleMatrixMode();
           keySequence = [];
@@ -2415,7 +2413,7 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
 
       /*
       ====================================================================
-      GOOGLE PHOTOS ALBUMS (via external API endpoint)
+      GOOGLE PHOTOS ALBUMS (via external API endpoint) yea this didn't work lol
       ====================================================================
       */
       /*
@@ -2423,12 +2421,9 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
       GOOGLE DRIVE INTEGRATION (Client-Side)
       ====================================================================
       */
-      // 1. Get an API Key from console.cloud.google.com
-      // 2. Enable "Google Drive API"
-      // 3. Paste it below:
       const GOOGLE_API_KEY = 'AIzaSyDebjiQprQpcLa64Dx5Eu8116_cD_62xX0';
 
-      // Folder IDs provided by you:
+    
       const DRIVE_FOLDERS = {
         cats: '1Mt8jmm2s-qgYHm_JtZk_0zGkMZcrWCDM',
         photos: '1W7LdvjdSli5ZCtpIaGJQZvsZhnGU1dg5'
@@ -2463,7 +2458,7 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
         // Query: IS in folder AND is an image AND not trashed
         const query = `'${folderId}' in parents and mimeType contains 'image/' and trashed = false`;
         const fields = 'files(id, name, thumbnailLink, mimeType)';
-        // Using strict search and specific fields for efficiency
+        // Using strict search and specific fields for efficiency google why did kill embed
         const url = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}&key=${GOOGLE_API_KEY}&fields=${encodeURIComponent(fields)}&pageSize=100`;
 
         const response = await fetch(url);
@@ -2512,7 +2507,7 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
             return;
           }
 
-          // Randomize order for that "alive" feel
+          // Randomize order cuz nobody wants a stale website
           items.sort(() => Math.random() - 0.5);
 
           const grid = document.createElement('div');
@@ -2522,7 +2517,6 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
             const card = document.createElement('div');
             card.className = 'album-item';
 
-            // High-res hack: substitute =s... with =s1200 for better quality than default thumbnail
             let src = item.thumbnailLink;
             if (src && src.includes('=s')) {
               src = src.replace(/=s\d+/, '=s1200');
@@ -2595,7 +2589,7 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
         Jukebox.useBackgroundAudio().onSectionChange(key);
         showSection(key);
 
-        // If they return to Home after navigating elsewhere, point at the squiggle.
+        // If they return to Home after navigating elsewhere, point at the squiggle.I SPENT AGES WITH THEMES
         if (key === 'intro') {
           const prevKey = sessionStorage.getItem('wal-prev-section');
           if (prevKey && prevKey !== 'intro') {
