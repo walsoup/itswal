@@ -2449,8 +2449,7 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
         const response = await fetch(url);
 
         if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`Album fetch error: ${response.status} ${response.statusText}${errorText ? ` - ${errorText}` : ''}`);
+          throw new Error(`Album fetch error: ${response.status} ${response.statusText}`);
         }
 
         const data = await response.json();
