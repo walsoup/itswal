@@ -2450,7 +2450,7 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
 
         if (!response.ok) {
           const errorText = await response.text();
-          throw new Error(`Drive API Error: ${response.status} ${response.statusText}${errorText ? ` - ${errorText}` : ''}`);
+          throw new Error(`Album fetch error: ${response.status} ${response.statusText}${errorText ? ` - ${errorText}` : ''}`);
         }
 
         const data = await response.json();
