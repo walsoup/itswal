@@ -2421,6 +2421,8 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
       GOOGLE DRIVE INTEGRATION (Client-Side)
       ====================================================================
       */
+      const DRIVE_PROXY_URL = 'https://script.google.com/macros/s/AKfycbxo6mFVyQpVPLBay658pROr6dHUuB8uV5Tps8ZEP5wc8YQeGH-m4SFn_F9-H0z1WFdU/exec';
+
       const albumState = {
         cats: { loaded: false },
         photos: { loaded: false }
@@ -2443,7 +2445,7 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
           console.warn('[CACHE] Error reading from localStorage', e);
         }
 
-        const url = `https://script.google.com/macros/s/AKfycbxo6mFVyQpVPLBay658pROr6dHUuB8uV5Tps8ZEP5wc8YQeGH-m4SFn_F9-H0z1WFdU/exec?album=${encodeURIComponent(albumKey)}`;
+        const url = `${DRIVE_PROXY_URL}?album=${encodeURIComponent(albumKey)}`;
         const response = await fetch(url);
 
         if (!response.ok) {
