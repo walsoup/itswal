@@ -2421,13 +2421,7 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
       GOOGLE DRIVE INTEGRATION (Client-Side)
       ====================================================================
       */
-      const GOOGLE_API_KEY = 'AIzaSyDebjiQprQpcLa64Dx5Eu8116_cD_62xX0';
-
-    
-      const DRIVE_FOLDERS = {
-        cats: '1Mt8jmm2s-qgYHm_JtZk_0zGkMZcrWCDM',
-        photos: '1W7LdvjdSli5ZCtpIaGJQZvsZhnGU1dg5'
-      };
+      const DRIVE_PROXY_URL = 'https://script.google.com/macros/s/AKfycbxo6mFVyQpVPLBay658pROr6dHUuB8uV5Tps8ZEP5wc8YQeGH-m4SFn_F9-H0z1WFdU/exec';
 
       const albumState = {
         cats: { loaded: false },
@@ -2436,18 +2430,14 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
 
       const CACHE_DURATION = 3600000; // 1 hour
 
-      async function fetchDriveFiles(folderId) {
-        if (!GOOGLE_API_KEY || GOOGLE_API_KEY.includes('PASTE_YOUR')) {
-          throw new Error('Please paste your valid Google API Key in index.html line ~1287');
-        }
-
-        const cacheKey = `wal-drive-cache-${folderId}`;
+      async function fetchDriveFiles(albumKey) {
+        const cacheKey = `wal-drive-cache-${albumKey}`;
         try {
           const cached = localStorage.getItem(cacheKey);
           if (cached) {
             const { timestamp, files } = JSON.parse(cached);
             if (Date.now() - timestamp < CACHE_DURATION) {
-              console.log(`[CACHE] Hit for ${folderId}`);
+              console.log(`[CACHE] Hit for ${albumKey}`);
               return files;
             }
           }
@@ -2455,20 +2445,18 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
           console.warn('[CACHE] Error reading from localStorage', e);
         }
 
-        // Query: IS in folder AND is an image AND not trashed
-        const query = `'${folderId}' in parents and mimeType contains 'image/' and trashed = false`;
-        const fields = 'files(id, name, thumbnailLink, mimeType)';
-        // Using strict search and specific fields for efficiency google why did kill embed
-        const url = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}&key=${GOOGLE_API_KEY}&fields=${encodeURIComponent(fields)}&pageSize=100`;
-
+        const url = `${DRIVE_PROXY_URL}?album=${encodeURIComponent(albumKey)}`;
         const response = await fetch(url);
 
         if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`Drive API Error: ${response.status} ${response.statusText}`);
+          throw new Error(`Proxy error: ${response.status} ${response.statusText}`);
         }
 
         const data = await response.json();
+        if (data?.error) {
+          throw new Error(data.error);
+        }
+
         const files = data.files || [];
 
         try {
@@ -2476,7 +2464,7 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
             timestamp: Date.now(),
             files: files
           }));
-          console.log(`[CACHE] Saved for ${folderId}`);
+          console.log(`[CACHE] Saved for ${albumKey}`);
         } catch (e) {
           console.warn('[CACHE] Error saving to localStorage', e);
         }
@@ -2497,10 +2485,7 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
         status.textContent = 'Loading album from Drive…';
 
         try {
-          const folderId = DRIVE_FOLDERS[albumKey];
-          if (!folderId) throw new Error('Unknown album folder');
-
-          const items = await fetchDriveFiles(folderId);
+          const items = await fetchDriveFiles(albumKey);
 
           if (!items.length) {
             status.textContent = 'No photos found in this Drive folder.';
