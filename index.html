@@ -2625,7 +2625,8 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
       MATRIX RAIN
       ====================================================================
       */
-      let matrixInterval;
+      let matrixAnimationId;
+      let matrixLastDrawTime = 0;
       let isMatrixActive = false;
 
       function toggleMatrixMode() {
@@ -2635,7 +2636,7 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
         if (isMatrixActive) {
           isMatrixActive = false;
           body.classList.remove('matrix-mode-active');
-          clearInterval(matrixInterval);
+          cancelAnimationFrame(matrixAnimationId);
           console.log('[MATRIX] Deactivated');
         } else {
           isMatrixActive = true;
@@ -2664,7 +2665,20 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
             }
           };
 
-          matrixInterval = setInterval(draw, 30);
+          const loop = (currentTime) => {
+            if (!isMatrixActive) return;
+
+            if (!matrixLastDrawTime) matrixLastDrawTime = currentTime;
+            const deltaTime = currentTime - matrixLastDrawTime;
+
+            if (deltaTime >= 30) {
+              draw();
+              matrixLastDrawTime = currentTime - (deltaTime % 30);
+            }
+            matrixAnimationId = requestAnimationFrame(loop);
+          };
+
+          matrixAnimationId = requestAnimationFrame(loop);
         }
       }
 
