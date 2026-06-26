@@ -2411,6 +2411,8 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
         cat: document.getElementById('cat-fact')
       };
 
+      const navLinks = document.querySelectorAll('.nav-link');
+
       /*
       ====================================================================
       GOOGLE PHOTOS ALBUMS (via external API endpoint) yea this didn't work lol
@@ -2546,9 +2548,8 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
 
       function updateActiveLink() {
         const hash = window.location.hash || '#intro';
-        const links = document.querySelectorAll('.nav-link');
 
-        links.forEach(link => {
+        navLinks.forEach(link => {
           if (link.getAttribute('href') === hash) {
             link.classList.add('active');
             link.setAttribute('aria-current', 'page');
