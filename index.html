@@ -2559,8 +2559,14 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
         });
       }
 
+      let activeSection = null;
+
       function hideAllSections() {
-        Object.values(sections).forEach(s => s.classList.remove('visible'));
+        if (activeSection) {
+          activeSection.classList.remove('visible');
+        } else {
+          Object.values(sections).forEach(s => s.classList.remove('visible'));
+        }
       }
 
       function showSection(key) {
@@ -2570,8 +2576,10 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
 
           if (sections[key]) {
             sections[key].classList.add('visible');
+            activeSection = sections[key];
           } else if (sections.intro) {
             sections.intro.classList.add('visible');
+            activeSection = sections.intro;
           }
 
           if (key === 'cat') {
