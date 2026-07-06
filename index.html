@@ -78,111 +78,91 @@
     }
 
     /* --------------------------------------------------------------------------
-      THEME: DARK MODE 🌙 (tried to make it look like Apple's liquid glass lmfao)
+      THEME: DARK MODE 🌙 (Apple Liquid Glass)
       Trigger: Type "night"
       --------------------------------------------------------------------------
       */
     body.theme-dark {
-      --color-bg-primary: #050508;
+      --color-bg-primary: #020205;
       --color-accent: #ffffff;
       --color-accent-hover: #e2e8f0;
-      --color-text-main: #f1f5f9;
+      --color-text-main: #f8fafc;
       --color-text-muted: #94a3b8;
       --color-text-heading: #ffffff;
       --color-nav-text: #94a3b8;
       --color-social: #ffffff;
 
-      --gradient-1: #03030b;
-      --gradient-2: #070a1a;
-      --gradient-3: #101735;
-      --gradient-4: #050710;
-
-      /* Zero light blobs */
-      --blob-1-color: transparent;
-      --blob-2-color: transparent;
-
-      --audio-btn-bg: rgba(255, 255, 255, 0.08);
-      --audio-btn-border: rgba(255, 255, 255, 0.18);
+      --audio-btn-bg: rgba(255, 255, 255, 0.05);
+      --audio-btn-border: rgba(255, 255, 255, 0.1);
       --audio-btn-color: #f8fafc;
-      --audio-btn-shadow: 0 12px 28px rgba(0, 0, 0, 0.55);
-      --audio-btn-hover-bg: rgba(255, 255, 255, 0.14);
+      --audio-btn-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      --audio-btn-hover-bg: rgba(255, 255, 255, 0.15);
+      
+      --mouse-x: 50vw;
+      --mouse-y: 50vh;
+      --blob-opacity: 0;
+      --glass-shine: rgba(255, 255, 255, 0.05);
     }
 
     body.theme-dark::before {
-      background:
-        radial-gradient(1200px 600px at 15% 10%, rgba(88, 127, 255, 0.2), transparent 65%),
-        radial-gradient(900px 500px at 85% 0%, rgba(156, 116, 255, 0.17), transparent 62%),
-        radial-gradient(1400px 900px at 50% 100%, rgba(37, 61, 128, 0.2), transparent 70%),
-        linear-gradient(160deg, #02030a 0%, #040814 35%, #070d21 65%, #040610 100%);
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background: #000000;
     }
 
     body.theme-dark::after {
       content: '';
       position: fixed;
       inset: 0;
-      pointer-events: none;
       z-index: -1;
-      opacity: 0.75;
-      background:
-        radial-gradient(circle at 8% 14%, rgba(255, 255, 255, 0.9) 0 1px, transparent 1.8px),
-        radial-gradient(circle at 26% 72%, rgba(255, 255, 255, 0.8) 0 1px, transparent 1.8px),
-        radial-gradient(circle at 41% 23%, rgba(255, 255, 255, 0.75) 0 1px, transparent 1.7px),
-        radial-gradient(circle at 67% 32%, rgba(255, 255, 255, 0.85) 0 1.1px, transparent 1.9px),
-        radial-gradient(circle at 84% 68%, rgba(255, 255, 255, 0.82) 0 1px, transparent 1.8px),
-        radial-gradient(circle at 92% 19%, rgba(255, 255, 255, 0.72) 0 1px, transparent 1.8px),
-        radial-gradient(circle at 57% 84%, rgba(255, 255, 255, 0.76) 0 1px, transparent 1.8px),
-        radial-gradient(circle at 16% 88%, rgba(255, 255, 255, 0.68) 0 0.9px, transparent 1.7px),
-        radial-gradient(circle at 74% 9%, rgba(255, 255, 255, 0.7) 0 0.9px, transparent 1.7px);
-      transform: scale(1.02);
-      transition: opacity 0.6s ease, transform 0.6s ease;
+      pointer-events: none;
+      /* Morphing liquid blob tied to cursor */
+      background: 
+        radial-gradient(circle 600px at var(--mouse-x) var(--mouse-y), rgba(90, 50, 255, 0.8), transparent 70%),
+        radial-gradient(circle 800px at calc(var(--mouse-x) - 200px) calc(var(--mouse-y) + 200px), rgba(20, 140, 255, 0.6), transparent 60%),
+        radial-gradient(circle 500px at calc(var(--mouse-x) + 300px) calc(var(--mouse-y) - 100px), rgba(255, 40, 120, 0.5), transparent 70%);
+      filter: blur(80px);
+      transition: background 0.15s ease-out; 
+      opacity: 0.9;
     }
 
-    body.animations-enabled.theme-dark::after {
-      animation: starDrift 70s linear infinite, starTwinkle 9s ease-in-out infinite alternate;
+    /* Ambient animated blobs */
+    body.animations-enabled.theme-dark::before {
+      background: 
+        radial-gradient(circle 800px at 20% 20%, rgba(60, 10, 150, 0.4), transparent 50%),
+        radial-gradient(circle 1000px at 80% 80%, rgba(10, 80, 120, 0.3), transparent 50%),
+        #000000;
+      animation: liquidPulse 15s ease-in-out infinite alternate;
     }
 
-    @keyframes starDrift {
-      0% { transform: translate3d(0, 0, 0) scale(1.02); }
-      100% { transform: translate3d(-14px, 10px, 0) scale(1.04); }
+    @keyframes liquidPulse {
+      0% { transform: scale(1); opacity: 0.8; }
+      100% { transform: scale(1.2); opacity: 1; }
     }
 
-    @keyframes starTwinkle {
-      0% { opacity: 0.55; }
-      50% { opacity: 0.78; }
-      100% { opacity: 0.65; }
-    }
-
-    /* -------------------------------------------
-       1. GLOBAL LIQUID PROPERTIES
-       ------------------------------------------- */
     body.theme-dark .main-content-box,
     body.theme-dark .nav-link,
     body.theme-dark .refresh-btn,
     body.theme-dark .album-item,
     body.theme-dark .bg-white\/5,
     body.theme-dark .album-status {
-      border: 1px solid rgba(193, 218, 255, 0.28) !important;
-      background: linear-gradient(145deg, rgba(139, 191, 255, 0.16) 0%, rgba(76, 111, 176, 0.1) 45%, rgba(60, 80, 125, 0.2) 100%) !important;
-      backdrop-filter: blur(18px) saturate(165%) !important;
-      -webkit-backdrop-filter: blur(18px) saturate(165%) !important;
+      /* Liquid Glass Morphism */
+      background: rgba(255, 255, 255, 0.03) !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      backdrop-filter: blur(40px) saturate(200%) brightness(1.1) !important;
+      -webkit-backdrop-filter: blur(40px) saturate(200%) brightness(1.1) !important;
+      box-shadow: 
+        0 10px 40px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.05) !important;
     }
 
-    /* -------------------------------------------
-       2. MAIN CONTENT BOX (Literally just a giant Nav Link)
-       ------------------------------------------- */
     body.theme-dark .main-content-box {
-      box-shadow:
-        0 26px 60px rgba(1, 4, 16, 0.78),
-        inset 0 1px 0 rgba(255, 255, 255, 0.44),
-        inset 0 -16px 32px rgba(13, 18, 36, 0.52),
-        inset 0 0 0 1px rgba(231, 241, 255, 0.32),
-        inset 0 0 26px -8px rgba(210, 232, 255, 0.35) !important;
       border-radius: 40px;
     }
 
-    /* -------------------------------------------
-       3. NAV LINKS (Clear Droplets)
-       ------------------------------------------- */
     body.theme-dark .side-nav {
       background: transparent;
       padding: 0;
@@ -201,70 +181,40 @@
       letter-spacing: 0.05em;
       color: var(--color-nav-text);
       z-index: 1;
-
-      box-shadow:
-        0 12px 30px rgba(3, 6, 20, 0.55),
-        inset 0 1px 0 rgba(239, 247, 255, 0.5),
-        inset 0 -10px 18px rgba(11, 17, 35, 0.5),
-        inset 0 0 0 1px rgba(225, 238, 255, 0.28),
-        inset 0 0 20px -8px rgba(214, 232, 255, 0.5) !important;
-
-      transition: all 0.4s cubic-bezier(0.2, 0, 0, 1);
+      transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
     }
 
     body.theme-dark .nav-link:hover,
     body.theme-dark .nav-link.active {
       color: #ffffff;
-      background: linear-gradient(145deg, rgba(157, 203, 255, 0.22) 0%, rgba(86, 122, 190, 0.12) 45%, rgba(68, 89, 137, 0.24) 100%) !important;
-
-      box-shadow:
-        0 14px 34px rgba(2, 5, 18, 0.62),
-        inset 0 1px 0 rgba(250, 252, 255, 0.62),
-        inset 0 -12px 22px rgba(13, 20, 40, 0.55),
-        inset 0 0 0 1px rgba(233, 244, 255, 0.4),
-        inset 0 0 26px -10px rgba(231, 243, 255, 0.58) !important;
-
-      transform: translateY(-2px) scale(1.05);
+      background: rgba(255, 255, 255, 0.1) !important;
+      border-color: rgba(255, 255, 255, 0.3) !important;
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 
+        0 15px 30px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
     }
 
-    /* -------------------------------------------
-       4. BUTTONS (Refractive Blobs)
-       ------------------------------------------- */
     body.theme-dark .refresh-btn {
       position: relative;
       overflow: hidden;
       color: #ffffff;
       border-radius: 999px;
-      box-shadow:
-        0 10px 26px rgba(3, 7, 22, 0.5),
-        inset 0 1px 0 rgba(244, 250, 255, 0.48),
-        inset 0 -10px 18px rgba(10, 16, 34, 0.52),
-        inset 0 0 0 1px rgba(223, 236, 255, 0.28),
-        inset 0 0 18px -8px rgba(220, 236, 255, 0.48) !important;
-      transition: all 0.4s ease;
+      transition: all 0.3s ease;
     }
 
     body.theme-dark .refresh-btn:hover {
-      background: linear-gradient(145deg, rgba(154, 201, 255, 0.24) 0%, rgba(84, 122, 192, 0.14) 45%, rgba(62, 86, 146, 0.28) 100%) !important;
+      background: rgba(255, 255, 255, 0.1) !important;
+      border-color: rgba(255, 255, 255, 0.4) !important;
       transform: translateY(-2px);
-      box-shadow:
-        0 14px 32px rgba(3, 8, 24, 0.56),
-        inset 0 1px 0 rgba(251, 253, 255, 0.6),
-        inset 0 -13px 24px rgba(12, 19, 40, 0.56),
-        inset 0 0 0 1px rgba(236, 245, 255, 0.4),
-        inset 0 0 24px -10px rgba(227, 241, 255, 0.56) !important;
+      box-shadow: 
+        0 15px 30px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
     }
 
-    /* -------------------------------------------
-       5. ALBUM IMAGES (Submerged Layer)
-       ------------------------------------------- */
     body.theme-dark .album-item {
       position: relative;
       border-radius: 24px;
-      box-shadow:
-        0 16px 34px rgba(3, 7, 23, 0.58),
-        inset 0 1px 0 rgba(244, 250, 255, 0.38),
-        inset 0 -14px 22px rgba(11, 17, 36, 0.52);
       overflow: hidden;
     }
 
@@ -275,10 +225,7 @@
       pointer-events: none;
       border-radius: inherit;
       z-index: 2;
-      box-shadow:
-        inset 0 0 0 1px rgba(255, 255, 255, 0.1),
-        inset 0 0 24px -6px rgba(255, 255, 255, 0.4),
-        inset 0 0 12px -2px rgba(0, 0, 0, 0.8);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
     }
 
     body.theme-dark .album-item img {
@@ -290,29 +237,21 @@
 
     body.theme-dark .album-item:hover img {
       opacity: 1;
-      transform: scale(1.08);
+      transform: scale(1.05);
     }
 
-    /* -------------------------------------------
-       6. UTILITIES & SUB-BOXES
-       ------------------------------------------- */
     body.theme-dark .bg-white\/5,
     body.theme-dark .album-status {
-      background: linear-gradient(145deg, rgba(126, 177, 245, 0.14) 0%, rgba(61, 90, 148, 0.1) 50%, rgba(47, 67, 112, 0.2) 100%) !important;
-      box-shadow:
-        inset 0 1px 0 rgba(239, 248, 255, 0.35),
-        inset 0 0 0 1px rgba(220, 236, 255, 0.24),
-        inset 0 -8px 16px rgba(10, 16, 36, 0.44) !important;
       border-radius: 20px;
     }
 
-    body.theme-dark #cat-fact { color: #cbd5e1; }
+    body.theme-dark #cat-fact { color: #f8fafc; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
 
-    body.theme-dark .social-icon { color: #94a3b8; }
+    body.theme-dark .social-icon { color: #94a3b8; transition: all 0.3s ease; }
     body.theme-dark .social-icon:hover {
       color: #ffffff;
       transform: scale(1.15);
-      filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.4));
+      filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.6));
     }
         /* --------------------------------------------------------------------------
       THEME: BANANA 🍌 (M3 Expressive cuz why not :3)
@@ -1301,47 +1240,7 @@
   <a href="#main-content" class="skip-link">Skip to main content</a>
   <!-- ... rest of body ... -->
 
-  <!-- ... somewhere in script ... -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      // ... existing init code ...
 
-      /*
-      ====================================================================
-      LIGHTBOX LOGIC
-      ====================================================================
-      */
-      const lightbox = document.getElementById('lightbox');
-      const lightboxImg = document.getElementById('lightbox-img');
-      const lightboxClose = document.querySelector('.lightbox-close');
-
-      function openLightbox(src) {
-        lightboxImg.src = src;
-        lightbox.classList.add('active');
-      }
-
-      function closeLightbox() {
-        lightbox.classList.remove('active');
-        setTimeout(() => lightboxImg.src = '', 300); // Clear after fade
-      }
-
-      lightbox.addEventListener('click', (e) => {
-        if (e.target !== lightboxImg) closeLightbox();
-      });
-
-      lightboxClose.addEventListener('click', closeLightbox);
-
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && lightbox.classList.contains('active')) {
-          closeLightbox();
-        }
-      });
-
-      // ... modify loadAlbum to add click listener ...
-    });
-  </script>
-
-  <a href="#main-content" class="skip-link">Skip to main content</a>
 
   <div class="absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
     <div class="blob blob-1"></div>
@@ -1364,7 +1263,7 @@
 
       <main id="main-content" class="w-full md:w-3/4 rounded-2xl p-8 md:p-12 main-content-box self-center">
 
-        <div id="intro-section" class="content-section visible">
+        <div id="intro" class="content-section visible">
           <div class="mb-4">
             <div class="wal-container" id="wal-toggle" role="button" tabindex="0" aria-label="Toggle animations">
               <h1 class="wal-title text-5xl md:text-7xl" id="wal-text"></h1>
@@ -1417,7 +1316,7 @@
           </div>
         </div>
 
-        <div id="bio-section" class="content-section">
+        <div id="bio" class="content-section">
           <h2 class="text-4xl md:text-5xl font-bold mb-4">About Me</h2>
           <p class="text-lg mb-4">every elegant solution eventually creates a new, much worse problem.</p>
           <p class="text-lg mb-4">I like taking photos of cats (among other things), and building stuff to kill time</p>
@@ -1425,7 +1324,7 @@
             onerror="this.onerror=null; this.src='https://placehold.co/600x400/FFDAB9/B22222?text=A+Cool+Flower';" />
         </div>
 
-        <div id="cat-section" class="content-section">
+        <div id="cat" class="content-section">
           <h2 class="text-4xl md:text-5xl font-bold mb-4">Cats</h2>
           <p class="text-lg mb-4">some cat pics I took</p>
 
@@ -1441,7 +1340,7 @@
           </div>
         </div>
 
-        <div id="photos-section" class="content-section">
+        <div id="photos" class="content-section">
           <h2 class="text-4xl md:text-5xl font-bold mb-4">Photos</h2>
           <p class="text-lg mb-4">Some cool photos (shot by me and my friends)</p>
           <div class="album-gallery" id="photos-album" data-album="photos">
@@ -1483,79 +1382,89 @@
 
         // ─── Config ────────────────────────────────────────────────────────────────
         const THEME_MAP   = { default: 'expressive', dark: 'space', banana: 'pink' };
-        const SECTION_MAP = { intro: 'home', bio: 'bio', cat: 'photos', photos: 'photos' };
-        const TAB_KEYS    = ['home', 'bio', 'photos'];
-        const FADE_MS     = { default: 900, space: 1800 };
-        const syncChannelName = 'wal-jukebox-sync-v1';
-        const syncStorageKey  = 'wal-jukebox-sync-state-v1';
-        const syncDriftSec    = 0.35;
-        const syncTickMs      = 1500;
-        const maxSyncLagSec   = 10;
+        const SECTION_MAP = { intro: 'home', bio: 'bio', cat: 'cats', photos: 'photos' };
+        const syncChannelName = 'wal-jukebox-sync-v2';
+        const syncStorageKey  = 'wal-jukebox-sync-state-v2';
         const BASE        = 'audio/tracks/';
 
-        const url = (theme, tab) => `${BASE}itswal_${theme}_${tab}.mp3`;
+        const url = (theme, tab) => {
+            const safeTab = (tab === 'cat' || tab === 'cats') ? 'cats' : tab;
+            return `${BASE}itswal_${theme}_${safeTab}.mp3`;
+        };
 
-        // ─── Slot factory ──────────────────────────────────────────────────────────
-        // A slot is a thin wrapper: { el: HTMLAudioElement, theme, tab }
-        // Two slots exist for the lifetime of the engine. Their .el references
-        // are swapped to point at cached Audio objects as tracks change.
-        function makeSlot() {
-          const el = new Audio();
-          el.preload = 'none';
-          el.loop    = true;
-          el.volume  = 0;
-          return { el, theme: null, tab: null };
+        // ─── Web Audio Slot ────────────────────────────────────────────────────────
+        class TrackSlot {
+          constructor(ctx) {
+            this.el = new Audio();
+            this.el.loop = true;
+            this.el.preload = 'none';
+            this.el.crossOrigin = 'anonymous'; 
+            
+            this.source = ctx.createMediaElementSource(this.el);
+            this.gain = ctx.createGain();
+            this.gain.gain.value = 0;
+            
+            this.source.connect(this.gain);
+            this.gain.connect(ctx.destination);
+            
+            this.theme = null;
+            this.tab = null;
+          }
         }
 
         // ─── Engine class ──────────────────────────────────────────────────────────
         class JukeboxEngine {
-
           constructor() {
-            this._slotA   = makeSlot();          // currently playing
-            this._slotB   = makeSlot();          // incoming / idle
-            this._active  = this._slotA;
-            this._idle    = this._slotB;
-
-            this._cache   = new Map();           // url → HTMLAudioElement
-
-            this._theme   = 'expressive';
-            this._tab     = 'home';
+            this.ctx = null;
+            this.slots = null;
+            this.activeIdx = 0;
+            
+            this._theme = 'expressive';
+            this._tab = 'home';
             this._isMuted = false;
-            this._ready   = false;               // true once first play succeeds
-
-            this._fadeRaf     = null;
-            this._fading      = false;           // true from _crossfade entry until fade fully settles
-            this._fadingFrom  = null;
-            this._fadingTo    = null;
-            this._pending     = null;            // { theme, tab } queued during a fade
-            this._fadeNonce   = 0;               // invalidates stale async fade chains
-            this._transition  = null;            // current fade context for abort/restore
-            this._syncTarget  = null;            // element with pending loadedmetadata listener
-            this._syncHandler = null;            // pending loadedmetadata listener fn
-            const randomSuffix = (() => {
-              try {
-                const bytes = new Uint32Array(2);
-                crypto.getRandomValues(bytes);
-                return `${bytes[0].toString(36)}${bytes[1].toString(36)}`;
-              } catch {
-                return Math.random().toString(36).slice(2);
-              }
-            })();
-            this._tabSessionId = `${Date.now().toString(36)}-${randomSuffix}`;
+            this._ready = false;
+            
+            this._fadePromise = null;
+            this._pending = null; 
+            
+            this._tabSessionId = Math.random().toString(36).slice(2);
             this._syncChannel = null;
-            this._syncTicker  = null;
             this._isApplyingRemote = false;
-            this._pendingRemoteState = null;
+            
             this._setupCrossTabSync();
           }
 
-          // ── Public API (identical surface to old AudioManager) ──────────────────
-
           get isMuted() { return this._isMuted; }
 
+          _initCtx() {
+            if (!this.ctx) {
+              const AudioContext = window.AudioContext || window.webkitAudioContext;
+              this.ctx = new AudioContext();
+              this.slots = [new TrackSlot(this.ctx), new TrackSlot(this.ctx)];
+            }
+            if (this.ctx.state === 'suspended') {
+              this.ctx.resume().catch(()=>{});
+            }
+          }
+
           init() {
-            this._prime(this._theme, this._tab, this._active)
-              .catch(() => this._waitForInteraction());
+            let didUnlock = false;
+            const unlock = () => {
+              if (didUnlock) return;
+              didUnlock = true;
+              this._initCtx();
+              document.removeEventListener('click', unlock, true);
+              document.removeEventListener('touchstart', unlock, true);
+              
+              if (!this._ready) {
+                this._ready = true;
+                const p = this._pending || { theme: this._theme, tab: this._tab, targetTimeSec: null };
+                this._pending = null;
+                this._request(p.theme, p.tab, p.targetTimeSec);
+              }
+            };
+            document.addEventListener('click', unlock, true);
+            document.addEventListener('touchstart', unlock, true);
           }
 
           onThemeChange(uiTheme) {
@@ -1575,481 +1484,204 @@
 
           setMuted(muted) {
             this._isMuted = muted;
-
-            // Abort any fade state (including pre-rAF loading window) before applying mute
-            if (this._fading) {
-              this._fadeNonce++;
-              this._clearPendingSyncListener();
-              if (this._fadeRaf) {
-                cancelAnimationFrame(this._fadeRaf);
-                this._fadeRaf = null;
-              }
-
-              // Restore pre-fade routing state so active/idle/theme/tab stay consistent
-              if (this._transition) {
-                this._theme  = this._transition.prevTheme;
-                this._tab    = this._transition.prevTab;
-                this._active = this._transition.fromSlot;
-                this._idle   = this._transition.toSlot;
-              }
-
-              if (this._fadingTo) {
-                this._fadingTo.el.volume = 0;
-                this._fadingTo.el.pause();
-              }
-
-              this._fadingFrom = null;
-              this._fadingTo   = null;
-              this._transition = null;
-              this._fading     = false;
-              this._pending    = null;
-            }
-
-            // No fade in flight — just act on active slot
-            if (muted) {
-              this._active.el.volume = 0;
-              this._active.el.pause();
-            } else {
-              this._active.el.volume = 1;
-              this._active.el.play().catch(() => {});
+            if (this.slots) {
+                const now = this.ctx.currentTime;
+                for (const slot of this.slots) {
+                    slot.gain.gain.cancelScheduledValues(now);
+                    if (muted) {
+                        slot.gain.gain.setValueAtTime(slot.gain.gain.value, now);
+                        slot.gain.gain.linearRampToValueAtTime(0, now + 0.05);
+                        setTimeout(() => slot.el.pause(), 50);
+                    }
+                }
+                if (!muted) {
+                    const activeSlot = this.slots[this.activeIdx];
+                    activeSlot.gain.gain.setValueAtTime(0, now);
+                    activeSlot.gain.gain.linearRampToValueAtTime(1, now + 0.05);
+                    activeSlot.el.play().catch(()=>{});
+                }
             }
             this._publishSyncState();
+            window.dispatchEvent(new CustomEvent('wal-jukebox-mute-change', { detail: { muted } }));
           }
 
-          // ── Internal: loading ────────────────────────────────────────────────────
-
-          // _getOrCreate: returns cached Audio for this URL, creating it lazily.
-          // Newly created elements default to preload=none until explicitly armed.
-          _getOrCreate(trackUrl) {
-            if (!this._cache.has(trackUrl)) {
-              const el = new Audio();
-              el.preload = 'none';
-              el.src     = trackUrl;
-              el.loop    = true;
-              el.volume  = 0;
-              this._cache.set(trackUrl, el);
-            }
-            return this._cache.get(trackUrl);
-          }
-
-          // _arm: upgrades an Audio element to preload=auto and waits until it has
-          // enough data to start playing (canplay). Resolves immediately if
-          // the element is already buffered (readyState >= HAVE_FUTURE_DATA).
           _arm(el) {
-            // Skip arming when the element is already sufficiently buffered.
-            if (el.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) return Promise.resolve();
-            if (!el.src) {
-              return Promise.reject(new Error('[Jukebox] Audio element has no source URL set'));
-            }
-            el.preload = 'auto';
-            el.load();
+            if (el.readyState >= 3) return Promise.resolve();
             return new Promise((resolve, reject) => {
-              const onOk  = () => { el.removeEventListener('error', onErr); resolve(); };
+              const onOk = () => { el.removeEventListener('error', onErr); resolve(); };
               const onErr = () => { el.removeEventListener('canplay', onOk); reject(); };
               el.addEventListener('canplay', onOk, { once: true });
-              el.addEventListener('error',   onErr, { once: true });
+              el.addEventListener('error', onErr, { once: true });
+              el.load();
             });
           }
 
-          // _prime: wire up a slot with the Audio for theme+tab, arm it, and play.
-          // Used for the very first track on init and in fallback re-play paths.
-          async _prime(theme, tab, slot) {
-            const trackUrl = url(theme, tab);
-            const el = this._getOrCreate(trackUrl);
-
-            slot.el    = el;
-            slot.theme = theme;
-            slot.tab   = tab;
-
-            await this._arm(el);
-
-            el.volume = this._isMuted ? 0 : 1;
-            if (!this._isMuted) await el.play();
-            this._theme = theme;
-            this._tab   = tab;
-            this._ready = true;
-            this._publishSyncState();
-
-            if (this._pendingRemoteState) {
-              const pendingRemote = this._pendingRemoteState;
-              this._pendingRemoteState = null;
-              this._applyRemoteState(pendingRemote);
-            }
-
-            // Replay latest pre-ready request once first track is unlocked.
-            if (this._pending) {
-              const { theme: pendingTheme, tab: pendingTab, targetTimeSec: pendingTargetTimeSec = null } = this._pending;
-              this._pending = null;
-              if (pendingTheme !== this._theme || pendingTab !== this._tab) {
-                this._request(pendingTheme, pendingTab, pendingTargetTimeSec);
-              }
-            }
-          }
-
-          // ── Internal: change routing ─────────────────────────────────────────────
-
           _request(nextTheme, nextTab, targetTimeSec = null) {
-            if (nextTheme === this._theme && nextTab === this._tab) {
-              if (Number.isFinite(targetTimeSec)) this._syncActiveToTarget(targetTimeSec);
-              return;
-            }
             if (!this._ready) {
-              this._pending = { theme: nextTheme, tab: nextTab, targetTimeSec };
-              return;
+                this._pending = { theme: nextTheme, tab: nextTab, targetTimeSec };
+                return;
             }
-
-            // If a crossfade is mid-flight, queue this as pending (latest wins).
-            // The fade completion handler will pick it up.
-            if (this._fading) {
-              this._pending = { theme: nextTheme, tab: nextTab, targetTimeSec };
-              return;
-            }
-
-            this._crossfade(nextTheme, nextTab, targetTimeSec);
-          }
-
-          // ── Internal: crossfade ──────────────────────────────────────────────────
-
-          _crossfade(nextTheme, nextTab, targetTimeSec = null) {
-            this._fading = true;                 // block _request re-entry immediately (sync)
-
-            const prevTheme = this._theme;
-            const prevTab   = this._tab;
-
-            this._theme = nextTheme;
-            this._tab   = nextTab;
-
-            const fromSlot = this._active;
-            const toSlot   = this._idle;
-            const duration = this._fadeDuration(prevTheme, nextTheme);
-            const fadeLeadSec = duration / 1000;
-
-            // Wire the idle slot to the incoming Audio element
-            const trackUrl  = url(nextTheme, nextTab);
-            const nextEl    = this._getOrCreate(trackUrl);
-            toSlot.el       = nextEl;
-            toSlot.theme    = nextTheme;
-            toSlot.tab      = nextTab;
-            const fadeNonce = ++this._fadeNonce;
-            this._transition = { prevTheme, prevTab, fromSlot, toSlot };
-
-            // Sync playback position before starting
-            this._syncTime(fromSlot.el, nextEl, targetTimeSec, fadeLeadSec);
-
-            // ── Muted path: no animation needed, just swap cleanly
-            if (this._isMuted) {
-              fromSlot.el.volume = 0;
-              fromSlot.el.pause();
-              nextEl.preload = 'auto';
-              nextEl.load();                     // trigger fetch; setting preload alone is not enough
-              nextEl.volume  = 0;
-              nextEl.play().catch(() => {});
-              this._swapSlots();
-              this._transition = null;
-              this._fading = false;
-              this._publishSyncState();
-              if (this._pending) {
-                const { theme, tab, targetTimeSec: pendingTargetTimeSec = null } = this._pending;
-                this._pending = null;
-                this._crossfade(theme, tab, pendingTargetTimeSec);
-              } else {
-                this._scheduleAdjacentPrefetch();
-              }
-              return;
-            }
-
-            // ── Audible path: arm incoming track, then rAF fade
-            // Begin loading immediately; start fade animation only once the track is
-            // actually playing. If arm or play fails, abort cleanly without touching
-            // the outgoing track.
-            nextEl.preload = 'auto';
-            nextEl.volume  = 0;
-            const ABORTED_FADE = Symbol('ABORTED_FADE');
-
-            this._arm(nextEl)
-              .then(() => {
-                if (!this._fading || fadeNonce !== this._fadeNonce) return ABORTED_FADE;
-                return nextEl.play();
-              })
-              .then((playResult) => {
-                if (playResult === ABORTED_FADE || !this._fading || fadeNonce !== this._fadeNonce) return;
-                const fromVol   = fromSlot.el.volume;
-                const start     = performance.now();
-
-                this._fadingFrom = fromSlot;
-                this._fadingTo   = toSlot;
-
-                const step = () => {
-                  if (!this._fading || fadeNonce !== this._fadeNonce) {
-                    this._fadeRaf = null;
-                    return;
-                  }
-                  const ratio = Math.min(1, (performance.now() - start) / duration);
-
-                  fromSlot.el.volume = fromVol * (1 - ratio);
-                  nextEl.volume      = ratio;
-
-                  if (ratio >= 1) {
-                    // Fade complete — clean up outgoing track
-                    fromSlot.el.volume = 0;
-                    fromSlot.el.pause();
-                    nextEl.volume      = 1;
-
-                    this._fadeRaf    = null;
-                    this._fading     = false;
-                    this._fadingFrom = null;
-                    this._fadingTo   = null;
-                    this._transition = null;
-
-                    this._swapSlots();
-                    this._publishSyncState();
-
-                    // Drain pending queue
-                    if (this._pending) {
-                      const { theme, tab, targetTimeSec: pendingTargetTimeSec = null } = this._pending;
-                      this._pending = null;
-                      this._crossfade(theme, tab, pendingTargetTimeSec);
-                    } else {
-                      this._scheduleAdjacentPrefetch();
+            
+            const activeSlot = this.slots ? this.slots[this.activeIdx] : null;
+            const isInitialized = activeSlot && activeSlot.theme !== null;
+            if (nextTheme === this._theme && nextTab === this._tab && isInitialized) {
+                if (targetTimeSec !== null && activeSlot) {
+                    if (Math.abs(activeSlot.el.currentTime - targetTimeSec) > 0.5) {
+                        activeSlot.el.currentTime = targetTimeSec;
                     }
-                    return;
-                  }
-
-                  this._fadeRaf = requestAnimationFrame(step);
-                };
-
-                this._fadeRaf = requestAnimationFrame(step);
-              })
-              .catch(() => {
-                if (fadeNonce !== this._fadeNonce) return;
-                // arm or play failed — abort cleanly, leave outgoing track untouched
-                this._clearPendingSyncListener();
-                if (this._fadingTo) {
-                  this._fadingTo.el.volume = 0;
-                  this._fadingTo.el.pause();
                 }
-                this._fadingTo   = null;
-                this._fadingFrom = null;
-                this._transition = null;
-                this._fading = false;
-                this._theme  = prevTheme;
-                this._tab    = prevTab;
-                this._active = fromSlot;
-                this._idle   = toSlot;
-                this._publishSyncState();
-              });
-          }
-
-          // ── Internal: utilities ──────────────────────────────────────────────────
-
-          _swapSlots() {
-            const tmp    = this._active;
-            this._active = this._idle;
-            this._idle   = tmp;
-          }
-
-          _isElementInUse(el) {
-            return el === this._active.el || el === this._idle.el || el === this._fadingTo?.el || el === this._fadingFrom?.el;
-          }
-
-          _fadeDuration(fromTheme, toTheme) {
-            return (fromTheme === 'space' || toTheme === 'space')
-              ? FADE_MS.space
-              : FADE_MS.default;
-          }
-
-          _syncTime(from, to, targetTimeSec = null, leadSeconds = 0) {
-            if (!from || !to || from === to) return;
-            this._clearPendingSyncListener();
-            const baseTime = Number.isFinite(targetTimeSec) ? targetTimeSec : from.currentTime;
-            const syncTargetTime = Math.max(0, baseTime + leadSeconds);
-            const apply = () => {
-              // Best-effort seek sync; ignore failures if metadata/seek state is not ready yet.
-              try { to.currentTime = this._normalizePosition(syncTargetTime, to.duration); }
-              catch (error) { this._debugSyncWarning('Incoming-track seek failed during crossfade sync', error); }
-            };
-            if (to.readyState >= HTMLMediaElement.HAVE_METADATA) {
-              apply();
-            } else {
-              const onLoadedMetadata = () => {
-                this._clearPendingSyncListener();
-                apply();
-              };
-              this._syncTarget  = to;
-              this._syncHandler = onLoadedMetadata;
-              to.addEventListener('loadedmetadata', onLoadedMetadata, { once: true });
+                return;
             }
-          }
-
-          _clearPendingSyncListener() {
-            if (this._syncTarget && this._syncHandler) {
-              this._syncTarget.removeEventListener('loadedmetadata', this._syncHandler);
+            
+            if (this._fadePromise) {
+                this._pending = { theme: nextTheme, tab: nextTab, targetTimeSec };
+                return;
             }
-            this._syncTarget  = null;
-            this._syncHandler = null;
+            
+            this._fadePromise = this._crossfade(nextTheme, nextTab, targetTimeSec)
+                .catch(e => console.error('[Jukebox]', e))
+                .finally(() => {
+                    this._fadePromise = null;
+                    if (this._pending) {
+                        const p = this._pending;
+                        this._pending = null;
+                        this._request(p.theme, p.tab, p.targetTimeSec);
+                    }
+                });
           }
 
-          _normalizePosition(timeSec, durationSec) {
-            if (!Number.isFinite(timeSec)) return 0;
-            if (!Number.isFinite(durationSec) || durationSec <= 0) return 0;
-            return Math.max(0, timeSec) % durationSec;
-          }
-
-          _debugSyncWarning(message, error) {
-            if (!(window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) return;
-            console.warn(`[Jukebox sync] ${message}`, error);
-          }
-
-          _syncActiveToTarget(targetTimeSec) {
-            if (!Number.isFinite(targetTimeSec) || !this._active?.el) return;
-            const el = this._active.el;
-            const apply = () => {
-              const normalized = this._normalizePosition(targetTimeSec, el.duration);
-              if (!Number.isFinite(normalized)) return;
-              // Skip tiny corrections to prevent audible jitter from frequent seeks.
-              if (Math.abs((el.currentTime || 0) - normalized) < syncDriftSec) return;
-              try { el.currentTime = normalized; }
-              catch (error) { this._debugSyncWarning('Active-track seek failed during drift correction', error); }
-            };
-            if (el.readyState >= HTMLMediaElement.HAVE_METADATA) {
-              apply();
-            } else {
-              const onLoadedMetadata = () => {
-                this._clearPendingSyncListener();
-                apply();
-              };
-              this._clearPendingSyncListener();
-              this._syncTarget  = el;
-              this._syncHandler = onLoadedMetadata;
-              el.addEventListener('loadedmetadata', onLoadedMetadata, { once: true });
-            }
-          }
-
-          _getSyncStatePayload() {
-            if (!this._ready || !this._active?.el) return null;
-            return {
-              source: this._tabSessionId,
-              emittedAt: Date.now(),
-              theme: this._theme,
-              tab: this._tab,
-              muted: this._isMuted,
-              positionSec: this._active.el.currentTime || 0
-            };
-          }
-
-          _publishSyncState() {
-            if (this._isApplyingRemote) return;
-            const payload = this._getSyncStatePayload();
-            if (!payload) return;
-            try {
-              localStorage.setItem(syncStorageKey, JSON.stringify(payload));
-            } catch (error) { this._debugSyncWarning('Failed to persist sync state to localStorage', error); }
-            try {
-              this._syncChannel?.postMessage(payload);
-            } catch (error) { this._debugSyncWarning('Failed to broadcast sync state over BroadcastChannel', error); }
-          }
-
-          _applyRemoteState(payload) {
-            if (!payload || payload.source === this._tabSessionId) return;
-            const emittedAt = Number(payload.emittedAt);
-            const rawElapsedSec = Number.isFinite(emittedAt)
-              ? (Date.now() - emittedAt) / 1000
-              : 0;
-            const elapsedSec = Math.min(maxSyncLagSec, Math.max(0, rawElapsedSec));
-            const remotePos = Number(payload.positionSec);
-            const targetTimeSec = Number.isFinite(remotePos) ? remotePos + elapsedSec : null;
-
-            if (!this._ready) {
-              this._pendingRemoteState = payload;
-              return;
-            }
-
-            this._isApplyingRemote = true;
-            try {
-              if (typeof payload.muted === 'boolean' && payload.muted !== this._isMuted) {
-                this.setMuted(payload.muted);
+          async _crossfade(nextTheme, nextTab, targetTimeSec) {
+              const activeSlot = this.slots[this.activeIdx];
+              const idleIdx = 1 - this.activeIdx;
+              const idleSlot = this.slots[idleIdx];
+              
+              const trackUrl = url(nextTheme, nextTab);
+              if (idleSlot.el.getAttribute('src') !== trackUrl) {
+                  idleSlot.el.src = trackUrl;
+                  idleSlot.el.preload = 'auto';
               }
-              const nextTheme = payload.theme || this._theme;
-              const nextTab = payload.tab || this._tab;
-              this._request(nextTheme, nextTab, targetTimeSec);
-            } finally {
-              this._isApplyingRemote = false;
-            }
+              
+              const armStart = performance.now();
+              await this._arm(idleSlot.el);
+              const armDurationSec = (performance.now() - armStart) / 1000;
+              
+              let syncTime;
+              if (targetTimeSec !== null) {
+                  syncTime = targetTimeSec + armDurationSec;
+              } else {
+                  syncTime = activeSlot.el.currentTime || 0;
+              }
+              
+              if (idleSlot.el.duration && syncTime > idleSlot.el.duration) {
+                  syncTime = syncTime % idleSlot.el.duration;
+              }
+              idleSlot.el.currentTime = syncTime;
+              
+              if (this.ctx.state === 'suspended') {
+                  await this.ctx.resume().catch(()=>{});
+              }
+              
+              if (this._isMuted) {
+                  this._theme = nextTheme;
+                  this._tab = nextTab;
+                  idleSlot.theme = nextTheme;
+                  idleSlot.tab = nextTab;
+                  this.activeIdx = idleIdx;
+                  
+                  activeSlot.el.pause();
+                  activeSlot.gain.gain.value = 0;
+                  idleSlot.gain.gain.value = 0;
+                  this._publishSyncState();
+                  return;
+              }
+              
+              try {
+                  await idleSlot.el.play();
+              } catch (e) {
+                  console.warn('[Jukebox] Play blocked', e);
+                  return;
+              }
+              
+              this._theme = nextTheme;
+              this._tab = nextTab;
+              idleSlot.theme = nextTheme;
+              idleSlot.tab = nextTab;
+              this.activeIdx = idleIdx;
+              
+              const fadeDuration = (nextTheme === 'space' || activeSlot.theme === 'space') ? 1.8 : 0.9;
+              const now = this.ctx.currentTime;
+              
+              idleSlot.gain.gain.cancelScheduledValues(now);
+              idleSlot.gain.gain.setValueAtTime(0, now);
+              idleSlot.gain.gain.linearRampToValueAtTime(1, now + fadeDuration);
+              
+              activeSlot.gain.gain.cancelScheduledValues(now);
+              activeSlot.gain.gain.setValueAtTime(1, now);
+              activeSlot.gain.gain.linearRampToValueAtTime(0, now + fadeDuration);
+              
+              await new Promise(resolve => setTimeout(resolve, fadeDuration * 1000 + 50));
+              
+              if (this.activeIdx === idleIdx) {
+                  activeSlot.el.pause();
+              }
+              
+              this._publishSyncState();
           }
 
           _setupCrossTabSync() {
             if (typeof BroadcastChannel !== 'undefined') {
               try {
                 this._syncChannel = new BroadcastChannel(syncChannelName);
-                this._syncChannel.addEventListener('message', (event) => this._applyRemoteState(event.data));
-              } catch {
-                this._syncChannel = null;
-              }
-            }
-
-            window.addEventListener('storage', (event) => {
-              if (event.key !== syncStorageKey || !event.newValue) return;
-              try {
-                this._applyRemoteState(JSON.parse(event.newValue));
+                this._syncChannel.addEventListener('message', (e) => this._applyRemoteState(e.data));
               } catch {}
+            }
+            window.addEventListener('storage', (e) => {
+              if (e.key === syncStorageKey && e.newValue) {
+                try { this._applyRemoteState(JSON.parse(e.newValue)); } catch {}
+              }
             });
-
             try {
               const stored = localStorage.getItem(syncStorageKey);
               if (stored) this._applyRemoteState(JSON.parse(stored));
             } catch {}
-
-            this._syncTicker = setInterval(() => this._publishSyncState(), syncTickMs);
+            
+            setInterval(() => this._publishSyncState(), 1500);
           }
 
-          // After a track settles, softly prefetch adjacent tracks (same theme,
-          // other tabs) at metadata-only level so duration is available for syncTime
-          // but no full decode buffer is allocated yet.
-          _scheduleAdjacentPrefetch() {
-            const doIt = () => {
-              const tabs = TAB_KEYS.filter(t => t !== this._tab);
-              for (const tab of tabs) {
-                const trackUrl = url(this._theme, tab);
-                const el = this._getOrCreate(trackUrl);
-                // Do not downgrade preload state for active, idle, or in-flight fade elements.
-                if (this._isElementInUse(el)) continue;
-                el.preload = 'metadata'; // header only — not full stream
-              }
+          _publishSyncState() {
+            if (this._isApplyingRemote || !this._ready || !this.slots) return;
+            const activeSlot = this.slots[this.activeIdx];
+            const payload = {
+              source: this._tabSessionId,
+              emittedAt: Date.now(),
+              theme: this._theme,
+              tab: this._tab,
+              muted: this._isMuted,
+              positionSec: activeSlot.el.currentTime || 0
             };
-
-            'requestIdleCallback' in window
-              ? requestIdleCallback(doIt, { timeout: 3000 })
-              : setTimeout(doIt, 2000);
+            try { localStorage.setItem(syncStorageKey, JSON.stringify(payload)); } catch {}
+            try { this._syncChannel?.postMessage(payload); } catch {}
           }
 
-          // Registers a one-shot interaction listener that retries playback.
-          // Called when init() is blocked by autoplay policy.
-          _waitForInteraction() {
-            let didUnlock = false;
-            const opts = { capture: true, passive: true };
-            const attachListeners = () => {
-              document.addEventListener('click',      unlock, opts);
-              document.addEventListener('touchstart', unlock, opts);
-            };
-            const detachListeners = () => {
-              document.removeEventListener('click', unlock, opts);
-              document.removeEventListener('touchstart', unlock, opts);
-            };
-            const unlock = () => {
-              if (didUnlock) return;
-              if (this._ready) {
-                detachListeners();
-                return;
-              }
-              didUnlock = true;
-              detachListeners();
-              this._prime(this._theme, this._tab, this._active)
-                .catch(() => {
-                  didUnlock = false;
-                  attachListeners();
-                });
-            };
-            attachListeners();
+          _applyRemoteState(payload) {
+            if (!payload || payload.source === this._tabSessionId) return;
+            
+            const emittedAt = Number(payload.emittedAt);
+            const rawElapsed = (Date.now() - emittedAt) / 1000;
+            const elapsed = Math.min(10, Math.max(0, rawElapsed));
+            const targetTimeSec = Number(payload.positionSec) + elapsed;
+
+            this._isApplyingRemote = true;
+            try {
+                if (typeof payload.muted === 'boolean' && payload.muted !== this._isMuted) {
+                    this.setMuted(payload.muted);
+                }
+                const nextTheme = payload.theme || this._theme;
+                const nextTab = payload.tab || this._tab;
+                this._request(nextTheme, nextTab, targetTimeSec);
+            } finally {
+                this._isApplyingRemote = false;
+            }
           }
         }
 
@@ -2061,6 +1693,9 @@
             if (!instance) {
               instance = new JukeboxEngine();
               instance.init();
+              if (typeof window !== 'undefined') {
+                window.__jukebox = instance;
+              }
             }
             return instance;
           },
@@ -2142,6 +1777,11 @@
         const theme = THEMES[themeKey];
         if (theme && theme.class) {
           body.classList.add(theme.class);
+        }
+
+        if (themeKey !== 'dark') {
+          body.style.removeProperty('--mouse-x');
+          body.style.removeProperty('--mouse-y');
         }
 
         currentTheme = themeKey;
@@ -2401,10 +2041,10 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
       ====================================================================
       */
       const sections = {
-        intro: document.getElementById('intro-section'),
-        bio: document.getElementById('bio-section'),
-        cat: document.getElementById('cat-section'),
-        photos: document.getElementById('photos-section'),
+        intro: document.getElementById('intro'),
+        bio: document.getElementById('bio'),
+        cat: document.getElementById('cat'),
+        photos: document.getElementById('photos'),
       };
 
       const factElements = {
@@ -2710,10 +2350,43 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
           Jukebox.useBackgroundAudio().toggleMuted();
           syncAudioButtonUi();
         });
+        window.addEventListener('wal-jukebox-mute-change', () => {
+          syncAudioButtonUi();
+        });
       }
 
       console.log(`[SYSTEM] v${APP_VERSION} loaded.`);
       console.log(`[HINT] Try typing: night or reset. Click the squiggle to cycle themes.`);
+
+      let mouseX = 0;
+      let mouseY = 0;
+      let tick = false;
+
+      function updateMousePos(clientX, clientY) {
+        mouseX = clientX;
+        mouseY = clientY;
+        if (!tick) {
+          requestAnimationFrame(() => {
+            if (currentTheme === 'dark') {
+              body.style.setProperty('--mouse-x', `${mouseX}px`);
+              body.style.setProperty('--mouse-y', `${mouseY}px`);
+            }
+            tick = false;
+          });
+          tick = true;
+        }
+      }
+
+      function handlePointerMove(e) {
+        if (currentTheme !== 'dark') return;
+        const clientX = (e.touches && e.touches.length > 0) ? e.touches[0].clientX : e.clientX;
+        const clientY = (e.touches && e.touches.length > 0) ? e.touches[0].clientY : e.clientY;
+        updateMousePos(clientX, clientY);
+      }
+
+      document.addEventListener('mousemove', handlePointerMove);
+      document.addEventListener('touchstart', handlePointerMove, { passive: true });
+      document.addEventListener('touchmove', handlePointerMove, { passive: true });
     });
   </script>
 </body>
