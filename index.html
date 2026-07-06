@@ -118,14 +118,14 @@
       inset: 0;
       z-index: -1;
       pointer-events: none;
-      /* Morphing liquid blob tied to cursor */
+      /* Vibrant glowing gradient blob tied to cursor */
       background: 
-        radial-gradient(circle 600px at var(--mouse-x) var(--mouse-y), rgba(90, 50, 255, 0.8), transparent 70%),
-        radial-gradient(circle 800px at calc(var(--mouse-x) - 200px) calc(var(--mouse-y) + 200px), rgba(20, 140, 255, 0.6), transparent 60%),
-        radial-gradient(circle 500px at calc(var(--mouse-x) + 300px) calc(var(--mouse-y) - 100px), rgba(255, 40, 120, 0.5), transparent 70%);
-      filter: blur(80px);
+        radial-gradient(circle 600px at var(--mouse-x) var(--mouse-y), rgba(130, 60, 255, 0.95), transparent 70%),
+        radial-gradient(circle 800px at calc(var(--mouse-x) - 200px) calc(var(--mouse-y) + 200px), rgba(0, 220, 255, 0.8), transparent 60%),
+        radial-gradient(circle 500px at calc(var(--mouse-x) + 300px) calc(var(--mouse-y) - 100px), rgba(255, 50, 150, 0.8), transparent 70%);
+      filter: blur(50px);
       transition: background 0.15s ease-out; 
-      opacity: 0.9;
+      opacity: 1;
     }
 
     /* Ambient animated blobs */
@@ -148,16 +148,17 @@
     body.theme-dark .album-item,
     body.theme-dark .bg-white\/5,
     body.theme-dark .album-status {
-      /* Water with High Surface Tension */
-      background: rgba(2, 4, 15, 0.1) !important; /* Almost entirely clear, slight tint */
-      border: none !important;
-      backdrop-filter: blur(6px) saturate(130%) contrast(1.1) brightness(1.2) !important;
-      -webkit-backdrop-filter: blur(6px) saturate(130%) contrast(1.1) brightness(1.2) !important;
+      /* Pure Liquid Glass: High transparency, thick refractive rim, minimal blur */
+      background: rgba(255, 255, 255, 0.03) !important; 
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      backdrop-filter: blur(2px) saturate(140%) brightness(1.1) !important;
+      -webkit-backdrop-filter: blur(2px) saturate(140%) brightness(1.1) !important;
       box-shadow: 
-        0 15px 35px rgba(0, 0, 0, 0.2),
-        inset 0 2px 4px rgba(255, 255, 255, 0.8),
-        inset 0 -4px 10px rgba(255, 255, 255, 0.3),
-        inset 0 0 20px rgba(255, 255, 255, 0.1) !important; /* Inner rim glow */
+        0 20px 40px rgba(0, 0, 0, 0.4), /* External drop shadow */
+        inset 0 6px 14px rgba(255, 255, 255, 0.8), /* Top refractive thick edge */
+        inset 0 -6px 16px rgba(0, 0, 0, 0.7), /* Bottom dark edge */
+        inset 4px 0 12px rgba(255, 255, 255, 0.3), /* Left inner rim */
+        inset -4px 0 12px rgba(255, 255, 255, 0.1) !important; /* Right inner rim */
     }
 
     body.theme-dark .main-content-box {
@@ -1234,10 +1235,9 @@
     body.theme-dark .album-item,
     body.theme-dark .album-status,
     body.theme-dark .bg-white\/5 {
-      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
-                  border-radius 0.3s ease-out,
+      transition: transform 0.25s ease-out, 
+                  border-radius 0.2s ease-out,
                   box-shadow 0.4s ease-out !important;
-      transform-style: preserve-3d;
       will-change: transform, border-radius;
     }
     
@@ -1251,18 +1251,16 @@
       inset: 0;
       border-radius: inherit;
       background: radial-gradient(
-        circle 100px at var(--local-x, 50%) var(--local-y, 50%), 
-        rgba(255, 255, 255, 0.95), 
-        rgba(255, 255, 255, 0.4) 15%,
-        rgba(150, 200, 255, 0.1) 40%,
+        circle 150px at var(--local-x, 50%) var(--local-y, 50%), 
+        rgba(255, 255, 255, 0.35), 
+        rgba(255, 255, 255, 0.1) 40%,
         transparent 70%
       );
-      mix-blend-mode: plus-lighter;
       opacity: 0;
       transition: opacity 0.3s;
       pointer-events: none;
       z-index: 10;
-      mix-blend-mode: overlay;
+      mix-blend-mode: soft-light;
     }
 
     body.theme-dark .nav-link:hover::before,
@@ -2436,8 +2434,6 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
       document.addEventListener('touchmove', handlePointerMove, { passive: true });
 
       // Liquid Glass Morphing Logic
-      // Note: we fetch the liquidElements inside the mouse move or cache them
-      
       let liquidElements = null;
       let lastMoveTime = 0;
       
@@ -2452,9 +2448,9 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
           return;
         }
         
-        // Throttling slightly for performance
+        // Throttling slightly for performance (~60fps)
         const now = performance.now();
-        if (now - lastMoveTime < 16) return; // approx 60fps
+        if (now - lastMoveTime < 16) return; 
         lastMoveTime = now;
 
         if (!liquidElements) liquidElements = document.querySelectorAll('.theme-dark .nav-link, .theme-dark .refresh-btn, .theme-dark .main-content-box, .theme-dark .album-item');
@@ -2475,48 +2471,42 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
           el.style.setProperty('--local-y', `${localY}px`);
 
           // Magnetic & Droplet Stretch Effect
-          // If mouse is within 150px of the element's center
-          const maxDist = Math.max(rect.width, rect.height) + 50;
+          // Radius of effect is slightly larger than the element
+          const maxDist = Math.max(rect.width, rect.height) + 100;
           
           if (distance < maxDist) {
-            const rotateX = -(distMouseY / maxDist) * 15; // Max 15deg tilt
-            const rotateY = (distMouseX / maxDist) * 15;
+            // No 3D rotation, just 2D translations to simulate pulling
+            const pullX = distMouseX / maxDist; 
+            const pullY = distMouseY / maxDist;
             
-            // Anchored 3D tilt + slight squish (scale 0.98) to keep bulk in place
-            el.style.transform = `scale(0.98)`;
+            // Subtly pull the element's position towards the cursor
+            const translateX = pullX * 10;
+            const translateY = pullY * 10;
+            el.style.transform = `translate(${translateX}px, ${translateY}px)`;
             
             // Shape Morphing (Liquid Droplet Stretch)
-            let brTopLeft = 40, brTopRight = 40, brBottomRight = 40, brBottomLeft = 40;
             const isPill = el.classList.contains('nav-link') || el.classList.contains('refresh-btn');
             const baseRadius = isPill ? 50 : 40;
             const unit = isPill ? '%' : 'px';
             
-            brTopLeft = brTopRight = brBottomRight = brBottomLeft = baseRadius;
+            // Calculate weights for corners: -1 (towards cursor) to 1 (away from cursor)
+            const weightTL = pullX + pullY; 
+            const weightTR = -pullX + pullY;
+            const weightBR = -pullX - pullY;
+            const weightBL = pullX - pullY;
             
-            const stretchAmount = (1 - (distance / maxDist)) * (isPill ? 35 : 25);
-            const compressAmount = stretchAmount * 0.5; // Squish opposite side
+            const intensity = isPill ? 25 : 20; 
             
-            if (distMouseX < 0 && distMouseY < 0) {
-                brTopLeft += stretchAmount;
-                brBottomRight -= compressAmount;
-            }
-            else if (distMouseX >= 0 && distMouseY < 0) {
-                brTopRight += stretchAmount;
-                brBottomLeft -= compressAmount;
-            }
-            else if (distMouseX >= 0 && distMouseY >= 0) {
-                brBottomRight += stretchAmount;
-                brTopLeft -= compressAmount;
-            }
-            else {
-                brBottomLeft += stretchAmount;
-                brTopRight -= compressAmount;
-            }
+            // Corners closest to cursor get sharper (stretching out), opposite gets rounder (compressing in)
+            const tl = Math.max(isPill ? 15 : 10, baseRadius + weightTL * intensity);
+            const tr = Math.max(isPill ? 15 : 10, baseRadius + weightTR * intensity);
+            const br = Math.max(isPill ? 15 : 10, baseRadius + weightBR * intensity);
+            const bl = Math.max(isPill ? 15 : 10, baseRadius + weightBL * intensity);
             
-            el.style.borderRadius = `${brTopLeft}${unit} ${brTopRight}${unit} ${brBottomRight}${unit} ${brBottomLeft}${unit}`;
+            el.style.borderRadius = `${tl}${unit} ${tr}${unit} ${br}${unit} ${bl}${unit}`;
           } else {
-             // Reset
-             el.style.transform = `scale(1)`;
+             // Reset smoothly
+             el.style.transform = `translate(0px, 0px)`;
              el.style.borderRadius = '';
           }
         });
