@@ -2483,7 +2483,7 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
             const rotateY = (distMouseX / maxDist) * 15;
             
             // Anchored 3D tilt + slight squish (scale 0.98) to keep bulk in place
-            el.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(0.98)`;
+            el.style.transform = `scale(0.98)`;
             
             // Shape Morphing (Liquid Droplet Stretch)
             let brTopLeft = 40, brTopRight = 40, brBottomRight = 40, brBottomLeft = 40;
@@ -2516,7 +2516,7 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
             el.style.borderRadius = `${brTopLeft}${unit} ${brTopRight}${unit} ${brBottomRight}${unit} ${brBottomLeft}${unit}`;
           } else {
              // Reset
-             el.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)`;
+             el.style.transform = `scale(1)`;
              el.style.borderRadius = '';
           }
         });
