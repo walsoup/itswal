@@ -148,16 +148,17 @@
     body.theme-dark .album-item,
     body.theme-dark .bg-white\/5,
     body.theme-dark .album-status {
-      /* True Water Droplet: No background color, thick liquid rim shadows */
-      background: rgba(255, 255, 255, 0.01) !important; 
-      border: 1px solid rgba(255, 255, 255, 0.05) !important;
-      backdrop-filter: blur(3px) saturate(150%) brightness(1.1) !important;
-      -webkit-backdrop-filter: blur(3px) saturate(150%) brightness(1.1) !important;
+      /* True Water Droplet: High transparency, crisp refractive rims */
+      background: rgba(255, 255, 255, 0) !important; 
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      backdrop-filter: blur(2px) saturate(120%) brightness(1.1) !important;
+      -webkit-backdrop-filter: blur(2px) saturate(120%) brightness(1.1) !important;
       box-shadow: 
-        0 15px 30px rgba(0, 0, 0, 0.4), /* Drop shadow */
-        inset 0 8px 18px rgba(255, 255, 255, 0.6), /* Top liquid refractive edge */
-        inset 0 -8px 20px rgba(0, 0, 0, 0.7), /* Bottom dense liquid edge */
-        inset 0 0 15px rgba(255, 255, 255, 0.15) !important; /* Overall rim glow */
+        0 10px 20px rgba(0, 0, 0, 0.2), /* Soft drop shadow */
+        inset 0 4px 10px rgba(255, 255, 255, 0.6), /* Top crisp reflection */
+        inset 0 -6px 12px rgba(0, 0, 0, 0.4), /* Bottom density/refraction */
+        inset 3px 0 8px rgba(255, 255, 255, 0.2),
+        inset -3px 0 8px rgba(0, 0, 0, 0.2) !important; /* Overall rim glow */
     }
 
     body.theme-dark .main-content-box {
@@ -2433,7 +2434,7 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
       document.addEventListener('touchstart', handlePointerMove, { passive: true });
       document.addEventListener('touchmove', handlePointerMove, { passive: true });
 
-      // Advanced Liquid Glass Physics Engine
+      // Advanced Liquid Glass Physics Engine (Vector Dot-Product approach)
       let liquidElements = null;
       let lastMoveTime = 0;
       
@@ -2460,9 +2461,9 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
           const centerX = rect.left + rect.width / 2;
           const centerY = rect.top + rect.height / 2;
           
-          const distMouseX = e.clientX - centerX;
-          const distMouseY = e.clientY - centerY;
-          const distance = Math.sqrt(distMouseX * distMouseX + distMouseY * distMouseY);
+          const distX = e.clientX - centerX;
+          const distY = e.clientY - centerY;
+          const distance = Math.max(1, Math.sqrt(distX * distX + distY * distY));
           
           // Specular highlight local coordinates
           const localX = e.clientX - rect.left;
@@ -2477,44 +2478,47 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
             // Remove CSS transitions during active tracking to eliminate all jitter/stutter
             el.style.transition = 'none';
 
-            // Normalized pull vectors (-1 to 1)
-            const pullX = Math.max(-1, Math.min(1, distMouseX / maxDist));
-            const pullY = Math.max(-1, Math.min(1, distMouseY / maxDist));
+            const pullStrength = Math.max(0, 1 - (distance / maxDist));
+            
+            // Normalized direction vector
+            const dx = distX / distance;
+            const dy = distY / distance;
             
             // 1. Subtle Translation (Pulling the water mass towards the mouse)
-            const tx = pullX * 12; 
-            const ty = pullY * 12;
+            const tx = dx * pullStrength * 25; 
+            const ty = dy * pullStrength * 25;
             
             // 2. Volume Preservation Scale (Squish and stretch along axes)
-            const sx = 1 + Math.abs(pullX) * 0.04 - Math.abs(pullY) * 0.02;
-            const sy = 1 + Math.abs(pullY) * 0.04 - Math.abs(pullX) * 0.02;
+            const sx = 1 + pullStrength * (Math.abs(dx) * 0.08 - Math.abs(dy) * 0.04);
+            const sy = 1 + pullStrength * (Math.abs(dy) * 0.08 - Math.abs(dx) * 0.04);
             
             el.style.transform = `translate(${tx}px, ${ty}px) scale(${sx}, ${sy})`;
             
-            // 3. True 8-Value Border Radius Morphing (Organic Teardrop shape)
+            // 3. Mathematical Teardrop morphing (Dot-Product Corner Sharpening)
             const isPill = el.classList.contains('nav-link') || el.classList.contains('refresh-btn');
             
-            // Determine base radius dynamically based on element
             let brBase = 24; 
-            let unit = 'px';
-            if (isPill) { brBase = 50; unit = '%'; }
+            const unit = 'px';
+            if (isPill) { brBase = 50; }
             else if (el.classList.contains('main-content-box')) { brBase = 40; }
             
-            const intensity = isPill ? 30 : brBase * 0.6; 
+            const intensity = brBase * 0.85; 
             
-            // X-axis deformation: corner pointing to mouse gets sharper (smaller radius), opposite gets rounder
-            const tl_x = Math.max(5, brBase + pullX * intensity);
-            const tr_x = Math.max(5, brBase - pullX * intensity);
-            const br_x = Math.max(5, brBase - pullX * intensity);
-            const bl_x = Math.max(5, brBase + pullX * intensity);
+            // Dot product evaluates how closely a corner's direction matches the mouse's direction.
+            function getDeformation(cx, cy) {
+                const dot = dx * cx + dy * cy;
+                // Positive = pointing at mouse (sharpen), Negative = pointing away (round)
+                return dot * pullStrength;
+            }
             
-            // Y-axis deformation
-            const tl_y = Math.max(5, brBase + pullY * intensity);
-            const tr_y = Math.max(5, brBase + pullY * intensity);
-            const br_y = Math.max(5, brBase - pullY * intensity);
-            const bl_y = Math.max(5, brBase - pullY * intensity);
+            // Normalized corner vectors
+            const cornerVal = 0.7071; // 1 / sqrt(2)
+            const tl = Math.max(4, brBase - getDeformation(-cornerVal, -cornerVal) * intensity);
+            const tr = Math.max(4, brBase - getDeformation(cornerVal, -cornerVal) * intensity);
+            const br = Math.max(4, brBase - getDeformation(cornerVal, cornerVal) * intensity);
+            const bl = Math.max(4, brBase - getDeformation(-cornerVal, cornerVal) * intensity);
             
-            el.style.borderRadius = `${tl_x}${unit} ${tr_x}${unit} ${br_x}${unit} ${bl_x}${unit} / ${tl_y}${unit} ${tr_y}${unit} ${br_y}${unit} ${bl_y}${unit}`;
+            el.style.borderRadius = `${tl}${unit} ${tr}${unit} ${br}${unit} ${bl}${unit}`;
           } else {
              // Smooth snap-back when mouse leaves radius
              el.style.transition = 'transform 0.5s cubic-bezier(0.2, 0, 0, 1), border-radius 0.5s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.4s ease-out';
