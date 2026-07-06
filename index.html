@@ -1225,6 +1225,49 @@
     .lightbox-close:hover {
       opacity: 1;
     }
+  
+    /* Liquid Morphing Styles */
+    body.theme-dark .nav-link,
+    body.theme-dark .refresh-btn,
+    body.theme-dark .main-content-box,
+    body.theme-dark .album-item,
+    body.theme-dark .album-status,
+    body.theme-dark .bg-white\/5 {
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                  border-radius 0.3s ease-out,
+                  box-shadow 0.4s ease-out !important;
+      transform-style: preserve-3d;
+      will-change: transform, border-radius;
+    }
+    
+    /* Adds a beautiful glassy highlight that tracks the cursor on the element itself */
+    body.theme-dark .nav-link::before,
+    body.theme-dark .refresh-btn::before,
+    body.theme-dark .main-content-box::before,
+    body.theme-dark .album-item::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(
+        circle 150px at var(--local-x, 50%) var(--local-y, 50%), 
+        rgba(255, 255, 255, 0.4), 
+        transparent 60%
+      );
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      z-index: 10;
+      mix-blend-mode: overlay;
+    }
+
+    body.theme-dark .nav-link:hover::before,
+    body.theme-dark .refresh-btn:hover::before,
+    body.theme-dark .main-content-box:hover::before,
+    body.theme-dark .album-item:hover::before {
+      opacity: 1;
+    }
+
   </style>
 </head>
 <!-- ... existing body code ... -->
@@ -2387,6 +2430,98 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
       document.addEventListener('mousemove', handlePointerMove);
       document.addEventListener('touchstart', handlePointerMove, { passive: true });
       document.addEventListener('touchmove', handlePointerMove, { passive: true });
+
+      // Liquid Glass Morphing Logic
+      // Note: we fetch the liquidElements inside the mouse move or cache them
+      
+      let liquidElements = null;
+      let lastMoveTime = 0;
+      
+      document.addEventListener('mousemove', (e) => {
+        if (!document.body.classList.contains('theme-dark')) {
+          if (liquidElements) {
+             liquidElements.forEach(el => {
+                el.style.transform = '';
+                el.style.borderRadius = '';
+             });
+          }
+          return;
+        }
+        
+        // Throttling slightly for performance
+        const now = performance.now();
+        if (now - lastMoveTime < 16) return; // approx 60fps
+        lastMoveTime = now;
+
+        if (!liquidElements) liquidElements = document.querySelectorAll('.theme-dark .nav-link, .theme-dark .refresh-btn, .theme-dark .main-content-box, .theme-dark .album-item');
+        
+        liquidElements.forEach(el => {
+          const rect = el.getBoundingClientRect();
+          const centerX = rect.left + rect.width / 2;
+          const centerY = rect.top + rect.height / 2;
+          
+          const distMouseX = e.clientX - centerX;
+          const distMouseY = e.clientY - centerY;
+          const distance = Math.sqrt(distMouseX * distMouseX + distMouseY * distMouseY);
+          
+          // Specular highlight local coordinates
+          const localX = e.clientX - rect.left;
+          const localY = e.clientY - rect.top;
+          el.style.setProperty('--local-x', `${localX}px`);
+          el.style.setProperty('--local-y', `${localY}px`);
+
+          // Magnetic & Droplet Stretch Effect
+          // If mouse is within 150px of the element's center
+          const maxDist = Math.max(rect.width, rect.height) + 50;
+          
+          if (distance < maxDist) {
+            const pull = (1 - (distance / maxDist)) * 15; // Max 15px pull
+            const rotateX = -(distMouseY / maxDist) * 10; // Max 10deg tilt
+            const rotateY = (distMouseX / maxDist) * 10;
+            
+            // Apply magnetic pull and 3D tilt
+            el.style.transform = `perspective(1000px) translate3d(${distMouseX * 0.1}px, ${distMouseY * 0.1}px, 20px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+            
+            // Shape Morphing (Liquid Droplet Stretch)
+            // Calculate which quadrant the mouse is in to stretch that corner
+            let brTopLeft = 40, brTopRight = 40, brBottomRight = 40, brBottomLeft = 40;
+            
+            // Adjust base radius depending on element type
+            const isPill = el.classList.contains('nav-link') || el.classList.contains('refresh-btn');
+            const baseRadius = isPill ? 999 : 40;
+            
+            if (isPill) {
+                brTopLeft = brTopRight = brBottomRight = brBottomLeft = 50; // Use % for pills
+                
+                // Stretch the corner closest to mouse
+                const stretchAmount = (1 - (distance / maxDist)) * 30; // up to 30% stretch
+                
+                if (distMouseX < 0 && distMouseY < 0) brTopLeft += stretchAmount;
+                else if (distMouseX >= 0 && distMouseY < 0) brTopRight += stretchAmount;
+                else if (distMouseX >= 0 && distMouseY >= 0) brBottomRight += stretchAmount;
+                else brBottomLeft += stretchAmount;
+                
+                el.style.borderRadius = `${brTopLeft}% ${brTopRight}% ${brBottomRight}% ${brBottomLeft}%`;
+            } else {
+                // For boxes, stretch using px
+                brTopLeft = brTopRight = brBottomRight = brBottomLeft = baseRadius;
+                const stretchAmount = (1 - (distance / maxDist)) * 30;
+                
+                if (distMouseX < 0 && distMouseY < 0) brTopLeft += stretchAmount;
+                else if (distMouseX >= 0 && distMouseY < 0) brTopRight += stretchAmount;
+                else if (distMouseX >= 0 && distMouseY >= 0) brBottomRight += stretchAmount;
+                else brBottomLeft += stretchAmount;
+                
+                el.style.borderRadius = `${brTopLeft}px ${brTopRight}px ${brBottomRight}px ${brBottomLeft}px`;
+            }
+          } else {
+             // Reset
+             el.style.transform = `perspective(1000px) translate3d(0,0,0) rotateX(0deg) rotateY(0deg) scale(1)`;
+             el.style.borderRadius = '';
+          }
+        });
+      });
+
     });
   </script>
 </body>
