@@ -154,12 +154,10 @@
       backdrop-filter: blur(6px) saturate(130%) contrast(1.1) brightness(1.2) !important;
       -webkit-backdrop-filter: blur(6px) saturate(130%) contrast(1.1) brightness(1.2) !important;
       box-shadow: 
-        0 25px 50px rgba(0, 0, 0, 0.4),            /* Deep shadow for floating */
-        0 10px 15px rgba(0, 0, 0, 0.2),            /* Ambient occlusion */
-        inset 0 -8px 20px rgba(200, 220, 255, 0.2),/* Reflected light from bottom */
-        inset 0 6px 18px rgba(255, 255, 255, 0.6), /* Thick refractive highlight on top edge */
-        inset 0 1px 2px rgba(255, 255, 255, 0.9),  /* Extreme sharp rim highlight */
-        inset 0 0 3px rgba(255, 255, 255, 0.4) !important; /* Inner rim glow */
+        0 15px 35px rgba(0, 0, 0, 0.2),
+        inset 0 2px 4px rgba(255, 255, 255, 0.8),
+        inset 0 -4px 10px rgba(255, 255, 255, 0.3),
+        inset 0 0 20px rgba(255, 255, 255, 0.1) !important; /* Inner rim glow */
     }
 
     body.theme-dark .main-content-box {
@@ -2481,48 +2479,44 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
           const maxDist = Math.max(rect.width, rect.height) + 50;
           
           if (distance < maxDist) {
-            const pull = (1 - (distance / maxDist)) * 15; // Max 15px pull
-            const rotateX = -(distMouseY / maxDist) * 10; // Max 10deg tilt
-            const rotateY = (distMouseX / maxDist) * 10;
+            const rotateX = -(distMouseY / maxDist) * 15; // Max 15deg tilt
+            const rotateY = (distMouseX / maxDist) * 15;
             
-            // Apply magnetic pull and 3D tilt
-            el.style.transform = `perspective(1000px) translate3d(${distMouseX * 0.1}px, ${distMouseY * 0.1}px, 20px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+            // Anchored 3D tilt + slight squish (scale 0.98) to keep bulk in place
+            el.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(0.98)`;
             
             // Shape Morphing (Liquid Droplet Stretch)
-            // Calculate which quadrant the mouse is in to stretch that corner
             let brTopLeft = 40, brTopRight = 40, brBottomRight = 40, brBottomLeft = 40;
-            
-            // Adjust base radius depending on element type
             const isPill = el.classList.contains('nav-link') || el.classList.contains('refresh-btn');
-            const baseRadius = isPill ? 999 : 40;
+            const baseRadius = isPill ? 50 : 40;
+            const unit = isPill ? '%' : 'px';
             
-            if (isPill) {
-                brTopLeft = brTopRight = brBottomRight = brBottomLeft = 50; // Use % for pills
-                
-                // Stretch the corner closest to mouse
-                const stretchAmount = (1 - (distance / maxDist)) * 30; // up to 30% stretch
-                
-                if (distMouseX < 0 && distMouseY < 0) brTopLeft += stretchAmount;
-                else if (distMouseX >= 0 && distMouseY < 0) brTopRight += stretchAmount;
-                else if (distMouseX >= 0 && distMouseY >= 0) brBottomRight += stretchAmount;
-                else brBottomLeft += stretchAmount;
-                
-                el.style.borderRadius = `${brTopLeft}% ${brTopRight}% ${brBottomRight}% ${brBottomLeft}%`;
-            } else {
-                // For boxes, stretch using px
-                brTopLeft = brTopRight = brBottomRight = brBottomLeft = baseRadius;
-                const stretchAmount = (1 - (distance / maxDist)) * 30;
-                
-                if (distMouseX < 0 && distMouseY < 0) brTopLeft += stretchAmount;
-                else if (distMouseX >= 0 && distMouseY < 0) brTopRight += stretchAmount;
-                else if (distMouseX >= 0 && distMouseY >= 0) brBottomRight += stretchAmount;
-                else brBottomLeft += stretchAmount;
-                
-                el.style.borderRadius = `${brTopLeft}px ${brTopRight}px ${brBottomRight}px ${brBottomLeft}px`;
+            brTopLeft = brTopRight = brBottomRight = brBottomLeft = baseRadius;
+            
+            const stretchAmount = (1 - (distance / maxDist)) * (isPill ? 35 : 25);
+            const compressAmount = stretchAmount * 0.5; // Squish opposite side
+            
+            if (distMouseX < 0 && distMouseY < 0) {
+                brTopLeft += stretchAmount;
+                brBottomRight -= compressAmount;
             }
+            else if (distMouseX >= 0 && distMouseY < 0) {
+                brTopRight += stretchAmount;
+                brBottomLeft -= compressAmount;
+            }
+            else if (distMouseX >= 0 && distMouseY >= 0) {
+                brBottomRight += stretchAmount;
+                brTopLeft -= compressAmount;
+            }
+            else {
+                brBottomLeft += stretchAmount;
+                brTopRight -= compressAmount;
+            }
+            
+            el.style.borderRadius = `${brTopLeft}${unit} ${brTopRight}${unit} ${brBottomRight}${unit} ${brBottomLeft}${unit}`;
           } else {
              // Reset
-             el.style.transform = `perspective(1000px) translate3d(0,0,0) rotateX(0deg) rotateY(0deg) scale(1)`;
+             el.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)`;
              el.style.borderRadius = '';
           }
         });
