@@ -2502,21 +2502,25 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
           
           if (isDragged) {
               const pullDist = Math.min(distance, 400); 
-              stretchAmount = (pullDist / 400) * 0.4; // Up to 40% elongation
+              stretchAmount = (pullDist / 400) * 0.45; // Up to 45% elongation
               isWarping = true;
           } else {
-              // Surface Tension Physics (Dead zone in the middle)
-              const interactRange = 30; // Only interact within 30px of the edge
-              if (Math.abs(distance - edgeDist) < interactRange) {
-                  isWarping = true;
-                  if (distance <= edgeDist) {
-                      // Mouse is INSIDE pushing OUT -> Stretches outward
-                      const intensity = 1 - (edgeDist - distance) / interactRange;
-                      stretchAmount = intensity * 0.05; // up to +5% stretch
-                  } else {
-                      // Mouse is OUTSIDE pushing IN -> Contracts inward
-                      const intensity = 1 - (distance - edgeDist) / interactRange;
-                      stretchAmount = -intensity * 0.05; // up to -5% squish
+              // Surface Tension Physics
+              if (distance <= edgeDist) {
+                  // Mouse is INSIDE pushing OUT
+                  const innerRange = 15; // Only interact within 15px of the inner edge
+                  if (edgeDist - distance < innerRange) {
+                      isWarping = true;
+                      const intensity = 1 - (edgeDist - distance) / innerRange;
+                      stretchAmount = intensity * 0.12; // Strongly stretch outwards to trap mouse (+12%)
+                  }
+              } else {
+                  // Mouse is OUTSIDE pushing IN
+                  const outerRange = 3; // Must be practically touching the glass to squish it
+                  if (distance - edgeDist < outerRange) {
+                      isWarping = true;
+                      const intensity = 1 - (distance - edgeDist) / outerRange;
+                      stretchAmount = -intensity * 0.04; // Squish inward (-4%)
                   }
               }
           }
