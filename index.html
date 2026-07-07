@@ -148,21 +148,21 @@
     body.theme-dark .album-item,
     body.theme-dark .bg-white\/5,
     body.theme-dark .album-status {
-      /* True Water Droplet: High transparency, crisp refractive rims */
+      /* True Water Droplet: High transparency, crisp refractive rims without splitting the middle */
       background: rgba(255, 255, 255, 0) !important; 
       border: 1px solid rgba(255, 255, 255, 0.1) !important;
       backdrop-filter: blur(2px) saturate(120%) brightness(1.1) !important;
       -webkit-backdrop-filter: blur(2px) saturate(120%) brightness(1.1) !important;
       box-shadow: 
-        0 10px 20px rgba(0, 0, 0, 0.2), /* Soft drop shadow */
-        inset 0 4px 10px rgba(255, 255, 255, 0.6), /* Top crisp reflection */
-        inset 0 -6px 12px rgba(0, 0, 0, 0.4), /* Bottom density/refraction */
-        inset 3px 0 8px rgba(255, 255, 255, 0.2),
-        inset -3px 0 8px rgba(0, 0, 0, 0.2) !important; /* Overall rim glow */
+        0 10px 30px rgba(0, 0, 0, 0.2), /* Soft drop shadow */
+        inset 0 1px 2px rgba(255, 255, 255, 0.8), /* Very thin, crisp top rim */
+        inset 0 -1px 2px rgba(0, 0, 0, 0.3), /* Very thin, crisp bottom rim */
+        inset 0 0 15px rgba(255, 255, 255, 0.15) !important; /* Unified internal glow */
     }
 
     body.theme-dark .main-content-box {
-      border-radius: 40px;
+      border-radius: 50px !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
     }
 
     body.theme-dark .side-nav {
@@ -1237,9 +1237,8 @@
     body.theme-dark .bg-white\/5 {
       /* Smooth snap-back transition (JS will remove this during active hover to prevent stutter) */
       transition: transform 0.5s cubic-bezier(0.2, 0, 0, 1), 
-                  border-radius 0.5s cubic-bezier(0.2, 0, 0, 1),
                   box-shadow 0.4s ease-out !important;
-      will-change: transform, border-radius;
+      will-change: transform;
     }
     
     /* Soft organic specular highlight tracking cursor */
@@ -2434,7 +2433,7 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
       document.addEventListener('touchstart', handlePointerMove, { passive: true });
       document.addEventListener('touchmove', handlePointerMove, { passive: true });
 
-      // Advanced Liquid Glass Physics Engine (Vector Dot-Product approach)
+      // Advanced Liquid Glass Physics Engine (Pure Translate & Scale)
       let liquidElements = null;
       let lastMoveTime = 0;
       
@@ -2443,7 +2442,6 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
           if (liquidElements) {
              liquidElements.forEach(el => {
                 el.style.transform = '';
-                el.style.borderRadius = '';
              });
           }
           return;
@@ -2488,44 +2486,15 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
             const tx = dx * pullStrength * 6; 
             const ty = dy * pullStrength * 6;
             
-            // 2. Volume Preservation Scale (Squish and stretch along axes)
+            // 2. Volume Preservation Scale (Squish and stretch along axes organically without mutating corners)
             const sx = 1 + pullStrength * (Math.abs(dx) * 0.04 - Math.abs(dy) * 0.02);
             const sy = 1 + pullStrength * (Math.abs(dy) * 0.04 - Math.abs(dx) * 0.02);
             
             el.style.transform = `translate(${tx}px, ${ty}px) scale(${sx}, ${sy})`;
-            
-            // 3. Mathematical Teardrop morphing (Dot-Product Corner Sharpening)
-            const isPill = el.classList.contains('nav-link') || el.classList.contains('refresh-btn');
-            
-            let brBase = 24; 
-            const unit = 'px';
-            if (isPill) { brBase = 50; }
-            else if (el.classList.contains('main-content-box')) { brBase = 40; }
-            
-            // User requested shape stays rounded always. Reduce intensity so it doesn't sharpen too much.
-            const intensity = brBase * 0.35; 
-            const minRadius = brBase * 0.5; // Never become sharp, always stay at least 50% round
-            
-            // Dot product evaluates how closely a corner's direction matches the mouse's direction.
-            function getDeformation(cx, cy) {
-                const dot = dx * cx + dy * cy;
-                // Positive = pointing at mouse (sharpen slightly), Negative = pointing away (round slightly)
-                return dot * pullStrength;
-            }
-            
-            // Normalized corner vectors
-            const cornerVal = 0.7071; // 1 / sqrt(2)
-            const tl = Math.max(minRadius, brBase - getDeformation(-cornerVal, -cornerVal) * intensity);
-            const tr = Math.max(minRadius, brBase - getDeformation(cornerVal, -cornerVal) * intensity);
-            const br = Math.max(minRadius, brBase - getDeformation(cornerVal, cornerVal) * intensity);
-            const bl = Math.max(minRadius, brBase - getDeformation(-cornerVal, cornerVal) * intensity);
-            
-            el.style.borderRadius = `${tl}${unit} ${tr}${unit} ${br}${unit} ${bl}${unit}`;
           } else {
              // Smooth snap-back when mouse leaves radius
-             el.style.transition = 'transform 0.5s cubic-bezier(0.2, 0, 0, 1), border-radius 0.5s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.4s ease-out';
+             el.style.transition = 'transform 0.5s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.4s ease-out';
              el.style.transform = `translate(0px, 0px) scale(1, 1)`;
-             el.style.borderRadius = '';
           }
         });
       });
