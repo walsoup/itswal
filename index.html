@@ -1249,6 +1249,7 @@
       content: '';
       position: absolute;
       inset: 0;
+      height: 100% !important; /* Fixes the legacy 50% height split line */
       border-radius: inherit;
       background: radial-gradient(
         circle 200px at var(--local-x, 50%) var(--local-y, 50%), 
@@ -1261,6 +1262,14 @@
       pointer-events: none;
       z-index: 10;
       mix-blend-mode: color-dodge; /* Simulates light refraction nicely */
+    }
+
+    /* Disable legacy pseudo-element gradients that cause split lines */
+    body.theme-dark .nav-link::after,
+    body.theme-dark .refresh-btn::after,
+    body.theme-dark .main-content-box::after,
+    body.theme-dark .album-item::after {
+      display: none !important;
     }
 
     body.theme-dark .nav-link:hover::before,
@@ -2433,24 +2442,33 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
       document.addEventListener('touchstart', handlePointerMove, { passive: true });
       document.addEventListener('touchmove', handlePointerMove, { passive: true });
 
-      // Advanced Liquid Glass Physics Engine (Pure Translate & Scale)
+      // Advanced Liquid Glass Physics Engine (Anchored Stretching & Dragging)
       let liquidElements = null;
-      let lastMoveTime = 0;
+      let lastPhysicsTime = 0;
+      let draggedElement = null;
+
+      const startDrag = (e) => {
+         const target = e.target.closest('.theme-dark .nav-link, .theme-dark .refresh-btn, .theme-dark .main-content-box, .theme-dark .album-item');
+         if (target) draggedElement = target;
+      };
+      const endDrag = () => { draggedElement = null; };
+
+      document.addEventListener('mousedown', startDrag);
+      document.addEventListener('touchstart', startDrag, { passive: true });
+      document.addEventListener('mouseup', endDrag);
+      document.addEventListener('touchend', endDrag);
       
-      document.addEventListener('mousemove', (e) => {
+      const updatePhysics = (clientX, clientY) => {
         if (!document.body.classList.contains('theme-dark')) {
           if (liquidElements) {
-             liquidElements.forEach(el => {
-                el.style.transform = '';
-             });
+             liquidElements.forEach(el => el.style.transform = '');
           }
           return;
         }
         
-        // Target 60fps tracking
         const now = performance.now();
-        if (now - lastMoveTime < 16) return; 
-        lastMoveTime = now;
+        if (now - lastPhysicsTime < 16) return; 
+        lastPhysicsTime = now;
 
         if (!liquidElements) liquidElements = document.querySelectorAll('.theme-dark .nav-link, .theme-dark .refresh-btn, .theme-dark .main-content-box, .theme-dark .album-item');
         
@@ -2459,45 +2477,57 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
           const centerX = rect.left + rect.width / 2;
           const centerY = rect.top + rect.height / 2;
           
-          const distX = e.clientX - centerX;
-          const distY = e.clientY - centerY;
-          const distance = Math.max(1, Math.sqrt(distX * distX + distY * distY));
+          const isHovered = clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom;
+          const isDragged = draggedElement === el;
           
           // Specular highlight local coordinates
-          const localX = e.clientX - rect.left;
-          const localY = e.clientY - rect.top;
+          const localX = clientX - rect.left;
+          const localY = clientY - rect.top;
           el.style.setProperty('--local-x', `${localX}px`);
           el.style.setProperty('--local-y', `${localY}px`);
-
-          // Liquid tracking radius
-          const maxDist = Math.max(rect.width, rect.height) + 120;
           
-          if (distance < maxDist) {
-            // Remove CSS transitions during active tracking to eliminate all jitter/stutter
+          if (isHovered || isDragged) {
             el.style.transition = 'none';
-
-            const pullStrength = Math.max(0, 1 - (distance / maxDist));
             
-            // Normalized direction vector
+            const distX = clientX - centerX;
+            const distY = clientY - centerY;
+            const distance = Math.max(1, Math.sqrt(distX * distX + distY * distY));
             const dx = distX / distance;
             const dy = distY / distance;
             
-            // 1. Subtle Translation (Keeps it 'in place' instead of sliding around)
-            const tx = dx * pullStrength * 6; 
-            const ty = dy * pullStrength * 6;
+            let stretchAmount = 0;
+            if (isDragged) {
+                // If dragging, stretch significantly based on cursor distance
+                const pullDist = Math.min(distance, 400); 
+                stretchAmount = (pullDist / 400) * 0.4; // Up to 40% elongation
+            } else {
+                // Just hovered: subtle stretch tracking the cursor
+                const maxRadius = Math.min(rect.width, rect.height) / 2;
+                const hoverPull = Math.min(distance, maxRadius) / maxRadius;
+                stretchAmount = hoverPull * 0.05; // Up to 5% elongation
+            }
             
-            // 2. Volume Preservation Scale (Squish and stretch along axes organically without mutating corners)
-            const sx = 1 + pullStrength * (Math.abs(dx) * 0.04 - Math.abs(dy) * 0.02);
-            const sy = 1 + pullStrength * (Math.abs(dy) * 0.04 - Math.abs(dx) * 0.02);
+            // Anchor it firmly to the opposite side by perfectly translating it along the scale vector
+            const tx = dx * (stretchAmount * rect.width / 2);
+            const ty = dy * (stretchAmount * rect.height / 2);
+            
+            // Compress perpendicularly to preserve liquid volume
+            const sx = 1 + stretchAmount * Math.abs(dx) - (stretchAmount * 0.4) * Math.abs(dy);
+            const sy = 1 + stretchAmount * Math.abs(dy) - (stretchAmount * 0.4) * Math.abs(dx);
             
             el.style.transform = `translate(${tx}px, ${ty}px) scale(${sx}, ${sy})`;
           } else {
-             // Smooth snap-back when mouse leaves radius
+             // Smooth snap-back
              el.style.transition = 'transform 0.5s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.4s ease-out';
              el.style.transform = `translate(0px, 0px) scale(1, 1)`;
           }
         });
-      });
+      };
+
+      document.addEventListener('mousemove', (e) => updatePhysics(e.clientX, e.clientY));
+      document.addEventListener('touchmove', (e) => {
+          if (e.touches && e.touches.length > 0) updatePhysics(e.touches[0].clientX, e.touches[0].clientY);
+      }, { passive: true });
 
     });
   </script>
