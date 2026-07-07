@@ -2484,13 +2484,13 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
             const dx = distX / distance;
             const dy = distY / distance;
             
-            // 1. Subtle Translation (Pulling the water mass towards the mouse)
-            const tx = dx * pullStrength * 25; 
-            const ty = dy * pullStrength * 25;
+            // 1. Subtle Translation (Keeps it 'in place' instead of sliding around)
+            const tx = dx * pullStrength * 6; 
+            const ty = dy * pullStrength * 6;
             
             // 2. Volume Preservation Scale (Squish and stretch along axes)
-            const sx = 1 + pullStrength * (Math.abs(dx) * 0.08 - Math.abs(dy) * 0.04);
-            const sy = 1 + pullStrength * (Math.abs(dy) * 0.08 - Math.abs(dx) * 0.04);
+            const sx = 1 + pullStrength * (Math.abs(dx) * 0.04 - Math.abs(dy) * 0.02);
+            const sy = 1 + pullStrength * (Math.abs(dy) * 0.04 - Math.abs(dx) * 0.02);
             
             el.style.transform = `translate(${tx}px, ${ty}px) scale(${sx}, ${sy})`;
             
@@ -2502,21 +2502,23 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
             if (isPill) { brBase = 50; }
             else if (el.classList.contains('main-content-box')) { brBase = 40; }
             
-            const intensity = brBase * 0.85; 
+            // User requested shape stays rounded always. Reduce intensity so it doesn't sharpen too much.
+            const intensity = brBase * 0.35; 
+            const minRadius = brBase * 0.5; // Never become sharp, always stay at least 50% round
             
             // Dot product evaluates how closely a corner's direction matches the mouse's direction.
             function getDeformation(cx, cy) {
                 const dot = dx * cx + dy * cy;
-                // Positive = pointing at mouse (sharpen), Negative = pointing away (round)
+                // Positive = pointing at mouse (sharpen slightly), Negative = pointing away (round slightly)
                 return dot * pullStrength;
             }
             
             // Normalized corner vectors
             const cornerVal = 0.7071; // 1 / sqrt(2)
-            const tl = Math.max(4, brBase - getDeformation(-cornerVal, -cornerVal) * intensity);
-            const tr = Math.max(4, brBase - getDeformation(cornerVal, -cornerVal) * intensity);
-            const br = Math.max(4, brBase - getDeformation(cornerVal, cornerVal) * intensity);
-            const bl = Math.max(4, brBase - getDeformation(-cornerVal, cornerVal) * intensity);
+            const tl = Math.max(minRadius, brBase - getDeformation(-cornerVal, -cornerVal) * intensity);
+            const tr = Math.max(minRadius, brBase - getDeformation(cornerVal, -cornerVal) * intensity);
+            const br = Math.max(minRadius, brBase - getDeformation(cornerVal, cornerVal) * intensity);
+            const bl = Math.max(minRadius, brBase - getDeformation(-cornerVal, cornerVal) * intensity);
             
             el.style.borderRadius = `${tl}${unit} ${tr}${unit} ${br}${unit} ${bl}${unit}`;
           } else {
