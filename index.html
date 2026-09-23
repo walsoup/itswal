@@ -902,28 +902,41 @@
     }
 
     /* --------------------------------------------------------------------------
-      BOTTOM RIGHT FOOTER INFO (DISCREET WATERMARK)
+      BOTTOM LEFT FOOTER INFO (DISCREET WATERMARK)
       --------------------------------------------------------------------------
       */
     .wal-bottom-info {
       position: fixed;
-      right: 16px;
-      bottom: 3px;
+      left: 16px;
+      bottom: 16px;
       z-index: 1100;
-      font-size: 9px;
-      line-height: 1;
-      letter-spacing: 0.04em;
-      color: var(--color-text-muted);
-      opacity: 0.01;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      background: rgba(18, 18, 18, 0.88);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: #ffffff;
+      font-size: 0.74rem;
+      line-height: 1.4;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      opacity: 0.02;
       pointer-events: auto;
       user-select: none;
       cursor: default;
-      transition: opacity 0.4s ease;
+      transition: opacity 0.35s ease, transform 0.25s ease;
       white-space: nowrap;
     }
 
-    .wal-bottom-info:hover {
-      opacity: 0.45;
+    .wal-bottom-info:hover,
+    .wal-bottom-info.is-hovered {
+      opacity: 0.95;
+      transform: translateY(-2px);
     }
 
     /* --------------------------------------------------------------------------
@@ -3857,6 +3870,24 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
       const vibeDoodle = document.getElementById('vibe-doodle-trigger') || document.getElementById('chip-doodle-mode');
       if (vibeDoodle) {
         vibeDoodle.addEventListener('click', () => toggleDoodleMode(true));
+      }
+
+      // Bottom-left watermark reveal on corner proximity
+      const bottomInfo = document.getElementById('wal-bottom-info');
+      if (bottomInfo) {
+        window.addEventListener('mousemove', (e) => {
+          const distFromLeft = e.clientX;
+          const distFromBottom = window.innerHeight - e.clientY;
+          if (distFromLeft <= 180 && distFromBottom <= 100) {
+            bottomInfo.classList.add('is-hovered');
+          } else {
+            bottomInfo.classList.remove('is-hovered');
+          }
+        }, { passive: true });
+
+        bottomInfo.addEventListener('click', () => {
+          bottomInfo.classList.toggle('is-hovered');
+        });
       }
 
       restoreCustomDoodles();
