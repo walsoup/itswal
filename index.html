@@ -1036,52 +1036,115 @@
 
     .doodle-toolbar {
       position: fixed;
-      top: 20px;
+      top: 16px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 1002;
       display: none;
       align-items: center;
-      gap: 12px;
-      padding: 8px 20px;
+      gap: 8px;
+      padding: 6px 14px;
       border-radius: 9999px;
-      background: rgba(18, 18, 18, 0.88);
-      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: rgba(18, 18, 18, 0.92);
+      border: 1px solid rgba(255, 255, 255, 0.22);
       color: #fff;
-      font-size: 0.85rem;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      font-size: 0.8rem;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      max-width: min(96vw, 680px);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .doodle-toolbar::-webkit-scrollbar {
+      display: none;
     }
 
     body.doodle-mode-active .doodle-toolbar {
       display: flex;
     }
 
+    .doodle-palette {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 2px;
+    }
+
+    .doodle-color-swatch {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      padding: 0;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+      flex-shrink: 0;
+    }
+
+    .doodle-color-swatch:hover {
+      transform: scale(1.25);
+      border-color: #fff;
+    }
+
+    .doodle-color-swatch.active {
+      transform: scale(1.3);
+      border-color: #fff;
+      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.45), 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .doodle-divider {
+      width: 1px;
+      height: 18px;
+      background: rgba(255, 255, 255, 0.2);
+      margin: 0 2px;
+      flex-shrink: 0;
+    }
+
     .doodle-btn {
-      padding: 5px 14px;
+      padding: 5px 12px;
       border-radius: 9999px;
-      font-size: 0.75rem;
+      font-size: 0.74rem;
       font-weight: 600;
       cursor: pointer;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: rgba(255, 255, 255, 0.12);
       color: #fff;
       user-select: none;
       -webkit-user-select: none;
       touch-action: manipulation;
       -webkit-tap-highlight-color: transparent;
-      transition: background 0.2s ease, transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.12s ease;
+      transition: background 0.18s ease, transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.18s ease, box-shadow 0.18s ease;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
     }
 
     .doodle-btn:hover {
-      background: rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.24);
       transform: translateY(-1px);
     }
 
     .doodle-btn:active {
-      transform: translateY(1.5px) scale(0.95) !important;
-      transition-duration: 0.05s !important;
+      transform: translateY(1px) scale(0.96) !important;
+    }
+
+    .doodle-btn.doodle-tool-active {
+      background: rgba(255, 255, 255, 0.35);
+      border-color: rgba(255, 255, 255, 0.8);
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.25);
+    }
+
+    .doodle-btn.doodle-btn-done {
+      background: var(--color-accent);
+      border-color: transparent;
+      color: #121212;
+      font-weight: 700;
+    }
+
+    .doodle-btn.doodle-btn-done:hover {
+      filter: brightness(1.1);
     }
 
     /* --------------------------------------------------------------------------
@@ -1885,9 +1948,26 @@
   <canvas id="doodle-canvas"></canvas>
 
   <div id="doodle-toolbar" class="doodle-toolbar" aria-hidden="true">
-    <span>〰️ Doodle Mode</span>
-    <button id="doodle-clear-btn" class="doodle-btn">Clear</button>
-    <button id="doodle-exit-btn" class="doodle-btn">Done (Esc)</button>
+    <button id="doodle-pen-btn" class="doodle-btn doodle-tool-active" title="Pen (P)" aria-label="Pen tool">✏️ Pen</button>
+    <button id="doodle-eraser-btn" class="doodle-btn" title="Eraser (E)" aria-label="Eraser tool">🧹 Eraser</button>
+
+    <div class="doodle-divider"></div>
+
+    <div class="doodle-palette" id="doodle-palette" role="radiogroup" aria-label="Color palette">
+      <button class="doodle-color-swatch active" data-color="accent" style="background: var(--color-accent);" title="Theme Accent" aria-label="Theme Accent"></button>
+      <button class="doodle-color-swatch" data-color="#ff5c8d" style="background: #ff5c8d;" title="Coral Pink" aria-label="Coral Pink"></button>
+      <button class="doodle-color-swatch" data-color="#ffd166" style="background: #ffd166;" title="Banana Yellow" aria-label="Banana Yellow"></button>
+      <button class="doodle-color-swatch" data-color="#06d6a0" style="background: #06d6a0;" title="Mint Green" aria-label="Mint Green"></button>
+      <button class="doodle-color-swatch" data-color="#00b4d8" style="background: #00b4d8;" title="Cyan Blue" aria-label="Cyan Blue"></button>
+      <button class="doodle-color-swatch" data-color="#b388ff" style="background: #b388ff;" title="Purple" aria-label="Purple"></button>
+      <button class="doodle-color-swatch" data-color="#ffffff" style="background: #ffffff;" title="White" aria-label="White"></button>
+      <button class="doodle-color-swatch" data-color="#1f2937" style="background: #1f2937;" title="Dark" aria-label="Dark"></button>
+    </div>
+
+    <div class="doodle-divider"></div>
+
+    <button id="doodle-clear-btn" class="doodle-btn" title="Clear canvas">Clear</button>
+    <button id="doodle-exit-btn" class="doodle-btn doodle-btn-done" title="Save & Exit">Done (Esc)</button>
   </div>
 
   <div id="wal-toast" class="wal-toast" role="status" aria-live="polite">
@@ -1907,7 +1987,7 @@
     <button id="audio-toggle-btn" class="audio-toggle-btn" aria-label="Mute background audio" title="Mute background audio">🔊</button>
   </div>
 
-  <div class="wal-bottom-info" id="wal-bottom-info" aria-hidden="true">regula uk 2026 copyright Walid</div>
+  <div class="wal-bottom-info" id="wal-bottom-info" aria-hidden="true">© 2026 Walid</div>
 
   <div class="relative min-h-screen flex items-center justify-center p-4 z-10">
     <div class="max-w-6xl w-full flex flex-col md:flex-row md:items-stretch md:space-x-8">
@@ -2539,6 +2619,46 @@
       let lastDoodleY = 0;
       let doodleStrokes = [];
       let currentStroke = null;
+      let currentDoodleTool = 'pen'; // 'pen' | 'eraser'
+      let currentDoodleColor = 'accent'; // 'accent' | hex color string
+      let doodleCheerIndex = 0;
+
+      const DOODLE_CHEER_MESSAGES = [
+        'Nice work :3',
+        'Looks cute :3',
+        'Masterpiece :3',
+        'Very aesthetic :3',
+        'Clean doodle :3'
+      ];
+
+      function getActiveDoodleColor() {
+        if (currentDoodleColor === 'accent') {
+          return (typeof getComputedStyle === 'function')
+            ? (getComputedStyle(document.body).getPropertyValue('--color-accent').trim() || '#86B910')
+            : '#86B910';
+        }
+        return currentDoodleColor;
+      }
+
+      function setDoodleTool(tool) {
+        currentDoodleTool = tool;
+        const penBtn = document.getElementById('doodle-pen-btn');
+        const eraserBtn = document.getElementById('doodle-eraser-btn');
+        if (penBtn) penBtn.classList.toggle('doodle-tool-active', tool === 'pen');
+        if (eraserBtn) eraserBtn.classList.toggle('doodle-tool-active', tool === 'eraser');
+        if (doodleCanvas) {
+          doodleCanvas.style.cursor = tool === 'eraser' ? 'cell' : 'crosshair';
+        }
+      }
+
+      function setDoodleColor(color, swatchEl) {
+        currentDoodleColor = color;
+        setDoodleTool('pen');
+        document.querySelectorAll('.doodle-color-swatch').forEach(s => s.classList.remove('active'));
+        if (swatchEl) {
+          swatchEl.classList.add('active');
+        }
+      }
 
       function initDoodleCanvas() {
         if (doodleCanvas) return;
@@ -2560,35 +2680,91 @@
           return { x: clientX, y: clientY };
         }
 
+        function eraseAt(x, y, fromX = x, fromY = y) {
+          if (!doodleCtx) return;
+          doodleCtx.save();
+          doodleCtx.globalCompositeOperation = 'destination-out';
+          doodleCtx.lineWidth = 28;
+          doodleCtx.lineCap = 'round';
+          doodleCtx.lineJoin = 'round';
+          doodleCtx.beginPath();
+          doodleCtx.moveTo(fromX, fromY);
+          doodleCtx.lineTo(x, y);
+          doodleCtx.stroke();
+          doodleCtx.restore();
+
+          const eraseRadiusSq = 18 * 18;
+          const nextStrokes = [];
+
+          doodleStrokes.forEach(stroke => {
+            if (!stroke || stroke.length === 0) return;
+            const strokeColor = stroke.color;
+            let sub = [];
+            stroke.forEach(pt => {
+              const dx = pt.x - x;
+              const dy = pt.y - y;
+              if (dx * dx + dy * dy > eraseRadiusSq) {
+                sub.push(pt);
+              } else {
+                if (sub.length > 0) {
+                  sub.color = strokeColor;
+                  nextStrokes.push(sub);
+                  sub = [];
+                }
+              }
+            });
+            if (sub.length > 0) {
+              sub.color = strokeColor;
+              nextStrokes.push(sub);
+            }
+          });
+
+          doodleStrokes = nextStrokes;
+        }
+
         function startDrawing(e) {
           if (!isDoodleActive || !doodleCtx) return;
           isDrawing = true;
           const pos = getPos(e);
           lastDoodleX = pos.x;
           lastDoodleY = pos.y;
-          currentStroke = [{ x: pos.x, y: pos.y }];
-          doodleStrokes.push(currentStroke);
+
+          if (currentDoodleTool === 'eraser') {
+            eraseAt(pos.x, pos.y);
+          } else {
+            const activeColor = getActiveDoodleColor();
+            currentStroke = [{ x: pos.x, y: pos.y }];
+            currentStroke.color = activeColor;
+            doodleStrokes.push(currentStroke);
+          }
         }
 
         function draw(e) {
           if (!isDrawing || !isDoodleActive || !doodleCtx) return;
           const pos = getPos(e);
-          const accentColor = (typeof getComputedStyle === 'function')
-            ? (getComputedStyle(document.body).getPropertyValue('--color-accent').trim() || '#d57624')
-            : '#d57624';
-          doodleCtx.strokeStyle = accentColor;
-          doodleCtx.lineWidth = 4;
-          doodleCtx.lineCap = 'round';
-          doodleCtx.lineJoin = 'round';
-          doodleCtx.beginPath();
-          doodleCtx.moveTo(lastDoodleX, lastDoodleY);
-          doodleCtx.lineTo(pos.x, pos.y);
-          doodleCtx.stroke();
+
+          if (currentDoodleTool === 'eraser') {
+            eraseAt(pos.x, pos.y, lastDoodleX, lastDoodleY);
+          } else {
+            const activeColor = getActiveDoodleColor();
+            doodleCtx.save();
+            doodleCtx.globalCompositeOperation = 'source-over';
+            doodleCtx.strokeStyle = activeColor;
+            doodleCtx.lineWidth = 4;
+            doodleCtx.lineCap = 'round';
+            doodleCtx.lineJoin = 'round';
+            doodleCtx.beginPath();
+            doodleCtx.moveTo(lastDoodleX, lastDoodleY);
+            doodleCtx.lineTo(pos.x, pos.y);
+            doodleCtx.stroke();
+            doodleCtx.restore();
+
+            if (currentStroke) {
+              currentStroke.push({ x: pos.x, y: pos.y });
+            }
+          }
           lastDoodleX = pos.x;
           lastDoodleY = pos.y;
-          if (currentStroke) {
-            currentStroke.push({ x: pos.x, y: pos.y });
-          }
         }
 
         function stopDrawing() {
@@ -2604,6 +2780,26 @@
         doodleCanvas.addEventListener('touchmove', draw, { passive: true });
         doodleCanvas.addEventListener('touchend', stopDrawing);
 
+        // Tool buttons
+        const penBtn = document.getElementById('doodle-pen-btn');
+        if (penBtn) {
+          penBtn.addEventListener('click', () => setDoodleTool('pen'));
+        }
+        const eraserBtn = document.getElementById('doodle-eraser-btn');
+        if (eraserBtn) {
+          eraserBtn.addEventListener('click', () => setDoodleTool('eraser'));
+        }
+
+        // Color swatches
+        const swatches = document.querySelectorAll('.doodle-color-swatch');
+        swatches.forEach(swatch => {
+          swatch.addEventListener('click', () => {
+            const color = swatch.getAttribute('data-color');
+            setDoodleColor(color, swatch);
+          });
+        });
+
+        // Clear button
         const clearBtn = document.getElementById('doodle-clear-btn');
         if (clearBtn) {
           clearBtn.addEventListener('click', () => {
@@ -2611,13 +2807,22 @@
               doodleCtx.clearRect(0, 0, doodleCanvas.width, doodleCanvas.height);
             }
             doodleStrokes = [];
+            currentStroke = null;
           });
         }
 
+        // Exit button
         const exitBtn = document.getElementById('doodle-exit-btn');
         if (exitBtn) {
           exitBtn.addEventListener('click', () => toggleDoodleMode(false));
         }
+
+        // Shortcuts: E for eraser, P / B for pen
+        window.addEventListener('keydown', (e) => {
+          if (!isDoodleActive) return;
+          if (e.key === 'e' || e.key === 'E') setDoodleTool('eraser');
+          if (e.key === 'p' || e.key === 'P' || e.key === 'b' || e.key === 'B') setDoodleTool('pen');
+        });
       }
 
       function convertDoodleToCrew() {
@@ -2632,7 +2837,9 @@
           .map(s => {
             if (!s || s.length === 0) return null;
             if (s.length === 1) {
-              return [{ x: s[0].x, y: s[0].y }, { x: s[0].x + 0.5, y: s[0].y + 0.5 }];
+              const p = [{ x: s[0].x, y: s[0].y }, { x: s[0].x + 0.5, y: s[0].y + 0.5 }];
+              p.color = s.color;
+              return p;
             }
             return s;
           })
@@ -2666,15 +2873,14 @@
         const posX = Math.max(8, Math.round(minX - pad));
         const posY = Math.max(8, Math.round(minY - pad));
 
-        let d = '';
-        validStrokes.forEach(stroke => {
+        const strokeItems = validStrokes.map(stroke => {
           let seg = '';
           stroke.forEach((pt, idx) => {
             const relX = (pt.x - (minX - pad)).toFixed(1);
             const relY = (pt.y - (minY - pad)).toFixed(1);
             seg += (idx === 0 ? `M ${relX},${relY}` : ` L ${relX},${relY}`);
           });
-          d += (d ? ' ' : '') + seg;
+          return { d: seg, color: stroke.color || 'currentColor' };
         });
 
         const bgLayer = document.getElementById('bg-canvas-layer') ||
@@ -2697,14 +2903,16 @@
         svg.style.width = `${boxWidth}px`;
         svg.style.height = `${boxHeight}px`;
 
-        const path = createSvgEl('path');
-        path.setAttribute('d', d);
-        path.setAttribute('fill', 'none');
-        path.setAttribute('stroke', 'currentColor');
-        path.setAttribute('stroke-width', '3.5');
-        path.setAttribute('stroke-linecap', 'round');
-        path.setAttribute('stroke-linejoin', 'round');
-        svg.appendChild(path);
+        strokeItems.forEach(item => {
+          const path = createSvgEl('path');
+          path.setAttribute('d', item.d);
+          path.setAttribute('fill', 'none');
+          path.setAttribute('stroke', item.color);
+          path.setAttribute('stroke-width', '3.5');
+          path.setAttribute('stroke-linecap', 'round');
+          path.setAttribute('stroke-linejoin', 'round');
+          svg.appendChild(path);
+        });
 
         svg.addEventListener('click', function () {
           this.classList.remove('squiggle-wiggling');
@@ -2718,7 +2926,15 @@
         // Save doodle in localStorage
         try {
           const saved = JSON.parse(localStorage.getItem('wal_crew_doodles') || '[]');
-          saved.push({ d, boxWidth, boxHeight, posX, posY, floatAnim });
+          saved.push({
+            strokes: strokeItems,
+            d: strokeItems.map(s => s.d).join(' '),
+            boxWidth,
+            boxHeight,
+            posX,
+            posY,
+            floatAnim
+          });
           if (saved.length > 20) saved.shift();
           localStorage.setItem('wal_crew_doodles', JSON.stringify(saved));
         } catch (e) {}
@@ -2729,7 +2945,9 @@
         doodleStrokes = [];
         currentStroke = null;
 
-        showToast('✨ Your doodle joined the background crew! :3', '🎨', 3500);
+        const cheerMsg = DOODLE_CHEER_MESSAGES[doodleCheerIndex % DOODLE_CHEER_MESSAGES.length];
+        doodleCheerIndex++;
+        showToast(cheerMsg, '🎨', 2200);
       }
 
       function restoreCustomDoodles() {
@@ -2743,7 +2961,7 @@
             return document.createElementNS ? document.createElementNS('http://www.w3.org/2000/svg', tag) : document.createElement(tag);
           };
           saved.forEach(item => {
-            if (!item || !item.d) return;
+            if (!item) return;
             const floatAnim = (item.floatAnim && item.floatAnim.startsWith('user-doodle-float-'))
               ? item.floatAnim
               : `user-doodle-float-${Math.floor(Math.random() * 5) + 1}`;
@@ -2755,14 +2973,27 @@
             svg.style.width = `${item.boxWidth}px`;
             svg.style.height = `${item.boxHeight}px`;
 
-            const path = createSvgEl('path');
-            path.setAttribute('d', item.d);
-            path.setAttribute('fill', 'none');
-            path.setAttribute('stroke', 'currentColor');
-            path.setAttribute('stroke-width', '3.5');
-            path.setAttribute('stroke-linecap', 'round');
-            path.setAttribute('stroke-linejoin', 'round');
-            svg.appendChild(path);
+            if (Array.isArray(item.strokes) && item.strokes.length > 0) {
+              item.strokes.forEach(s => {
+                const path = createSvgEl('path');
+                path.setAttribute('d', s.d);
+                path.setAttribute('fill', 'none');
+                path.setAttribute('stroke', s.color || 'currentColor');
+                path.setAttribute('stroke-width', '3.5');
+                path.setAttribute('stroke-linecap', 'round');
+                path.setAttribute('stroke-linejoin', 'round');
+                svg.appendChild(path);
+              });
+            } else if (item.d) {
+              const path = createSvgEl('path');
+              path.setAttribute('d', item.d);
+              path.setAttribute('fill', 'none');
+              path.setAttribute('stroke', 'currentColor');
+              path.setAttribute('stroke-width', '3.5');
+              path.setAttribute('stroke-linecap', 'round');
+              path.setAttribute('stroke-linejoin', 'round');
+              svg.appendChild(path);
+            }
 
             svg.addEventListener('click', function () {
               this.classList.remove('squiggle-wiggling');
@@ -2770,6 +3001,7 @@
               this.classList.add('squiggle-wiggling');
               setTimeout(() => this.classList.remove('squiggle-wiggling'), 650);
             });
+
             bgLayer.appendChild(svg);
           });
         } catch (e) {}
@@ -2783,8 +3015,9 @@
         }
         isDoodleActive = newState;
         if (isDoodleActive) {
+          setDoodleTool('pen');
           body.classList.add('doodle-mode-active');
-          showToast('〰️ Doodle Mode! Draw squiggles anywhere', '🎨', 3000);
+          showToast('〰️ Doodle Mode! Draw squiggles anywhere', '🎨', 2200);
         } else {
           body.classList.remove('doodle-mode-active');
         }
