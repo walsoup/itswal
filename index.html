@@ -71,6 +71,9 @@
       --audio-btn-color: #374151;
       --audio-btn-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
       --audio-btn-hover-bg: rgba(255, 255, 255, 0.75);
+
+      /* Squiggle Background Accents */
+      --squiggle-bg-color: rgba(213, 118, 36, 0.32);
     }
 
     * {
@@ -83,25 +86,26 @@
       --------------------------------------------------------------------------
       */
     body.theme-dark {
-      --color-bg-primary: #020205;
-      --color-accent: #ffffff;
-      --color-accent-hover: #e2e8f0;
-      --color-text-main: #f8fafc;
-      --color-text-muted: #94a3b8;
-      --color-text-heading: #ffffff;
-      --color-nav-text: #94a3b8;
-      --color-social: #ffffff;
+      --color-bg-primary: #0e0618;
+      --color-accent: #e879a8;
+      --color-accent-hover: #f472b6;
+      --color-text-main: #ede9f6;
+      --color-text-muted: #b8a4cc;
+      --color-text-heading: #f5f0ff;
+      --color-nav-text: #e0d0f0;
+      --color-social: #d97fb3;
 
-      --audio-btn-bg: rgba(255, 255, 255, 0.05);
-      --audio-btn-border: rgba(255, 255, 255, 0.1);
-      --audio-btn-color: #f8fafc;
-      --audio-btn-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-      --audio-btn-hover-bg: rgba(255, 255, 255, 0.15);
+      --audio-btn-bg: rgba(200, 100, 160, 0.16);
+      --audio-btn-border: rgba(200, 100, 160, 0.3);
+      --audio-btn-color: #ede9f6;
+      --audio-btn-shadow: 0 8px 32px rgba(12, 4, 22, 0.6);
+      --audio-btn-hover-bg: rgba(220, 110, 170, 0.28);
       
       --mouse-x: 50vw;
       --mouse-y: 50vh;
       --blob-opacity: 0;
-      --glass-shine: rgba(255, 255, 255, 0.05);
+      --glass-shine: rgba(200, 170, 220, 0.12);
+      --squiggle-bg-color: rgba(220, 120, 180, 0.45);
     }
 
     body.theme-dark::before {
@@ -109,7 +113,13 @@
       position: fixed;
       inset: 0;
       z-index: -2;
-      background: #000000;
+      background:
+        radial-gradient(circle 900px at 20% 20%, rgba(200, 90, 160, 0.24), transparent 60%),
+        radial-gradient(circle 1100px at 80% 80%, rgba(100, 60, 200, 0.22), transparent 60%),
+        radial-gradient(circle 750px at 50% 10%, rgba(180, 60, 140, 0.18), transparent 50%),
+        radial-gradient(circle 600px at 85% 25%, rgba(80, 50, 180, 0.2), transparent 50%),
+        radial-gradient(circle 500px at 15% 75%, rgba(60, 20, 120, 0.15), transparent 50%),
+        #08030f;
     }
 
     body.theme-dark::after {
@@ -118,12 +128,13 @@
       inset: 0;
       z-index: -1;
       pointer-events: none;
-      /* Vibrant glowing gradient blob tied to cursor */
+      /* 50/50 cosmic space + pink nebula cursor glow */
       background: 
-        radial-gradient(circle 600px at var(--mouse-x) var(--mouse-y), rgba(130, 60, 255, 0.95), transparent 70%),
-        radial-gradient(circle 800px at calc(var(--mouse-x) - 200px) calc(var(--mouse-y) + 200px), rgba(0, 220, 255, 0.8), transparent 60%),
-        radial-gradient(circle 500px at calc(var(--mouse-x) + 300px) calc(var(--mouse-y) - 100px), rgba(255, 50, 150, 0.8), transparent 70%);
-      filter: blur(50px);
+        radial-gradient(circle 600px at var(--mouse-x) var(--mouse-y), rgba(220, 100, 170, 0.75), transparent 70%),
+        radial-gradient(circle 800px at calc(var(--mouse-x) - 180px) calc(var(--mouse-y) + 180px), rgba(120, 80, 200, 0.55), transparent 65%),
+        radial-gradient(circle 520px at calc(var(--mouse-x) + 260px) calc(var(--mouse-y) - 100px), rgba(200, 70, 130, 0.5), transparent 70%),
+        radial-gradient(circle 900px at calc(var(--mouse-x) - 220px) calc(var(--mouse-y) - 180px), rgba(100, 60, 180, 0.4), transparent 70%);
+      filter: blur(55px);
       transition: background 0.15s ease-out; 
       opacity: 1;
     }
@@ -131,9 +142,12 @@
     /* Ambient animated blobs */
     body.animations-enabled.theme-dark::before {
       background: 
-        radial-gradient(circle 800px at 20% 20%, rgba(60, 10, 150, 0.4), transparent 50%),
-        radial-gradient(circle 1000px at 80% 80%, rgba(10, 80, 120, 0.3), transparent 50%),
-        #000000;
+        radial-gradient(circle 850px at 20% 20%, rgba(200, 90, 160, 0.28), transparent 55%),
+        radial-gradient(circle 1050px at 80% 80%, rgba(100, 60, 200, 0.24), transparent 55%),
+        radial-gradient(circle 700px at 50% 15%, rgba(180, 60, 140, 0.18), transparent 50%),
+        radial-gradient(circle 800px at 70% 30%, rgba(80, 50, 180, 0.2), transparent 50%),
+        radial-gradient(circle 500px at 15% 75%, rgba(60, 20, 120, 0.15), transparent 50%),
+        #08030f;
       animation: liquidPulse 15s ease-in-out infinite alternate;
     }
 
@@ -148,21 +162,20 @@
     body.theme-dark .album-item,
     body.theme-dark .bg-white\/5,
     body.theme-dark .album-status {
-      /* True Water Droplet: High transparency, crisp refractive rims without splitting the middle */
-      background: rgba(255, 255, 255, 0) !important; 
-      border: 1px solid rgba(255, 255, 255, 0.1) !important;
-      backdrop-filter: blur(2px) saturate(120%) brightness(1.1) !important;
-      -webkit-backdrop-filter: blur(2px) saturate(120%) brightness(1.1) !important;
+      background: rgba(20, 10, 35, 0.4) !important; 
+      border: 1px solid rgba(180, 100, 200, 0.22) !important;
+      backdrop-filter: blur(6px) saturate(140%) brightness(1.05) !important;
+      -webkit-backdrop-filter: blur(6px) saturate(140%) brightness(1.05) !important;
       box-shadow: 
-        0 10px 30px rgba(0, 0, 0, 0.2), /* Soft drop shadow */
-        inset 0 1px 2px rgba(255, 255, 255, 0.8), /* Very thin, crisp top rim */
-        inset 0 -1px 2px rgba(0, 0, 0, 0.3), /* Very thin, crisp bottom rim */
-        inset 0 0 15px rgba(255, 255, 255, 0.15) !important; /* Unified internal glow */
+        0 12px 36px rgba(8, 2, 18, 0.5),
+        inset 0 1px 2px rgba(200, 170, 220, 0.5),
+        inset 0 -1px 2px rgba(20, 8, 40, 0.4),
+        inset 0 0 18px rgba(160, 80, 180, 0.12) !important;
     }
 
     body.theme-dark .main-content-box {
       border-radius: 50px !important;
-      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      border: 1px solid rgba(160, 90, 200, 0.25) !important;
     }
 
     body.theme-dark .side-nav {
@@ -183,18 +196,31 @@
       letter-spacing: 0.05em;
       color: var(--color-nav-text);
       z-index: 1;
-      transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      transition: all 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
     body.theme-dark .nav-link:hover,
     body.theme-dark .nav-link.active {
-      color: #ffffff;
-      background: rgba(255, 255, 255, 0.1) !important;
-      border-color: rgba(255, 255, 255, 0.3) !important;
+      color: #f5f0ff;
+      background: rgba(160, 80, 190, 0.2) !important;
+      border-color: rgba(180, 100, 200, 0.4) !important;
       transform: translateY(-2px) scale(1.02);
       box-shadow: 
-        0 15px 30px rgba(0, 0, 0, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+        0 15px 30px rgba(15, 4, 30, 0.55),
+        0 0 20px rgba(160, 80, 190, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+    }
+
+    body.theme-dark .nav-link:active {
+      transform: translateY(2px) scale(0.96) !important;
+      box-shadow: 
+        0 4px 10px rgba(10, 4, 25, 0.65),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+      transition-duration: 0.05s !important;
     }
 
     body.theme-dark .refresh-btn {
@@ -202,16 +228,29 @@
       overflow: hidden;
       color: #ffffff;
       border-radius: 999px;
-      transition: all 0.3s ease;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      transition: all 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
     body.theme-dark .refresh-btn:hover {
-      background: rgba(255, 255, 255, 0.1) !important;
-      border-color: rgba(255, 255, 255, 0.4) !important;
+      background: rgba(160, 80, 190, 0.22) !important;
+      border-color: rgba(180, 100, 200, 0.5) !important;
       transform: translateY(-2px);
       box-shadow: 
-        0 15px 30px rgba(0, 0, 0, 0.4),
+        0 15px 30px rgba(15, 4, 30, 0.55),
+        0 0 22px rgba(160, 80, 190, 0.25),
         inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+    }
+
+    body.theme-dark .refresh-btn:active {
+      transform: translateY(2px) scale(0.95) !important;
+      box-shadow: 
+        0 4px 10px rgba(10, 4, 25, 0.65),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+      transition-duration: 0.05s !important;
     }
 
     body.theme-dark .album-item {
@@ -227,13 +266,13 @@
       pointer-events: none;
       border-radius: inherit;
       z-index: 2;
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+      box-shadow: inset 0 0 0 1px rgba(160, 90, 200, 0.25);
     }
 
     body.theme-dark .album-item img {
       position: relative;
       z-index: 1;
-      opacity: 0.9;
+      opacity: 0.92;
       transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.2, 0, 0, 1);
     }
 
@@ -247,13 +286,13 @@
       border-radius: 20px;
     }
 
-    body.theme-dark #cat-fact { color: #f8fafc; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+    body.theme-dark #cat-fact { color: #ede9f6; text-shadow: 0 1px 4px rgba(140, 80, 180, 0.3); }
 
-    body.theme-dark .social-icon { color: #94a3b8; transition: all 0.3s ease; }
+    body.theme-dark .social-icon { color: #d097c8; transition: all 0.3s ease; }
     body.theme-dark .social-icon:hover {
-      color: #ffffff;
+      color: #f5f0ff;
       transform: scale(1.15);
-      filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.6));
+      filter: drop-shadow(0 0 8px rgba(160, 90, 200, 0.7));
     }
         /* --------------------------------------------------------------------------
       THEME: BANANA 🍌 (M3 Expressive cuz why not :3)
@@ -286,6 +325,7 @@
       --audio-btn-color: #121F00;
       --audio-btn-shadow: 0 10px 24px rgba(134, 185, 16, 0.22);
       --audio-btn-hover-bg: #A7D142;
+      --squiggle-bg-color: rgba(134, 185, 16, 0.4);
     }
 
     body.theme-banana .main-content-box {
@@ -363,6 +403,12 @@
       opacity: 1;
     }
 
+    body.theme-banana .nav-link:active {
+      transform: translateY(2px) scale(0.96) !important;
+      box-shadow: 0 2px 6px rgba(134, 185, 16, 0.2) !important;
+      transition-duration: 0.05s !important;
+    }
+
     body.theme-banana #squiggle-path {
       stroke: var(--color-accent);
       stroke-width: 6px;
@@ -376,7 +422,11 @@
       padding: 16px 32px;
       border: none;
       font-weight: 700;
-      transition: all 0.4s cubic-bezier(0.2, 0, 0, 1);
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      transition: all 0.15s cubic-bezier(0.2, 0, 0, 1);
     }
 
     body.theme-banana .refresh-btn:hover {
@@ -386,8 +436,9 @@
     }
 
     body.theme-banana .refresh-btn:active {
-      transform: scale(0.96);
+      transform: translateY(2px) scale(0.95) !important;
       border-radius: 10px;
+      transition-duration: 0.05s !important;
     }
 
     body.theme-banana .album-item {
@@ -570,6 +621,444 @@
     }
 
     /* --------------------------------------------------------------------------
+      SPICED BACKGROUND SQUIGGLES (Decorative floating ambient squiggles)
+      --------------------------------------------------------------------------
+      */
+    .bg-squiggle {
+      position: absolute;
+      fill: none;
+      stroke: var(--squiggle-bg-color, var(--color-accent));
+      stroke-width: 3.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      pointer-events: auto;
+      cursor: pointer;
+      opacity: 0.35;
+      transition: opacity 0.4s ease, stroke 0.5s ease, transform 0.3s ease;
+      will-change: transform;
+      z-index: 1;
+    }
+
+    .bg-squiggle:hover {
+      opacity: 0.85;
+      transform: scale(1.15) rotate(4deg);
+    }
+
+    body.theme-dark .bg-squiggle {
+      filter: drop-shadow(0 0 8px rgba(160, 90, 200, 0.45));
+    }
+
+    .squiggle-float-1 {
+      top: 8%;
+      right: 12%;
+      width: 160px;
+      height: 70px;
+    }
+
+    .squiggle-float-2 {
+      bottom: 14%;
+      left: 7%;
+      width: 110px;
+      height: 110px;
+    }
+
+    .squiggle-float-3 {
+      top: 18%;
+      left: 14%;
+      width: 65px;
+      height: 65px;
+    }
+
+    .squiggle-float-4 {
+      bottom: 22%;
+      right: 8%;
+      width: 170px;
+      height: 50px;
+    }
+
+    .squiggle-float-5 {
+      top: 55%;
+      left: 4%;
+      width: 120px;
+      height: 80px;
+    }
+
+    body.animations-enabled .squiggle-float-1 {
+      animation: squiggleFloat1 18s ease-in-out infinite alternate;
+    }
+
+    body.animations-enabled .squiggle-float-2 {
+      animation: squiggleFloat2 22s ease-in-out infinite alternate;
+    }
+
+    body.animations-enabled .squiggle-float-3 {
+      animation: squiggleFloat3 14s ease-in-out infinite alternate;
+    }
+
+    body.animations-enabled .squiggle-float-4 {
+      animation: squiggleFloat4 20s ease-in-out infinite alternate;
+    }
+
+    body.animations-enabled .squiggle-float-5 {
+      animation: squiggleFloat5 16s ease-in-out infinite alternate;
+    }
+
+    @keyframes squiggleFloat1 {
+      0% { transform: translate3d(0, 0, 0) rotate(0deg); }
+      100% { transform: translate3d(-25px, 20px, 0) rotate(8deg); }
+    }
+
+    @keyframes squiggleFloat2 {
+      0% { transform: translate3d(0, 0, 0) rotate(0deg); }
+      100% { transform: translate3d(20px, -25px, 0) rotate(-12deg); }
+    }
+
+    @keyframes squiggleFloat3 {
+      0% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
+      50% { transform: translate3d(15px, 15px, 0) scale(1.15) rotate(45deg); }
+      100% { transform: translate3d(-10px, 25px, 0) scale(0.9) rotate(90deg); }
+    }
+
+    @keyframes squiggleFloat4 {
+      0% { transform: translate3d(0, 0, 0) rotate(0deg); }
+      100% { transform: translate3d(-20px, -15px, 0) rotate(-6deg); }
+    }
+
+    @keyframes squiggleFloat5 {
+      0% { transform: translate3d(0, 0, 0) rotate(0deg); }
+      100% { transform: translate3d(15px, -20px, 0) rotate(10deg); }
+    }
+
+    @keyframes squiggleWiggle {
+      0% { transform: scale(1) rotate(0deg); }
+      25% { transform: scale(1.3) rotate(-18deg); }
+      50% { transform: scale(1.15) rotate(15deg); }
+      75% { transform: scale(1.2) rotate(-8deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+
+    .squiggle-wiggling {
+      animation: squiggleWiggle 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+    }
+
+    /* User custom doodles converted into background crew */
+    .user-doodle-squiggle {
+      position: absolute !important;
+      right: auto !important;
+      bottom: auto !important;
+      fill: none !important;
+      stroke: var(--color-accent);
+      color: var(--color-accent);
+      stroke-width: 3.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      pointer-events: auto;
+      cursor: pointer;
+      opacity: 0.75;
+      z-index: 1;
+      will-change: transform;
+      transition: opacity 0.3s ease, stroke 0.4s ease, color 0.4s ease, transform 0.25s ease;
+    }
+
+    .user-doodle-squiggle:hover {
+      opacity: 1;
+      transform: scale(1.08) rotate(3deg);
+      filter: drop-shadow(0 0 10px var(--color-accent));
+    }
+
+    body.theme-dark .user-doodle-squiggle {
+      filter: drop-shadow(0 0 8px rgba(160, 90, 200, 0.45));
+    }
+
+    body.animations-enabled .user-doodle-float-1 {
+      animation: squiggleFloat1 18s ease-in-out infinite alternate;
+    }
+    body.animations-enabled .user-doodle-float-2 {
+      animation: squiggleFloat2 22s ease-in-out infinite alternate;
+    }
+    body.animations-enabled .user-doodle-float-3 {
+      animation: squiggleFloat3 14s ease-in-out infinite alternate;
+    }
+    body.animations-enabled .user-doodle-float-4 {
+      animation: squiggleFloat4 20s ease-in-out infinite alternate;
+    }
+    body.animations-enabled .user-doodle-float-5 {
+      animation: squiggleFloat5 16s ease-in-out infinite alternate;
+    }
+
+    /* --------------------------------------------------------------------------
+      VIBE LIST & POLAROID CARD
+      --------------------------------------------------------------------------
+      */
+    .polaroid-card {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: var(--glass-shadow);
+      transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.3s ease;
+    }
+
+    .polaroid-card:hover {
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.16);
+    }
+
+    .vibe-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      line-height: 1.7;
+    }
+
+    .vibe-item {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      color: var(--color-text-muted);
+      font-size: 0.92rem;
+    }
+
+    .vibe-marker {
+      color: var(--color-accent);
+      font-weight: 700;
+      opacity: 0.7;
+      user-select: none;
+    }
+
+    .vibe-interactive-text {
+      cursor: pointer;
+      color: var(--color-text-main);
+      font-weight: 500;
+      text-decoration: underline dotted;
+      text-underline-offset: 3px;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      transition: color 0.15s ease, transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1);
+      display: inline-block;
+    }
+
+    .vibe-interactive-text:hover {
+      color: var(--color-accent);
+      transform: translateY(-1px);
+    }
+
+    .vibe-interactive-text:active {
+      transform: translateY(1.5px) scale(0.96) !important;
+      transition-duration: 0.05s !important;
+    }
+
+    .vibe-soup-highlight {
+      color: var(--color-accent);
+      font-weight: 600;
+    }
+
+    /* --------------------------------------------------------------------------
+      TOAST NOTIFICATION COMPONENT
+      --------------------------------------------------------------------------
+      */
+    .wal-toast {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      transform: translate(-50%, -120px);
+      z-index: 2000;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 24px;
+      border-radius: 20px;
+      background: rgba(18, 18, 18, 0.92);
+      color: #ffffff;
+      font-size: 0.88rem;
+      line-height: 1.45;
+      font-weight: 500;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      pointer-events: none;
+      opacity: 0;
+      max-width: min(92vw, 580px);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+    }
+
+    .wal-toast.show {
+      transform: translate(-50%, 0);
+      opacity: 1;
+    }
+
+    @keyframes toastWobble {
+      0% { transform: translate(-50%, 0) rotate(0deg); }
+      25% { transform: translate(-50%, 0) rotate(-2deg); }
+      75% { transform: translate(-50%, 0) rotate(2deg); }
+      100% { transform: translate(-50%, 0) rotate(0deg); }
+    }
+
+    .wal-toast.shake {
+      animation: toastWobble 0.4s ease-in-out;
+    }
+
+    /* --------------------------------------------------------------------------
+      AUDIO CONTROLS (PILL & MUTE BUTTON)
+      --------------------------------------------------------------------------
+      */
+    .audio-container {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      z-index: 1200;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .audio-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      height: 36px;
+      border-radius: 9999px;
+      background: var(--audio-btn-bg);
+      border: 1px solid var(--audio-btn-border);
+      color: var(--audio-btn-color);
+      font-size: 0.76rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      box-shadow: var(--audio-btn-shadow);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      white-space: nowrap;
+      user-select: none;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateX(18px) scale(0.4);
+      filter: blur(4px);
+      transform-origin: right center;
+      transition: opacity 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  filter 0.35s ease;
+    }
+
+    .audio-container:hover .audio-status-pill,
+    .audio-status-pill.pill-active {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+      filter: blur(0px);
+      pointer-events: auto;
+    }
+
+    @media (max-width: 640px) {
+      .audio-status-pill {
+        display: none;
+      }
+    }
+
+    .audio-wave-bars {
+      display: inline-flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 12px;
+    }
+
+    .audio-wave-bars .bar {
+      width: 2.5px;
+      background-color: var(--color-accent);
+      border-radius: 2px;
+      height: 4px;
+      transition: height 0.2s ease;
+    }
+
+    body.animations-enabled .audio-wave-bars .bar-1 {
+      animation: waveBar 1.1s ease-in-out infinite alternate;
+    }
+
+    body.animations-enabled .audio-wave-bars .bar-2 {
+      animation: waveBar 0.8s ease-in-out 0.2s infinite alternate;
+    }
+
+    body.animations-enabled .audio-wave-bars .bar-3 {
+      animation: waveBar 1.3s ease-in-out 0.4s infinite alternate;
+    }
+
+    @keyframes waveBar {
+      0% { height: 3px; }
+      100% { height: 12px; }
+    }
+
+    /* --------------------------------------------------------------------------
+      DOODLE CANVAS OVERLAY
+      --------------------------------------------------------------------------
+      */
+    #doodle-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1001;
+      display: none;
+      cursor: crosshair;
+      touch-action: none;
+    }
+
+    body.doodle-mode-active #doodle-canvas {
+      display: block;
+    }
+
+    .doodle-toolbar {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1002;
+      display: none;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 20px;
+      border-radius: 9999px;
+      background: rgba(18, 18, 18, 0.88);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #fff;
+      font-size: 0.85rem;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    body.doodle-mode-active .doodle-toolbar {
+      display: flex;
+    }
+
+    .doodle-btn {
+      padding: 5px 14px;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.2s ease, transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.12s ease;
+    }
+
+    .doodle-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .doodle-btn:active {
+      transform: translateY(1.5px) scale(0.95) !important;
+      transition-duration: 0.05s !important;
+    }
+
+    /* --------------------------------------------------------------------------
       NAVIGATION COMPONENT
       --------------------------------------------------------------------------
       */
@@ -602,12 +1091,21 @@
       font-size: 0.75rem;
       /* text-xs equivalent */
       color: var(--color-nav-text);
-      font-weight: 400;
-      transition: transform 0.5s ease-in-out, color 0.5s ease-in-out;
+      font-weight: 500;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1),
+                  color 0.2s ease,
+                  letter-spacing 0.25s ease,
+                  background 0.15s ease,
+                  box-shadow 0.12s ease;
     }
 
     .nav-link::after {
@@ -620,7 +1118,7 @@
       background: radial-gradient(circle, var(--color-accent) 0%, rgba(213, 118, 36, 0) 70%);
       filter: blur(7px);
       opacity: 0;
-      transition: opacity 0.5s ease-in-out;
+      transition: opacity 0.2s ease-in-out;
       z-index: -1;
       pointer-events: none;
     }
@@ -628,7 +1126,7 @@
     /* Hover state */
     .nav-link:hover {
       color: var(--color-accent);
-      transform: translateY(-2px);
+      transform: translateY(-1.5px);
     }
 
     .nav-link:hover::after,
@@ -636,10 +1134,10 @@
       opacity: 0.65;
     }
 
-    /* REDEFINING TRANSITION TO INCLUDE LETTER-SPACING */
-    .nav-link {
-      -webkit-transition: transform 0.5s ease-in-out, color 0.5s ease-in-out, letter-spacing 0.5s ease-in-out;
-      transition: transform 0.5s ease-in-out, color 0.5s ease-in-out, letter-spacing 0.5s ease-in-out;
+    /* Press/Active state: tactile physical depress */
+    .nav-link:active {
+      transform: translateY(1.5px) scale(0.96) !important;
+      transition-duration: 0.05s !important;
     }
 
     /* Active state */
@@ -820,8 +1318,17 @@
       display: inline-block;
       cursor: pointer;
       user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
       min-height: 1.2em;
       /* Prevents layout shift during loading */
+      transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .wal-container:active {
+      transform: scale(0.97) !important;
+      transition-duration: 0.05s !important;
     }
 
     .wal-title {
@@ -940,12 +1447,10 @@
     }
 
     .audio-toggle-btn {
-      position: fixed;
-      right: 16px;
-      bottom: 16px;
-      z-index: 1200;
-      width: 42px;
-      height: 42px;
+      width: 36px;
+      height: 36px;
+      min-width: 36px;
+      min-height: 36px;
       border: 1px solid var(--audio-btn-border);
       border-radius: 9999px;
       background: var(--audio-btn-bg);
@@ -954,17 +1459,42 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 1rem;
+      font-size: 0.82rem;
       box-shadow: var(--audio-btn-shadow);
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
-      transition: transform 0.15s ease, opacity 0.15s ease, background 0.2s ease;
+      opacity: 0.22;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1),
+                  opacity 0.25s ease,
+                  background 0.2s ease,
+                  box-shadow 0.12s ease;
     }
 
-    .audio-toggle-btn:hover {
-      transform: translateY(-1px);
-      opacity: 0.95;
-      background: var(--audio-btn-hover-bg);
+    .audio-container:hover .audio-toggle-btn,
+    .audio-toggle-btn:hover,
+    .audio-toggle-btn:focus-visible {
+      opacity: 1;
+      transform: scale(1.08);
+    }
+
+    .audio-toggle-btn:active {
+      transform: translateY(1.5px) scale(0.92) !important;
+      transition-duration: 0.05s !important;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    }
+
+    @keyframes buttonAbsorbPulse {
+      0% { transform: scale(1); }
+      35% { transform: scale(1.25); filter: drop-shadow(0 0 6px var(--color-accent)); }
+      100% { transform: scale(1); filter: none; }
+    }
+
+    .audio-toggle-btn.button-absorb-pulse {
+      animation: buttonAbsorbPulse 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     /* Fact Text Styling */
@@ -993,8 +1523,14 @@
       font-weight: 600;
       letter-spacing: 0.02em;
       box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
-      transform: translateY(0);
-      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.3s ease, border-color 0.3s ease;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1),
+                  box-shadow 0.12s ease,
+                  background 0.2s ease,
+                  border-color 0.2s ease;
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
     }
@@ -1003,12 +1539,13 @@
       background: rgba(255, 255, 255, 0.45);
       border-color: rgba(255, 255, 255, 0.55);
       box-shadow: 0 14px 28px rgba(0, 0, 0, 0.16);
-      transform: translateY(-1px);
+      transform: translateY(-2px);
     }
 
     .refresh-btn:active {
-      transform: translateY(0);
-      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.14);
+      transform: translateY(2px) scale(0.95) !important;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) !important;
+      transition-duration: 0.05s !important;
     }
 
     .refresh-btn:focus-visible {
@@ -1157,7 +1694,9 @@
       body.animations-enabled::before,
       body.animations-enabled.theme-dark::after,
       body.animations-enabled .blob-1,
-      body.animations-enabled .blob-2 {
+      body.animations-enabled .blob-2,
+      body.animations-enabled .bg-squiggle,
+      body.animations-enabled .audio-wave-bars .bar {
         animation: none !important;
       }
 
@@ -1221,11 +1760,21 @@
       font-size: 2rem;
       cursor: pointer;
       opacity: 0.7;
-      transition: opacity 0.2s;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      transition: opacity 0.2s, transform 0.12s ease;
     }
 
     .lightbox-close:hover {
       opacity: 1;
+      transform: scale(1.1);
+    }
+
+    .lightbox-close:active {
+      transform: scale(0.9) !important;
+      transition-duration: 0.05s !important;
     }
   
     /* Liquid Morphing Styles */
@@ -1253,9 +1802,9 @@
       border-radius: inherit;
       background: radial-gradient(
         circle 200px at var(--local-x, 50%) var(--local-y, 50%), 
-        rgba(255, 255, 255, 0.25) 0%, 
-        rgba(255, 255, 255, 0.05) 30%,
-        transparent 60%
+        rgba(210, 180, 240, 0.3) 0%, 
+        rgba(180, 120, 200, 0.12) 40%, 
+        transparent 65%
       );
       opacity: 0;
       transition: opacity 0.4s ease;
@@ -1296,13 +1845,41 @@
 
 
 
-  <div class="absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
+  <div id="bg-canvas-layer" class="fixed inset-0 z-0 overflow-hidden pointer-events-none" aria-hidden="true">
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
+    <svg class="bg-squiggle squiggle-float-1" viewBox="0 0 180 80"><path d="M 10,40 C 40,5 70,75 100,40 C 130,5 160,75 170,40" /></svg>
+    <svg class="bg-squiggle squiggle-float-2" viewBox="0 0 120 120"><path d="M 60,15 C 85,15 105,35 105,60 C 105,85 85,105 60,105 C 35,105 25,85 35,65 C 45,45 75,45 80,65 C 85,85 65,95 55,85" /></svg>
+    <svg class="bg-squiggle squiggle-float-3" viewBox="0 0 100 100"><path d="M 50,5 Q 50,50 95,50 Q 50,50 50,95 Q 50,50 5,50 Q 50,50 50,5 Z" /></svg>
+    <svg class="bg-squiggle squiggle-float-4" viewBox="0 0 200 60"><path d="M 10,30 Q 35,5 60,30 T 110,30 T 160,30 T 190,30" /></svg>
+    <svg class="bg-squiggle squiggle-float-5" viewBox="0 0 140 100"><path d="M 10,80 Q 40,10 70,80 T 130,80" /></svg>
   </div>
 
   <canvas id="matrix-canvas"></canvas>
-  <button id="audio-toggle-btn" class="audio-toggle-btn" aria-label="Mute background audio" title="Mute background audio">🔊</button>
+  <canvas id="doodle-canvas"></canvas>
+
+  <div id="doodle-toolbar" class="doodle-toolbar" aria-hidden="true">
+    <span>〰️ Doodle Mode</span>
+    <button id="doodle-clear-btn" class="doodle-btn">Clear</button>
+    <button id="doodle-exit-btn" class="doodle-btn">Done (Esc)</button>
+  </div>
+
+  <div id="wal-toast" class="wal-toast" role="status" aria-live="polite">
+    <span id="wal-toast-icon">✨</span>
+    <span id="wal-toast-message">Hello!</span>
+  </div>
+
+  <div id="audio-controls-container" class="audio-container">
+    <div id="audio-status-pill" class="audio-status-pill" aria-hidden="true">
+      <span class="audio-wave-bars">
+        <span class="bar bar-1"></span>
+        <span class="bar bar-2"></span>
+        <span class="bar bar-3"></span>
+      </span>
+      <span id="audio-track-label">Ambient Jukebox</span>
+    </div>
+    <button id="audio-toggle-btn" class="audio-toggle-btn" aria-label="Mute background audio" title="Mute background audio">🔊</button>
+  </div>
 
   <div class="relative min-h-screen flex items-center justify-center p-4 z-10">
     <div class="max-w-6xl w-full flex flex-col md:flex-row md:items-stretch md:space-x-8">
@@ -1374,8 +1951,24 @@
           <h2 class="text-4xl md:text-5xl font-bold mb-4">About Me</h2>
           <p class="text-lg mb-4">every elegant solution eventually creates a new, much worse problem.</p>
           <p class="text-lg mb-4">I like taking photos of cats (among other things), and building stuff to kill time</p>
-          <img src="flower.jpg" alt="A beautiful flower" class="rounded-lg mt-6 shadow-md w-full max-w-lg mx-auto"
-            onerror="this.onerror=null; this.src='https://placehold.co/600x400/FFDAB9/B22222?text=A+Cool+Flower';" />
+
+          <div class="mt-6 max-w-lg mx-auto">
+            <div id="bio-flower-card" class="polaroid-card p-3 rounded-2xl cursor-pointer" title="Click to view flower in lightbox">
+              <img src="flower.jpg" alt="A beautiful flower" class="rounded-xl shadow-md w-full object-cover aspect-[4/3]"
+                onerror="this.onerror=null; this.src='https://placehold.co/600x400/FFDAB9/B22222?text=A+Cool+Flower';" />
+              <p class="text-center text-xs mt-3 italic text-gray-500 opacity-80">shot somewhere sunny • click to view in lightbox</p>
+            </div>
+          </div>
+
+          <div class="mt-8 pt-6 border-t border-white/10">
+            <h3 class="text-xs uppercase font-bold tracking-widest text-gray-500 mb-3">Things I vibe with</h3>
+            <ul class="vibe-list space-y-2 text-sm text-gray-400" role="list">
+              <li class="vibe-item"><span class="vibe-marker font-mono">~</span> cats (animals in general)</li>
+              <li class="vibe-item"><span class="vibe-marker font-mono">~</span> <span id="vibe-doodle-trigger" class="vibe-interactive-text" role="button" tabindex="0" title="Click to draw squiggles!">drawing &amp; doodling</span> <span class="opacity-70 text-xs">(i like drawing furries but nobody has to know)</span></li>
+              <li class="vibe-item"><span class="vibe-marker font-mono">~</span> <span id="vibe-soup" class="vibe-interactive-text vibe-soup-highlight" role="button" tabindex="0" title="Click for the ultimate stance on soup :3">soup</span></li>
+              <li class="vibe-item"><span class="vibe-marker font-mono">~</span> computers obviously</li>
+            </ul>
+          </div>
         </div>
 
         <div id="cat" class="content-section">
@@ -1804,6 +2397,374 @@
 
       /*
       ====================================================================
+      TOAST & EASTER EGG NOTIFICATIONS
+      ====================================================================
+      */
+      let toastTimer = null;
+      function showToast(message, icon = '✨', duration = 3500) {
+        const toast = document.getElementById('wal-toast');
+        const toastIcon = document.getElementById('wal-toast-icon');
+        const toastMsg = document.getElementById('wal-toast-message');
+        if (!toast || !toastIcon || !toastMsg) return;
+
+        toastIcon.textContent = icon;
+        toastMsg.textContent = message;
+        toast.classList.remove('show', 'shake');
+        void toast.offsetWidth;
+        toast.classList.add('show', 'shake');
+
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          toast.classList.remove('show', 'shake');
+        }, duration);
+      }
+
+      function triggerSoupAlert() {
+        showToast('Soup is the most beautiful creation of mankind, a beautiful tasty meal for any time of day, i hope whoever you are, that you love soup as much as i do :3', '🥣', 6500);
+      }
+
+      function triggerCatCouncil() {
+        showToast('🐾 The cat council has approved this website! :3', '🐱', 4000);
+        if (!document.body || !document.body.appendChild) return;
+        for (let i = 0; i < 8; i++) {
+          setTimeout(() => {
+            const paw = document.createElement('div');
+            paw.textContent = Math.random() > 0.5 ? '🐾' : '🐱';
+            paw.style.position = 'fixed';
+            paw.style.left = (Math.random() * 85 + 5) + 'vw';
+            paw.style.top = '-40px';
+            paw.style.fontSize = (Math.random() * 1.5 + 1.2) + 'rem';
+            paw.style.zIndex = '9999';
+            paw.style.pointerEvents = 'none';
+            paw.style.transition = 'transform 3.5s cubic-bezier(0.2, 0.8, 0.4, 1), opacity 3.5s ease-out';
+            document.body.appendChild(paw);
+            requestAnimationFrame(() => {
+              paw.style.transform = `translate3d(${(Math.random() - 0.5) * 80}px, calc(100vh + 60px), 0) rotate(${(Math.random() - 0.5) * 60}deg)`;
+              paw.style.opacity = '0';
+            });
+            setTimeout(() => {
+              if (paw.parentNode) paw.parentNode.removeChild(paw);
+            }, 3600);
+          }, i * 200);
+        }
+      }
+
+      /*
+      ====================================================================
+      AUDIO TRACK DISPLAY & ABSORPTION ANIMATION
+      ====================================================================
+      */
+      let audioPillTimer = null;
+      let lastTrackLabel = '';
+
+      function updateAudioTrackLabel() {
+        const label = document.getElementById('audio-track-label');
+        if (!label) return;
+        const themeNames = { default: 'Expressive', dark: 'Space', banana: 'Pink' };
+        const sectionNames = { intro: 'Home', bio: 'Bio', cat: 'Cats', photos: 'Photos' };
+        const activeTheme = themeNames[currentTheme] || 'Ambient';
+        const hash = window.location.hash ? window.location.hash.substring(1) : 'intro';
+        const activeSection = sectionNames[hash] || 'Home';
+        const newTrackText = `${activeTheme} • ${activeSection}`;
+
+        const trackChanged = (lastTrackLabel !== '' && lastTrackLabel !== newTrackText);
+        lastTrackLabel = newTrackText;
+        label.textContent = newTrackText;
+
+        if (trackChanged) {
+          triggerAudioPillDisplay();
+        }
+      }
+
+      function triggerAudioPillDisplay() {
+        const pill = document.getElementById('audio-status-pill');
+        const btn = document.getElementById('audio-toggle-btn');
+        if (!pill) return;
+
+        pill.classList.remove('pill-active');
+        void pill.offsetWidth;
+        pill.classList.add('pill-active');
+
+        if (audioPillTimer) clearTimeout(audioPillTimer);
+        audioPillTimer = setTimeout(() => {
+          pill.classList.remove('pill-active');
+          if (btn) {
+            btn.classList.remove('button-absorb-pulse');
+            void btn.offsetWidth;
+            btn.classList.add('button-absorb-pulse');
+            setTimeout(() => {
+              btn.classList.remove('button-absorb-pulse');
+            }, 500);
+          }
+        }, 3200);
+      }
+
+      /*
+      ====================================================================
+      DOODLE CANVAS OVERLAY & CREW CONVERSION
+      ====================================================================
+      */
+      let isDoodleActive = false;
+      let doodleCanvas = null;
+      let doodleCtx = null;
+      let isDrawing = false;
+      let lastDoodleX = 0;
+      let lastDoodleY = 0;
+      let doodleStrokes = [];
+      let currentStroke = null;
+
+      function initDoodleCanvas() {
+        if (doodleCanvas) return;
+        doodleCanvas = document.getElementById('doodle-canvas');
+        if (!doodleCanvas || !doodleCanvas.getContext) return;
+        doodleCtx = doodleCanvas.getContext('2d');
+
+        function resizeDoodle() {
+          if (!doodleCanvas) return;
+          doodleCanvas.width = window.innerWidth || 800;
+          doodleCanvas.height = window.innerHeight || 600;
+        }
+        window.addEventListener('resize', resizeDoodle);
+        resizeDoodle();
+
+        function getPos(e) {
+          const clientX = (e.touches && e.touches.length > 0) ? e.touches[0].clientX : e.clientX;
+          const clientY = (e.touches && e.touches.length > 0) ? e.touches[0].clientY : e.clientY;
+          return { x: clientX, y: clientY };
+        }
+
+        function startDrawing(e) {
+          if (!isDoodleActive || !doodleCtx) return;
+          isDrawing = true;
+          const pos = getPos(e);
+          lastDoodleX = pos.x;
+          lastDoodleY = pos.y;
+          currentStroke = [{ x: pos.x, y: pos.y }];
+          doodleStrokes.push(currentStroke);
+        }
+
+        function draw(e) {
+          if (!isDrawing || !isDoodleActive || !doodleCtx) return;
+          const pos = getPos(e);
+          const accentColor = (typeof getComputedStyle === 'function')
+            ? (getComputedStyle(document.body).getPropertyValue('--color-accent').trim() || '#d57624')
+            : '#d57624';
+          doodleCtx.strokeStyle = accentColor;
+          doodleCtx.lineWidth = 4;
+          doodleCtx.lineCap = 'round';
+          doodleCtx.lineJoin = 'round';
+          doodleCtx.beginPath();
+          doodleCtx.moveTo(lastDoodleX, lastDoodleY);
+          doodleCtx.lineTo(pos.x, pos.y);
+          doodleCtx.stroke();
+          lastDoodleX = pos.x;
+          lastDoodleY = pos.y;
+          if (currentStroke) {
+            currentStroke.push({ x: pos.x, y: pos.y });
+          }
+        }
+
+        function stopDrawing() {
+          isDrawing = false;
+          currentStroke = null;
+        }
+
+        doodleCanvas.addEventListener('mousedown', startDrawing);
+        doodleCanvas.addEventListener('mousemove', draw);
+        doodleCanvas.addEventListener('mouseup', stopDrawing);
+        doodleCanvas.addEventListener('mouseleave', stopDrawing);
+        doodleCanvas.addEventListener('touchstart', startDrawing, { passive: true });
+        doodleCanvas.addEventListener('touchmove', draw, { passive: true });
+        doodleCanvas.addEventListener('touchend', stopDrawing);
+
+        const clearBtn = document.getElementById('doodle-clear-btn');
+        if (clearBtn) {
+          clearBtn.addEventListener('click', () => {
+            if (doodleCtx && doodleCanvas) {
+              doodleCtx.clearRect(0, 0, doodleCanvas.width, doodleCanvas.height);
+            }
+            doodleStrokes = [];
+          });
+        }
+
+        const exitBtn = document.getElementById('doodle-exit-btn');
+        if (exitBtn) {
+          exitBtn.addEventListener('click', () => toggleDoodleMode(false));
+        }
+      }
+
+      function convertDoodleToCrew() {
+        if (isDrawing) {
+          isDrawing = false;
+          currentStroke = null;
+        }
+        if (!doodleStrokes || doodleStrokes.length === 0) return;
+
+        // Ensure single-point taps/dots are not lost
+        const validStrokes = doodleStrokes
+          .map(s => {
+            if (!s || s.length === 0) return null;
+            if (s.length === 1) {
+              return [{ x: s[0].x, y: s[0].y }, { x: s[0].x + 0.5, y: s[0].y + 0.5 }];
+            }
+            return s;
+          })
+          .filter(Boolean);
+
+        if (validStrokes.length === 0) {
+          if (doodleCtx && doodleCanvas) {
+            doodleCtx.clearRect(0, 0, doodleCanvas.width, doodleCanvas.height);
+          }
+          doodleStrokes = [];
+          return;
+        }
+
+        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+        validStrokes.forEach(stroke => {
+          stroke.forEach(pt => {
+            if (pt.x < minX) minX = pt.x;
+            if (pt.x > maxX) maxX = pt.x;
+            if (pt.y < minY) minY = pt.y;
+            if (pt.y > maxY) maxY = pt.y;
+          });
+        });
+
+        if (minX === Infinity) return;
+        if (maxX <= minX) maxX = minX + 12;
+        if (maxY <= minY) maxY = minY + 12;
+
+        const pad = 24;
+        const boxWidth = Math.max(48, Math.round(maxX - minX + pad * 2));
+        const boxHeight = Math.max(48, Math.round(maxY - minY + pad * 2));
+        const posX = Math.max(8, Math.round(minX - pad));
+        const posY = Math.max(8, Math.round(minY - pad));
+
+        let d = '';
+        validStrokes.forEach(stroke => {
+          let seg = '';
+          stroke.forEach((pt, idx) => {
+            const relX = (pt.x - (minX - pad)).toFixed(1);
+            const relY = (pt.y - (minY - pad)).toFixed(1);
+            seg += (idx === 0 ? `M ${relX},${relY}` : ` L ${relX},${relY}`);
+          });
+          d += (d ? ' ' : '') + seg;
+        });
+
+        const bgLayer = document.getElementById('bg-canvas-layer') ||
+                        document.querySelector('.bg-squiggle')?.parentElement ||
+                        document.body;
+        if (!bgLayer) return;
+
+        const createSvgEl = (tag) => {
+          return document.createElementNS ? document.createElementNS('http://www.w3.org/2000/svg', tag) : document.createElement(tag);
+        };
+
+        const floatNum = Math.floor(Math.random() * 5) + 1;
+        const floatAnim = `user-doodle-float-${floatNum}`;
+
+        const svg = createSvgEl('svg');
+        svg.setAttribute('class', `bg-squiggle user-doodle-squiggle ${floatAnim}`);
+        svg.setAttribute('viewBox', `0 0 ${boxWidth} ${boxHeight}`);
+        svg.style.left = `${posX}px`;
+        svg.style.top = `${posY}px`;
+        svg.style.width = `${boxWidth}px`;
+        svg.style.height = `${boxHeight}px`;
+
+        const path = createSvgEl('path');
+        path.setAttribute('d', d);
+        path.setAttribute('fill', 'none');
+        path.setAttribute('stroke', 'currentColor');
+        path.setAttribute('stroke-width', '3.5');
+        path.setAttribute('stroke-linecap', 'round');
+        path.setAttribute('stroke-linejoin', 'round');
+        svg.appendChild(path);
+
+        svg.addEventListener('click', function () {
+          this.classList.remove('squiggle-wiggling');
+          void this.offsetWidth;
+          this.classList.add('squiggle-wiggling');
+          setTimeout(() => this.classList.remove('squiggle-wiggling'), 650);
+        });
+
+        bgLayer.appendChild(svg);
+
+        // Save doodle in localStorage
+        try {
+          const saved = JSON.parse(localStorage.getItem('wal_crew_doodles') || '[]');
+          saved.push({ d, boxWidth, boxHeight, posX, posY, floatAnim });
+          if (saved.length > 20) saved.shift();
+          localStorage.setItem('wal_crew_doodles', JSON.stringify(saved));
+        } catch (e) {}
+
+        if (doodleCtx && doodleCanvas) {
+          doodleCtx.clearRect(0, 0, doodleCanvas.width, doodleCanvas.height);
+        }
+        doodleStrokes = [];
+        currentStroke = null;
+
+        showToast('✨ Your doodle joined the background crew! :3', '🎨', 3500);
+      }
+
+      function restoreCustomDoodles() {
+        try {
+          const saved = JSON.parse(localStorage.getItem('wal_crew_doodles') || '[]');
+          const bgLayer = document.getElementById('bg-canvas-layer') ||
+                          document.querySelector('.bg-squiggle')?.parentElement ||
+                          document.body;
+          if (!bgLayer || !Array.isArray(saved) || saved.length === 0) return;
+          const createSvgEl = (tag) => {
+            return document.createElementNS ? document.createElementNS('http://www.w3.org/2000/svg', tag) : document.createElement(tag);
+          };
+          saved.forEach(item => {
+            if (!item || !item.d) return;
+            const floatAnim = (item.floatAnim && item.floatAnim.startsWith('user-doodle-float-'))
+              ? item.floatAnim
+              : `user-doodle-float-${Math.floor(Math.random() * 5) + 1}`;
+            const svg = createSvgEl('svg');
+            svg.setAttribute('class', `bg-squiggle user-doodle-squiggle ${floatAnim}`);
+            svg.setAttribute('viewBox', `0 0 ${item.boxWidth} ${item.boxHeight}`);
+            svg.style.left = `${item.posX}px`;
+            svg.style.top = `${item.posY}px`;
+            svg.style.width = `${item.boxWidth}px`;
+            svg.style.height = `${item.boxHeight}px`;
+
+            const path = createSvgEl('path');
+            path.setAttribute('d', item.d);
+            path.setAttribute('fill', 'none');
+            path.setAttribute('stroke', 'currentColor');
+            path.setAttribute('stroke-width', '3.5');
+            path.setAttribute('stroke-linecap', 'round');
+            path.setAttribute('stroke-linejoin', 'round');
+            svg.appendChild(path);
+
+            svg.addEventListener('click', function () {
+              this.classList.remove('squiggle-wiggling');
+              void this.offsetWidth;
+              this.classList.add('squiggle-wiggling');
+              setTimeout(() => this.classList.remove('squiggle-wiggling'), 650);
+            });
+            bgLayer.appendChild(svg);
+          });
+        } catch (e) {}
+      }
+
+      function toggleDoodleMode(forceState) {
+        initDoodleCanvas();
+        const newState = typeof forceState === 'boolean' ? forceState : !isDoodleActive;
+        if (isDoodleActive && !newState) {
+          convertDoodleToCrew();
+        }
+        isDoodleActive = newState;
+        if (isDoodleActive) {
+          body.classList.add('doodle-mode-active');
+          showToast('〰️ Doodle Mode! Draw squiggles anywhere', '🎨', 3000);
+        } else {
+          body.classList.remove('doodle-mode-active');
+        }
+      }
+
+      /*
+      ====================================================================
       THEME SYSTEM (emojis aren't used anymore but eh)
       ====================================================================
       */
@@ -1840,8 +2801,12 @@
 
         currentTheme = themeKey;
         audioProvider.onThemeChange(themeKey);
+        updateAudioTrackLabel();
 
         console.log(`[THEME] Switched to: ${theme.name}`);
+        if (!quiet) {
+          showToast(`Theme: ${theme.name} ${theme.icon || ''}`, theme.icon || '🎨', 2000);
+        }
 
         if (save) {
           localStorage.setItem('wal-theme', themeKey);
@@ -1909,6 +2874,11 @@
         // Ignore if typing in an input (good practice allegedly)
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
+        if (e.key === 'Escape') {
+          if (isDoodleActive) toggleDoodleMode(false);
+          if (isMatrixActive) toggleMatrixMode();
+        }
+
         keySequence.push(e.key.toLowerCase());
         if (keySequence.length > MAX_KEY_LENGTH) {
           keySequence.shift();
@@ -1929,6 +2899,28 @@
         if (typed.endsWith('hack')) {
           toggleMatrixMode();
           keySequence = [];
+          return;
+        }
+
+        // Soup love easter egg 🥣
+        if (typed.endsWith('soup') || typed.endsWith('potato')) {
+          triggerSoupAlert();
+          keySequence = [];
+          return;
+        }
+
+        // Cat council easter egg 🐾
+        if (typed.endsWith('meow') || typed.endsWith('cat')) {
+          triggerCatCouncil();
+          keySequence = [];
+          return;
+        }
+
+        // Doodle mode easter egg 〰️
+        if (typed.endsWith('draw') || typed.endsWith('doodle')) {
+          toggleDoodleMode();
+          keySequence = [];
+          return;
         }
       });
 
@@ -2082,7 +3074,22 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
         "A female cat is called a queen or molly.",
         "A male cat is called a tom.",
         "The first cat in space was a French cat named Felicette.",
-        "Cats use their whiskers to determine if they can fit through a space."
+        "Cats use their whiskers to determine if they can fit through a space.",
+        "Cats spend about 1/3 of their waking hours grooming themselves.",
+        "The average cat sleeps between 12 and 16 hours a day. Total professionals.",
+        "A cat's hearing is 5 times keener than a human adult's.",
+        "Cats have a third eyelid called a nictitating membrane.",
+        "When cats headbutt you gently, it is a sign of affection called bunting.",
+        "A cat cannot climb down head-first because its claws all curve backward.",
+        "A cat's field of vision is about 200 degrees, compared to 180 degrees for humans.",
+        "Cats walk like camels and giraffes: both right feet first, then both left feet.",
+        "A cat can make over 100 vocal sounds, while dogs can only make about 10.",
+        "A cat's heart beats 110 to 140 times a minute, roughly twice a human's.",
+        "Cats possess an extra sensory organ on the roof of their mouth called the Jacobson's organ.",
+        "A cat's spine is exceptionally flexible because its vertebrae are connected by elastic cushioning.",
+        "Cats don't meow at other adult cats — meowing is reserved almost entirely for humans.",
+        "Every cat's purr has therapeutic healing frequencies shown to lower stress.",
+        "If you stare at a cat and slowly blink, it is cat language for 'I trust you'."
       ];
 
       function getRandomFact(db) {
@@ -2109,20 +3116,152 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
 
       /*
       ====================================================================
-      GOOGLE PHOTOS ALBUMS (via external API endpoint) yea this didn't work lol
-      ====================================================================
-      */
-      /*
-      ====================================================================
-      GOOGLE DRIVE INTEGRATION (Client-Side)
+      GOOGLE DRIVE INTEGRATION (With Curated Fallback)
       ====================================================================
       */
       const GOOGLE_API_KEY = 'AIzaSyDebjiQprQpcLa64Dx5Eu8116_cD_62xX0';
 
-    
       const DRIVE_FOLDERS = {
         cats: '1Mt8jmm2s-qgYHm_JtZk_0zGkMZcrWCDM',
         photos: '1W7LdvjdSli5ZCtpIaGJQZvsZhnGU1dg5'
+      };
+
+      const DRIVE_FALLBACK = {
+        cats: [
+          { id: "1J0pNHOOuMU7D8wT8kyUdTCQAvFXJ1dvs", name: "2026-02-06-09-35-59-281.jpg" },
+          { id: "12ZbZoWGBtYZXmK9GGDEekfGDuG-42YRI", name: "20260121_133930.jpg" },
+          { id: "1wF_PNUV9SaFzGRIVGTuIteTHlC_OPkpP", name: "2026-02-07-08-20-07-629.jpg" },
+          { id: "1OIefeNdQqFfexAN8bNDj37Ay9hPwma6E", name: "2026-02-07-13-50-25-257.jpg" },
+          { id: "1rRSu4crLkcVsEvDlrURphRKXbQHkBXJQ", name: "2026-02-09-18-58-25-740.jpg" },
+          { id: "1cJi_3dkbLnUeN7xm1UMYZoyNfxZEk_mD", name: "2026-02-10-10-18-52-813.jpg" },
+          { id: "1GUCc9_iaA5fUbiAaeWC6bQenI1kdabmT", name: "IMG_1608.JPG" },
+          { id: "1E8tQgR-R8Ky4cpZzPczA001OFzrUbcdz", name: "2026-02-15-16-42-16-396.jpg" },
+          { id: "14hFmikcVyhM5amS2_bX67Hh5LEJFiGqO", name: "IMG_1630.JPG" },
+          { id: "1_zKHTu0754AmnDTI3gCbiL6qSdLm9-S-", name: "2026-02-24-09-41-40-167.jpg" },
+          { id: "1_8rMDhZmjpBGciZ4KBtDITYzwLEXHBo8", name: "2026-02-25-14-32-47-464.jpg" },
+          { id: "1di7EPgieJeUc08EF0fRKlc9r3wWqQClX", name: "2026-02-25-14-42-57-356.jpg" },
+          { id: "1s0pjjs_bpsdUlCANyh5JUSYo9a2rf8Fb", name: "2026-03-02-11-19-58-263.jpg" },
+          { id: "1tPTQb51TVD3dI_V7wIlx5VTCk3Bntoy7", name: "2026-03-06-16-19-53-333.jpg" },
+          { id: "14KR1d8zqd1OmhD6Loc2baoXyP5h-bUzJ", name: "20260406_133229.jpg" },
+          { id: "1g6t_dRarL6rc9nCqN3k_6qvUkHAVCSB6", name: "20260406_205223.jpg" },
+          { id: "1eU2La-ju-WiRHI7S4Xiw6avBdbtrzD-Q", name: "20260513_133555.jpg" },
+          { id: "1tr1xjc_z1Y4mQeZqyCsG1Uc40_64BG0B", name: "20260521_133932.jpg" },
+          { id: "1B009CItcxmtmh45nzz-KGNXZtrG1g9iS", name: "2025-11-22-16-32-25-305.jpg" },
+          { id: "108GFaCL_GclSVlpjHcETOtez30k4F4Xk", name: "2025-11-23-16-51-28-959.jpg" },
+          { id: "1Q1psLiVdu8B8EjJSo1Pg4aVZC4IRNDbF", name: "2025-12-31-13-48-19-820.jpg" },
+          { id: "1c2ael1qK8gWcPkEXTRul8C9GdhSCJsdf", name: "2025-11-24-19-27-00-442.jpg" },
+          { id: "1aLRhlwegpSrF_ToYPZPq3uSyC3B2raIZ", name: "2025-12-24-13-12-02-244.jpg" },
+          { id: "1Zak6Y0DD4-VGV2qjTUphuGxoLYWr0hPg", name: "2025-12-24-12-48-54-921.jpg" },
+          { id: "1XgQZWcq7LetbeRheRWNJkfC5JLjx2mYv", name: "2026-01-03-16-31-30-505.jpg" },
+          { id: "1FhJcIrpeL-ZR0wuWDtX7jjq4Xo_UHYWo", name: "IMG_20251028_134649.jpg" },
+          { id: "1X1qHujQMAYhW2RsKUG5htcVZIDbZEbE1", name: "2026-01-09-08-38-03-270.jpg" },
+          { id: "1Uc7fGn3-MmgqGscTJsAhj6zxHbTkEtCH", name: "2025-11-13-15-45-26-287.jpg" },
+          { id: "1Ij2cBz2hwu31sBWVwGnOTGQBiiAhxc8M", name: "2025-11-15-16-10-01-281.jpg" },
+          { id: "1RQC3SgFsVer8GkQ0eeoGmL3NzsXAnIbp", name: "2025-12-27-11-48-41-729.jpg" },
+          { id: "1fIcQ2UYc2h3Cs5F7Lo6y5O5DCM-mYPpw", name: "20260121_133930.jpg" },
+          { id: "1jr_HO_k61GEnuXHAwPMpZejTWQ6i7ed-", name: "IMG_20250520_103802.jpg" },
+          { id: "1rnPg0kcE_d_JNoyFGNdF6NKZGdgmqMuf", name: "20251014_191255.jpg" },
+          { id: "1NlRXwyBjmjZsZSnB7zaiYl6n76u3jGPN", name: "2025-11-14-11-32-14-779~2.jpg" },
+          { id: "1egureopVEZ8Oqsu2ECjAB5rTVGeutb3z", name: "2026-01-08-18-40-21-058.jpg" },
+          { id: "1KcGSqIgQnQtOH82JMyhcSJe2s3eH2yMB", name: "IMG_20251028_134516.jpg" },
+          { id: "1ZZzMtQDullw0zOaepz1hgwQwdA012VSy", name: "2026-01-13-17-42-16-660.jpg" },
+          { id: "1_QROMVv6s2W7YDaiDpClYHzo9N6_My_x", name: "20260121_133918.jpg" },
+          { id: "12F1GM7dk7gR1wUmyxHUJGwnzP-bSf4GQ", name: "2026-01-04-16-33-22-961.jpg" },
+          { id: "1oPsP4XtyqTMZywHhfoq4hIufkpnqLRTx", name: "IMG_20250520_103758.jpg" },
+          { id: "1NT5Vhj6fSapJlapEFCCozYqTMhyVjQjN", name: "2025-11-26-17-02-43-700.jpg" },
+          { id: "1SeRTatjlYTG84vM0M7ukcnztwEEnIHX0", name: "20230905_123257.jpg" },
+          { id: "1JU6lMrq01q45bJgyNy1RLkJPemrGlRls", name: "IMG_20251027_193708.jpg" },
+          { id: "1vowC2BczyIdDHP0yY8fEa3f3D4b5Qjg5", name: "2025-11-09-16-24-54-780.jpg" },
+          { id: "1VBy3Sl-sOafNhEa2DFDGo8mT3-sBqQmd", name: "2025-11-07-12-48-48-244.jpg" },
+          { id: "1WwotZ9sMCHgUwUAD0dMkNhZ4f44rNrjN", name: "IMG_20251026_134455.jpg" },
+          { id: "1zzqTp1q6hfDn2cw9ALgGO9BAoyES2g0B", name: "20251010_194559.jpg" },
+          { id: "1KbMDiSBapWTz3haOC6BZCeUDTxViUO6-", name: "20251011_182048.jpg" },
+          { id: "1jgIZuoaGttbazMgUjGAdyNu6wt7y4VAA", name: "20251015_103204.jpg" },
+          { id: "1AROT7qxoIK5CVNFEzZBK5PxNnf4uC9Qh", name: "2025-11-08-18-46-11-671.jpg" },
+          { id: "1u9dNeUWbRC1SFgP1r2KBNV7scMcEN9g7", name: "2026-01-04-16-20-37-768.jpg" },
+          { id: "1BJNtWWe0qZSKiccXj2CcCzPyj05NmKIG", name: "2026-01-05-15-24-01-615.jpg" },
+          { id: "1Qx_Q8P1zJgbDOKmzh7NbqMhL-Ve57oA0", name: "2025-11-20-12-34-13-111.jpg" },
+          { id: "1HWHn1JFnUoLT-b6WBsj1Z1RwZvsba48q", name: "2025-12-27-16-38-00-697.jpg" },
+          { id: "1RxJzwhdIqelRnDfRBRXvO-HrEB6LzQfJ", name: "IMG_2025-11-12-13-37-38-555.jpg" },
+          { id: "1YCC88BpOiJZ914Sv5jdFsQEru4JWmFXz", name: "IMG_20251024_172109.jpg" },
+          { id: "1Z5341VuF4u1WMV5bon-woKwjjwjpGQ8K", name: "2026-01-09-18-08-38-020.jpg" },
+          { id: "1oAOxCLftoEacB9QcTvRxlYwQluBNZ8AP", name: "2025-11-15-15-50-49-760.jpg" },
+          { id: "10O4XFBoZSlcChMLPDIeLizZeuM7fhka0", name: "IMG_20251022_171734.jpg" },
+          { id: "1REx878JpxYNwEY1qq7hZemIenJIxWq-T", name: "20260121_134511.jpg" },
+          { id: "14zXSRh2xb6O_i1_u8JV_JFWvAgouiHK7", name: "2026-01-03-16-28-35-645.jpg" },
+          { id: "1-ZijgGKv375mnhqy_YVjVWizsT1Hl_A4", name: "20260121_163718.heic" },
+          { id: "1-sIK8x48ldpQkv12Jp1dGD1eIqhBgXsy", name: "20251012_102423.jpg" },
+          { id: "1sq5ds0PxWw8Jrh8WPsw9rgUSfv3CNY5Q", name: "2025-12-24-13-41-08-573.jpg" },
+          { id: "1YCi95GfitjZ6E7qULqH8yjtZw9zqWN3O", name: "8FA34CAB-10EF-433D-97B3-F4A841F3430F~2.jpg" },
+          { id: "1kYC9qLeQ3pzID-HrA8OMRYv07srNNlvk", name: "2025-12-14-16-20-13-558.jpg" },
+          { id: "1tJ8rikDfpboSPkqmw9YDmxjISTLReC5L", name: "PXL_20260112_145845163.jpg" },
+          { id: "17PQ6351wwl0NIGR7Wn3dv1CruTMh7iqJ", name: "2025-12-07-12-44-09-004.jpg" },
+          { id: "13y8Neejnrcaw5lRHJ5fUbwPHTFPsjssd", name: "IMG-20200406-WA0001~2.jpg" },
+          { id: "14vLWZwoDBIIcTcrpamEoz1jUK_shx86O", name: "2025-12-18-15-08-58-937.jpg" },
+          { id: "1GV0HsajQmoQzhCG9WWb5wQIcskxEs-Zy", name: "20250930_192450.jpg" },
+        ],
+        photos: [
+          { id: "1GMsu4pqRYG3T-h2zzQc8QT1Uw2HcAm5T", name: "2026-02-25-14-29-28-330.jpg" },
+          { id: "1tboY_-XeDoH6wpfb_PCrwb1Vdwk4RpfS", name: "PXL_20260303_175128018.PORTRAIT.jpg" },
+          { id: "1QN2m5ErbWtWmtPQLGciJuSEIQwAOj5nx", name: "20260522_175631.jpg" },
+          { id: "1XtjnAuDpextN3omM7DoZLFJVhhpUMOoM", name: "PXL_20260311_141750959.jpg" },
+          { id: "1Xfb8PjkACEV58nqpXTNHh1HfLXry71XR", name: "PXL_20260311_143431178.jpg" },
+          { id: "1LoXG-SQO3yROHFmwcc2RuGGmgDoAzA5_", name: "PXL_20260311_141813694.jpg" },
+          { id: "1X1GE-N7My3VaZ-rHR_HDA0yUaOeCAxdI", name: "PXL_20260307_142458272.jpg" },
+          { id: "1yNgyj_Wzw-xJ3aOOGYdSzAPB7JteIitL", name: "PXL_20260219_120439799.jpg" },
+          { id: "1-iEavDLy1w5stMU8TFpt2iOubzu-fLj1", name: "PXL_20260219_120430621.jpg" },
+          { id: "1umF8IdEnDLNvffxKX-jXFuDfGMRSbw--", name: "PXL_20260218_123316957.jpg" },
+          { id: "1zQ59_C_qettFlCuZLw0hN7RaWYhxNxqe", name: "IMG_1598.JPG" },
+          { id: "16M1f4oGM7ClSmQb1XTpBq41ofP-h1rHl", name: "IMG_1584.JPG" },
+          { id: "1jhyVLcQXlQSoF-bERqRI-KfGdpj1CIS-", name: "IMG_20251026_140650.jpg" },
+          { id: "1mR4Rh6SXKs2lYsXcrjHn6Cocqs3YgLc2", name: "IMG_20251026_140637.jpg" },
+          { id: "1z-pAg89ILnDo2ERsXD3pn9KMZd5PTBwe", name: "2026-01-09-18-24-07-656.jpg" },
+          { id: "1bzLEIi8wG4kRBo7NmVAF8V98_TbIkA3P", name: "2025-11-14-11-40-40-777.jpg" },
+          { id: "1BaNysyQ9GKlLzvQV9ytDIiT8A0K_Y2ru", name: "2026-01-07-18-55-00-233.jpg" },
+          { id: "1u1IEt8KGBL3IVEHQ9UNr9oXtjaVO0tMx", name: "2025-11-21-13-04-33-924.jpg" },
+          { id: "1UoQ3DypYYJ7nqIUaGujcz2h4bew2Vx47", name: "2026-01-09-18-21-09-931.jpg" },
+          { id: "167BvtGz7zsZ2Ob1ZtFa82I14IczQj13D", name: "2026-01-02-08-15-44-628.jpg" },
+          { id: "1aYA8Q5trbV1PJp9piVKNswUUtpI13mWY", name: "2026-01-15-08-27-24-853.jpg" },
+          { id: "1VYnDxHD0Cxa7rT72G8MwAvw_uM6f_LAi", name: "2025-12-12-17-19-51-133.jpg" },
+          { id: "1U_FtTSjaznLrXBjFcTcnYBHCX9L4f6xq", name: "2025-11-21-13-05-02-346.jpg" },
+          { id: "1ffloEFeghtWahMLcBej-6gciPAL7dTse", name: "2026-01-09-18-19-12-470.jpg" },
+          { id: "1f9AH5Mt0XkXO_I-nuHw8TK4NZ0qnjWkn", name: "20251010_140411.jpg" },
+          { id: "1RhsEg-0ieNg0b7NNaZtKz7qF1lii-DMt", name: "PXL_20251121_113654556.jpg" },
+          { id: "1mySXo5wO7SPzf3_BkZAKIwubz0DrGo19", name: "2025-11-20-08-22-47-199~2.jpg" },
+          { id: "1PudXSe8My0EzswVpQp69Xl5ZgmoAx77S", name: "2026-01-09-18-16-13-862.jpg" },
+          { id: "1SokUKC7QwGws9qwx6glJ5uGsHKeWtMR4", name: "IMG_20251026_143031.jpg" },
+          { id: "17_WaTWerNTR-8UsAyWIkRRnMbkJYK0zh", name: "IMG_20251026_143154.jpg" },
+          { id: "1ixwY9exbpLWV36mDCFf91MZ_u2xaQJKl", name: "2025-11-25-17-03-21-145.jpg" },
+          { id: "1Z_RgwKMIbEvhVGyswcM7u5P18v8ZCK5C", name: "2025-11-21-13-04-46-329.jpg" },
+          { id: "1rH8kW7DsP_LnPvnZvrV-2O3OLyYx_Be6", name: "20251015_120010.jpg" },
+          { id: "1HAM4oVXT5Kp2XHvyceYiVD0fNQiJZEyf", name: "20251018_190608.jpg" },
+          { id: "1zxhmKTkrDyqYqjblbRl3Vv_X21R9uDTJ", name: "2026-01-09-18-18-25-751.jpg" },
+          { id: "1uuBHwLXrOxUaXy0zq-ATXwpZfHQbB4qy", name: "2025-12-18-13-06-51-874.jpg" },
+          { id: "1GHjLtNTIs6btWeWAQU8wYhdsQbx9gNI1", name: "20230915_104214.jpg" },
+          { id: "1M-IcuBi84p7ymVJKdKnTiDsvVM_QGVcq", name: "7826.jpg" },
+          { id: "1fKx2gdertV-YjPQng06pnoDmzc9mY93q", name: "IMG_20251026_143219.jpg" },
+          { id: "1LylVDgEmMNq1Gl28t4OUqbQLPHftOxk6", name: "PXL_20251121_112849834.jpg" },
+          { id: "1mKglu3UG_U6okMGHJ7ZNfl7I2BqofO0G", name: "PXL_20251120_112712332.jpg" },
+          { id: "1SA8XS1JiLSoonaMbn6SQlOEdByQUIArB", name: "2025-11-21-13-04-36-887.jpg" },
+          { id: "1rQFXUCbNy9as7xqAkqyF663sxYjh0-ol", name: "IMG_20251026_143212.jpg" },
+          { id: "1UA7ApqphYNeLSCL2Odz0dp-5iuGRH4Cu", name: "IMG_20251026_142243.jpg" },
+          { id: "1u1KeQXiAawKuqbiqpCuiaQBIDjzlsEcY", name: "IMG_20251026_141434~2.jpg" },
+          { id: "1s9HiTwZowHSY3oJGh1yZqmWHWqPk0w3p", name: "2025-11-17-08-38-51-449~3.jpg" },
+          { id: "15vZtdl2-NHF_HkeKCv4NRtg-qQsY221I", name: "2025-11-17-16-24-54-467.jpg" },
+          { id: "1FQU49vOUP5-nLsAAmuPJ42VfnhD4xil0", name: "2025-11-20-07-52-05-329~2.jpg" },
+          { id: "19wynsjVI9yEQcKSa_8UEeICoSlgpvsTd", name: "2026-01-09-18-20-44-842.jpg" },
+          { id: "1NGzVfI8GeEWozbG8m_gtmOklYIWBnaCW", name: "IMG_20251026_145504~2.jpg" },
+          { id: "1VKdJy8253kheDOkBWh_L5HSFVb8sa5ch", name: "2026-01-02-08-18-16-366~2.jpg" },
+          { id: "15l2HJbPDa86-fp6F22RbCfCb5-i-lV2U", name: "PXL_20251227_152534129.jpg" },
+          { id: "1zbznce5ijSsmkLCuxdjQSVc6buo9frYf", name: "2025-11-20-08-22-04-080~2.jpg" },
+          { id: "1v9qY4IipwqtsVoNyXp26v4jdWRTzWi2w", name: "20260121_164135.jpg" },
+          { id: "13YFAGGcOLb7JPcnvrKOs4606SzP7vfyi", name: "PXL_20251227_153024961.PORTRAIT.ORIGINAL.jpg" },
+          { id: "1NYS7aRsaYG8KIs0QQG1F-Eaz20Tt4E0e", name: "IMG_1460.JPG" },
+          { id: "1mj9wTRXz5RZzGBJf8Nvl_J4j8VztmU8I", name: "20260121_164352~2.jpg" },
+          { id: "1TiaPxFxJW4-8qPDR733zQozjGAoFeGuI", name: "PXL_20260115_113245563.jpg" },
+          { id: "1AK-bksKulzBmwPwonm3dR2_KeX7MfsNS", name: "PXL_20260111_142547791.jpg" },
+          { id: "1j2PHxXubjq20tp7VOgmAO2cwGC9gvb35", name: "20260121_163924~2.jpg" },
+        ]
       };
 
       const albumState = {
@@ -2133,8 +3272,10 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
       const CACHE_DURATION = 3600000; // 1 hour
 
       async function fetchDriveFiles(folderId) {
+        const fallbackKey = folderId === DRIVE_FOLDERS.cats ? 'cats' : 'photos';
+
         if (!GOOGLE_API_KEY || GOOGLE_API_KEY.includes('PASTE_YOUR')) {
-          throw new Error('Please paste your valid Google API Key in index.html line ~1287');
+          return DRIVE_FALLBACK[fallbackKey] || [];
         }
 
         const cacheKey = `wal-drive-cache-${folderId}`;
@@ -2142,7 +3283,7 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
           const cached = localStorage.getItem(cacheKey);
           if (cached) {
             const { timestamp, files } = JSON.parse(cached);
-            if (Date.now() - timestamp < CACHE_DURATION) {
+            if (Date.now() - timestamp < CACHE_DURATION && Array.isArray(files) && files.length > 0) {
               console.log(`[CACHE] Hit for ${folderId}`);
               return files;
             }
@@ -2151,33 +3292,35 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
           console.warn('[CACHE] Error reading from localStorage', e);
         }
 
-        // Query: IS in folder AND is an image AND not trashed
-        const query = `'${folderId}' in parents and mimeType contains 'image/' and trashed = false`;
-        const fields = 'files(id, name, thumbnailLink, mimeType)';
-        // Using strict search and specific fields for efficiency google why did kill embed
-        const url = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}&key=${GOOGLE_API_KEY}&fields=${encodeURIComponent(fields)}&pageSize=100`;
-
-        const response = await fetch(url);
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`Drive API Error: ${response.status} ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        const files = data.files || [];
-
         try {
-          localStorage.setItem(cacheKey, JSON.stringify({
-            timestamp: Date.now(),
-            files: files
-          }));
-          console.log(`[CACHE] Saved for ${folderId}`);
-        } catch (e) {
-          console.warn('[CACHE] Error saving to localStorage', e);
+          const query = `'${folderId}' in parents and mimeType contains 'image/' and trashed = false`;
+          const fields = 'files(id, name, thumbnailLink, mimeType)';
+          const url = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}&key=${GOOGLE_API_KEY}&fields=${encodeURIComponent(fields)}&pageSize=100`;
+
+          const response = await fetch(url);
+          if (!response.ok) {
+            throw new Error(`Drive API Error: ${response.status} ${response.statusText}`);
+          }
+
+          const data = await response.json();
+          const files = data.files || [];
+          if (files.length > 0) {
+            try {
+              localStorage.setItem(cacheKey, JSON.stringify({
+                timestamp: Date.now(),
+                files: files
+              }));
+              console.log(`[CACHE] Saved for ${folderId}`);
+            } catch (e) {
+              console.warn('[CACHE] Error saving to localStorage', e);
+            }
+            return files;
+          }
+        } catch (fetchErr) {
+          console.warn('[DRIVE] Remote fetch error, falling back to curated assets:', fetchErr);
         }
 
-        return files;
+        return DRIVE_FALLBACK[fallbackKey] || [];
       }
 
       async function loadAlbum(albumKey) {
@@ -2196,7 +3339,16 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
           const folderId = DRIVE_FOLDERS[albumKey];
           if (!folderId) throw new Error('Unknown album folder');
 
-          const items = await fetchDriveFiles(folderId);
+          let items = [];
+          try {
+            items = await fetchDriveFiles(folderId);
+          } catch (e) {
+            items = DRIVE_FALLBACK[albumKey] || [];
+          }
+
+          if (!items || !items.length) {
+            items = DRIVE_FALLBACK[albumKey] || [];
+          }
 
           if (!items.length) {
             status.textContent = 'No photos found in this Drive folder.';
@@ -2216,12 +3368,19 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
             let src = item.thumbnailLink;
             if (src && src.includes('=s')) {
               src = src.replace(/=s\d+/, '=s1200');
+            } else if (item.id) {
+              src = `https://lh3.googleusercontent.com/d/${item.id}=s1200`;
             }
 
             const img = document.createElement('img');
             img.alt = item.name || 'Photo';
             img.loading = 'lazy';
             img.src = src;
+            img.onerror = function () {
+              if (item.id && !this.src.includes('lh3.googleusercontent.com/d/')) {
+                this.src = `https://lh3.googleusercontent.com/d/${item.id}=s800`;
+              }
+            };
 
             // Add Lightbox interaction
             img.style.cursor = 'pointer';
@@ -2291,6 +3450,7 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
         const key = hash ? hash.substring(1) : 'intro';
         Jukebox.useBackgroundAudio().onSectionChange(key);
         showSection(key);
+        updateAudioTrackLabel();
 
         // If they return to Home after navigating elsewhere, point at the squiggle.I SPENT AGES WITH THEMES
         if (key === 'intro') {
@@ -2409,8 +3569,41 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
         });
       }
 
+      // Background squiggles playful interaction
+      const bgSquiggles = document.querySelectorAll('.bg-squiggle');
+      if (bgSquiggles && bgSquiggles.forEach) {
+        bgSquiggles.forEach(sq => {
+          sq.addEventListener('click', function () {
+            this.classList.remove('squiggle-wiggling');
+            void this.offsetWidth;
+            this.classList.add('squiggle-wiggling');
+            setTimeout(() => this.classList.remove('squiggle-wiggling'), 650);
+          });
+        });
+      }
+
+      // Bio polaroid card Lightbox
+      const bioFlowerCard = document.getElementById('bio-flower-card');
+      if (bioFlowerCard) {
+        bioFlowerCard.addEventListener('click', () => openLightbox('flower.jpg'));
+      }
+
+      // Bio vibe interactive triggers
+      const vibeSoup = document.getElementById('vibe-soup') || document.getElementById('chip-potato-soup');
+      if (vibeSoup) {
+        vibeSoup.addEventListener('click', triggerSoupAlert);
+      }
+
+      const vibeDoodle = document.getElementById('vibe-doodle-trigger') || document.getElementById('chip-doodle-mode');
+      if (vibeDoodle) {
+        vibeDoodle.addEventListener('click', () => toggleDoodleMode(true));
+      }
+
+      restoreCustomDoodles();
+      updateAudioTrackLabel();
+
       console.log(`[SYSTEM] v${APP_VERSION} loaded.`);
-      console.log(`[HINT] Try typing: night or reset. Click the squiggle to cycle themes.`);
+      console.log(`[HINT] Try typing: night, reset, hack, soup, cat, or draw. Click squiggles to cycle or wiggle :3`);
 
       let mouseX = 0;
       let mouseY = 0;
