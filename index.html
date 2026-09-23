@@ -295,7 +295,7 @@
       filter: drop-shadow(0 0 8px rgba(160, 90, 200, 0.7));
     }
         /* --------------------------------------------------------------------------
-      THEME: BANANA 🍌 (M3 Expressive cuz why not :3)
+      THEME: BANANA 🍌
       --------------------------------------------------------------------------
       */
     body.theme-banana {
@@ -860,44 +860,70 @@
       */
     .wal-toast {
       position: fixed;
-      top: 24px;
+      bottom: 24px;
       left: 50%;
-      transform: translate(-50%, -120px);
+      transform: translate(-50%, 16px) scale(0.92);
       z-index: 2000;
       display: inline-flex;
       align-items: center;
-      gap: 12px;
-      padding: 14px 24px;
-      border-radius: 20px;
-      background: rgba(18, 18, 18, 0.92);
+      gap: 8px;
+      padding: 7px 16px;
+      border-radius: 9999px;
+      background: rgba(18, 18, 18, 0.88);
       color: #ffffff;
-      font-size: 0.88rem;
-      line-height: 1.45;
+      font-size: 0.78rem;
+      line-height: 1.4;
       font-weight: 500;
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      letter-spacing: 0.015em;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.16);
       pointer-events: none;
       opacity: 0;
-      max-width: min(92vw, 580px);
-      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+      max-width: min(90vw, 440px);
+      transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.2), opacity 0.25s ease;
     }
 
     .wal-toast.show {
-      transform: translate(-50%, 0);
+      transform: translate(-50%, 0) scale(1);
       opacity: 1;
     }
 
     @keyframes toastWobble {
-      0% { transform: translate(-50%, 0) rotate(0deg); }
-      25% { transform: translate(-50%, 0) rotate(-2deg); }
-      75% { transform: translate(-50%, 0) rotate(2deg); }
-      100% { transform: translate(-50%, 0) rotate(0deg); }
+      0% { transform: translate(-50%, 0) scale(1) rotate(0deg); }
+      25% { transform: translate(-50%, -2px) scale(1.02) rotate(-1.5deg); }
+      75% { transform: translate(-50%, -1px) scale(1.01) rotate(1.5deg); }
+      100% { transform: translate(-50%, 0) scale(1) rotate(0deg); }
     }
 
     .wal-toast.shake {
-      animation: toastWobble 0.4s ease-in-out;
+      animation: toastWobble 0.35s ease-in-out;
+    }
+
+    /* --------------------------------------------------------------------------
+      BOTTOM RIGHT FOOTER INFO (DISCREET WATERMARK)
+      --------------------------------------------------------------------------
+      */
+    .wal-bottom-info {
+      position: fixed;
+      right: 16px;
+      bottom: 3px;
+      z-index: 1100;
+      font-size: 9px;
+      line-height: 1;
+      letter-spacing: 0.04em;
+      color: var(--color-text-muted);
+      opacity: 0.01;
+      pointer-events: auto;
+      user-select: none;
+      cursor: default;
+      transition: opacity 0.4s ease;
+      white-space: nowrap;
+    }
+
+    .wal-bottom-info:hover {
+      opacity: 0.45;
     }
 
     /* --------------------------------------------------------------------------
@@ -1881,6 +1907,8 @@
     <button id="audio-toggle-btn" class="audio-toggle-btn" aria-label="Mute background audio" title="Mute background audio">🔊</button>
   </div>
 
+  <div class="wal-bottom-info" id="wal-bottom-info" aria-hidden="true">regula uk 2026 copyright Walid</div>
+
   <div class="relative min-h-screen flex items-center justify-center p-4 z-10">
     <div class="max-w-6xl w-full flex flex-col md:flex-row md:items-stretch md:space-x-8">
 
@@ -1963,7 +1991,7 @@
             <h3 class="text-xs uppercase font-bold tracking-widest text-gray-500 mb-3">Things I vibe with</h3>
             <ul class="vibe-list space-y-2 text-sm text-gray-400" role="list">
               <li class="vibe-item"><span class="vibe-marker font-mono">~</span> cats (animals in general)</li>
-              <li class="vibe-item"><span class="vibe-marker font-mono">~</span> <span id="vibe-doodle-trigger" class="vibe-interactive-text" role="button" tabindex="0" title="Click to draw squiggles!">drawing &amp; doodling</span> <span class="opacity-70 text-xs">(i like drawing furries but nobody has to know)</span></li>
+              <li class="vibe-item"><span class="vibe-marker font-mono">~</span> <span id="vibe-doodle-trigger" class="vibe-interactive-text" role="button" tabindex="0" title="Click to draw squiggles!">drawing &amp; doodling</span></li>
               <li class="vibe-item"><span class="vibe-marker font-mono">~</span> <span id="vibe-soup" class="vibe-interactive-text vibe-soup-highlight" role="button" tabindex="0" title="Click for the ultimate stance on soup :3">soup</span></li>
               <li class="vibe-item"><span class="vibe-marker font-mono">~</span> computers obviously</li>
             </ul>
@@ -2459,7 +2487,7 @@
       function updateAudioTrackLabel() {
         const label = document.getElementById('audio-track-label');
         if (!label) return;
-        const themeNames = { default: 'Expressive', dark: 'Space', banana: 'Pink' };
+        const themeNames = { default: 'Expressive', dark: 'Space', banana: 'Banana' };
         const sectionNames = { intro: 'Home', bio: 'Bio', cat: 'Cats', photos: 'Photos' };
         const activeTheme = themeNames[currentTheme] || 'Ambient';
         const hash = window.location.hash ? window.location.hash.substring(1) : 'intro';
@@ -2770,7 +2798,7 @@
       const THEMES = {
         default: { name: 'Default', icon: '🌸', class: '' },
         dark: { name: 'Dark Mode', icon: '🌙', class: 'theme-dark' },
-        banana: { name: 'M3 Expressive', icon: '🍌', class: 'theme-banana' }
+        banana: { name: 'Banana', icon: '🍌', class: 'theme-banana' }
       };
 
       const THEME_ORDER = ['default', 'banana', 'dark'];
@@ -2804,7 +2832,7 @@
 
         console.log(`[THEME] Switched to: ${theme.name}`);
         if (!quiet) {
-          showToast(`Theme: ${theme.name} ${theme.icon || ''}`, theme.icon || '🎨', 2000);
+          showToast(`Theme: ${theme.name}`, theme.icon || '🎨', 1800);
         }
 
         if (save) {
