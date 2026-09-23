@@ -6,23 +6,26 @@ High-Fidelity Musical Remix Pipeline for itswal Portfolio Jukebox.
 Styles:
 1. Space Theme (Dark Mode) -> 8-Bit / Bitcrush / Chiptune Retro Arcade Remix
    - Sample rate decimation + 7-bit quantization (NES/Game Boy DAC grit)
-   - 25% pulse-wave tracker arpeggios in key (F Major / D Minor: F, A, C, E, D)
+   - 25% & 12.5% pulse-wave tracker arpeggios in key (F Major / D Minor: F, A, C, E, D)
    - Retro 15-bit LFSR noise drum hits (8-bit kick, snare, hi-hat)
-   - Spliced glitch/stutter chops and laser decimation sweeps on phrase turnarounds
+   - Spliced glitch/stutter chops, laser decimation drills, jump-cuts, and tracker silence cuts
 2. Banana Theme (Pink Mode) -> Spliced Bouncy Future-Funk / Lofi Chops
    - Spliced beat-repeats and 1/8th & 1/16th stutter edits on phrase turnarounds
-   - Pitch/tempo bounce, tape flutter/vibrato (modulated delay line + tape sat)
+   - Real varispeed pitch/tempo bounce (fractional resampling tape drop/snap)
+   - Tape flutter/vibrato (modulated delay line + tape sat)
    - Reverse chord swell chops swelling into downbeats, future-funk sidechain bounce
 3. Expressive Theme (Default) -> Spliced Breakbeat / Glitch-Hop Chops
-   - Spliced bar rearrangements (kick retriggering, jump cuts)
+   - Spliced bar rearrangements (kick retriggering, jump cuts, beat shuffling)
    - 1/16th and 1/32nd beat rolls/stutters on turnaround bars
    - Reverse chops into downbeats
    - 16th-note rhythmic gating (trance-gate / glitch chop)
 
-Continuity & Alignment:
+Continuity, Alignment & Stem Balancing:
 - Identical tempo grid (125.0 BPM, 84672 samples/bar)
 - Exact same slice decisions across section stems (home, bio, cats, photos)
 - Identical sample duration for all stems within each theme
+- Unified theme-wide master peak normalization preserving natural stem hierarchy:
+  (home > cats ~ photos > bio) so bio remains pleasant and never overpowers the master!
 """
 
 import os
@@ -124,7 +127,7 @@ def make_chiptune_drums(bar_count, tempo_offset):
     tri_kick = 2.0 * np.abs(2.0 * (phase_kick % 1.0) - 1.0) - 1.0
     quant_kick = np.round(tri_kick * 8) / 8
     click_kick = np.zeros(kick_len)
-    click_kick[:int(SR*0.004)] = 0.5 * LFSR_NOISE[:int(SR*0.004)]
+    click_kick[:int(SR * 0.004)] = 0.5 * LFSR_NOISE[:int(SR * 0.004)]
     kick_sound = (quant_kick + click_kick) * env_kick * 0.55
     
     for b in range(bar_count):
@@ -156,7 +159,7 @@ def make_chiptune_drums(bar_count, tempo_offset):
 
 def make_chiptune_arps(bar_count, tempo_offset, oct_shift=0, duty=0.25):
     """
-    Synthesize authentic 25% duty pulse-wave tracker arpeggios in key (F Major / D Minor).
+    Synthesize authentic pulse-wave tracker arpeggios in key (F Major / D Minor).
     Chord Progression:
       Bar 0: D minor (D4, F4, A4, C5)
       Bar 1: Bb major (Bb3, D4, F4, A4)
@@ -193,7 +196,6 @@ def make_chiptune_arps(bar_count, tempo_offset, oct_shift=0, duty=0.25):
                 pulse = np.where(phase < duty, 0.7, -0.7)
                 env = np.exp(-t / 0.05)
                 
-                # Pan slight ping-pong
                 pan_l = 0.5 + 0.3 * np.sin(step * 0.7)
                 pan_r = 1.0 - pan_l
                 
@@ -220,7 +222,6 @@ def apply_tape_flutter_and_bounce(audio, flutter_depth_ms=1.4, flutter_rate_hz=4
     frac = (idx_float - idx_floor)[:, None]
     
     delayed = (1.0 - frac) * audio[idx_floor] + frac * audio[idx_floor + 1]
-    # Lofi tape saturation: mild cubic saturation with subtle even harmonic warmth
     saturated = np.tanh(1.12 * delayed) + 0.04 * (delayed ** 2)
     return saturated
 
@@ -231,10 +232,23 @@ def apply_sidechain_bounce(bar_audio):
     t_beat = (np.arange(BEAT) / SR)
     pump_curve = 1.0 - 0.35 * np.exp(-t_beat / 0.085)
     
-    # Apply to beat 1 and beat 3
     out[0 : BEAT] *= pump_curve[:, None]
     out[2 * BEAT : 3 * BEAT] *= pump_curve[:, None]
     return out
+
+
+def apply_pitch_bounce(slice_data, dip_semitones=2.8):
+    """Real varispeed pitch/tempo bounce using fractional resampling."""
+    N = len(slice_data)
+    t = np.linspace(0, 1, N)
+    ratio = 1.0 - (1.0 - 2.0 ** (-dip_semitones / 12.0)) * (1.0 - t) ** 2
+    src_indices = np.cumsum(ratio)
+    src_indices = (src_indices - src_indices[0]) / (src_indices[-1] - src_indices[0]) * (N - 1)
+    
+    idx_floor = np.floor(src_indices).astype(int)
+    idx_floor = np.clip(idx_floor, 0, N - 2)
+    frac = (src_indices - idx_floor)[:, None]
+    return (1.0 - frac) * slice_data[idx_floor] + frac * slice_data[idx_floor + 1]
 
 
 # ─── REMIX BUILDERS ──────────────────────────────────────────────────────────
@@ -245,7 +259,8 @@ def remix_space_theme():
     - 7-bit quantization + sample rate decimation
     - Pulse wave arpeggios (Dm/F)
     - LFSR noise drums
-    - Glitch/stutter chops on phrase turnarounds (every 4 bars)
+    - Rich beat splicing: turnaround stutters, laser decimation drills, jump cuts, tracker mutes
+    - Preserved stem volume hierarchy with theme-wide master peak normalization
     """
     print('--> Building Space Theme Remix (8-Bit / Bitcrush / Chiptune)...')
     stems = ['home', 'bio', 'cats', 'photos']
@@ -276,64 +291,84 @@ def remix_space_theme():
         # Bitcrush underlying stem (NES/Game Boy 7-bit DAC grit)
         crushed = apply_bitcrush(raw_tracks[s], bits=7, downsample=3, dry_wet=0.82)
         
-        # Stem-specific instrumentation
+        # Stem-specific instrumentation (preserving intentional mix levels)
         if s == 'home':
             mix = crushed * 0.70 + drums * 0.55 + lead_arps * 0.45
         elif s == 'bio':
-            # Ambient/mellow: quiet crushed backing, gentle mellow arps, no heavy drums
-            mix = crushed * 0.75 + mellow_arps * 0.35 + drums * 0.15
+            # Ambient/mellow: quiet crushed backing, gentle mellow arps, subtle noise hats
+            mix = crushed * 0.65 + mellow_arps * 0.28 + drums * 0.08
         elif s == 'cats':
             # Playful: sparkly high-register arps, lighter drums
-            mix = crushed * 0.70 + high_arps * 0.40 + drums * 0.40
+            mix = crushed * 0.68 + high_arps * 0.42 + drums * 0.38
         elif s == 'photos':
             # Dreamy space: wide arpeggios, atmospheric crushed pads
-            mix = crushed * 0.72 + lead_arps * 0.30 + high_arps * 0.25 + drums * 0.35
+            mix = crushed * 0.70 + lead_arps * 0.28 + high_arps * 0.22 + drums * 0.30
             
         processed[s] = mix
         
-    # 2. Apply Spliced Glitch / Stutter Chops on Turnarounds (IDENTICALLY to all 4 stems!)
+    # 2. Spliced Glitch / Stutter Chops (IDENTICALLY to all 4 stems!)
     for b in range(bar_count):
         bar_start = tempo_offset + b * BAR
         
-        # Every 4th bar turnaround (bars 3, 7, 11, 15...)
-        if b % 4 == 3:
-            # Chop 1: Stutter edit on beat 4 (from 3*BEAT to 4*BEAT)
-            # Take the 16th-note slice at beat 3.75, repeat 4x with bitcrush ramp
+        # Pattern 1: Arcade Jump-Cut (every 4th bar, b % 4 == 1):
+        # Retrigger Beat 1 on beat 2.5 ("and" of 2)
+        if b % 4 == 1:
+            jump_src_start = bar_start
+            jump_src_end = bar_start + EIGHTH
+            jump_dst_start = bar_start + BEAT + EIGHTH
+            jump_dst_end = bar_start + 2 * BEAT
+            for s in stems:
+                jump_slice = smooth_edges(processed[s][jump_src_start:jump_src_end])
+                processed[s][jump_dst_start:jump_dst_end] = jump_slice * 1.1
+                
+        # Pattern 2: Tracker Silence Cut / Staccato Mute (every 4th bar, b % 4 == 2):
+        # 1/16th silence cut on beat 3.75 right before turnaround
+        if b % 4 == 2:
+            mute_start = bar_start + 3 * BEAT - SIXTEENTH
+            mute_end = bar_start + 3 * BEAT
+            for s in stems:
+                # 16th silence mute with smooth micro-fade
+                processed[s][mute_start:mute_end] = smooth_edges(np.zeros((SIXTEENTH, 2), dtype=np.float32))
+                
+        # Pattern 3: Turnaround 16th-note Stutter Edit on beat 4 (bars b % 4 == 3, except b % 8 == 7)
+        if b % 4 == 3 and b % 8 != 7:
             slice_src_start = bar_start + 3 * BEAT - SIXTEENTH
             slice_src_end = bar_start + 3 * BEAT
-            
             dest_start = bar_start + 3 * BEAT
             dest_end = bar_start + 4 * BEAT
             
             for s in stems:
                 slice_data = smooth_edges(processed[s][slice_src_start:slice_src_end])
-                # 4 repeats of the 16th slice
                 stutter_4x = np.tile(slice_data, (4, 1))
-                # Glitch ramp: accelerate bitcrush / volume
-                ramp = np.linspace(0.8, 1.3, len(stutter_4x))[:, None]
+                ramp = np.linspace(0.85, 1.3, len(stutter_4x))[:, None]
                 processed[s][dest_start:dest_end] = smooth_edges(stutter_4x * ramp)
                 
-        # Every 8th bar turnaround (bars 7, 15, 23...): Laser 32nd-note drill stutter
+        # Pattern 4: Major Turnaround 32nd-note Laser Drill Stutter on beat 4 (bars b % 8 == 7)
         if b % 8 == 7:
-            slice_src_start = bar_start + 4 * BEAT - THIRTYSECOND * 2
-            slice_src_end = bar_start + 4 * BEAT - THIRTYSECOND
-            dest_start = bar_start + 4 * BEAT - THIRTYSECOND * 8 # full beat 4
+            slice_src_start = bar_start + 3 * BEAT - THIRTYSECOND
+            slice_src_end = bar_start + 3 * BEAT
+            dest_start = bar_start + 3 * BEAT
             dest_end = bar_start + 4 * BEAT
             
             for s in stems:
                 slice_32 = smooth_edges(processed[s][slice_src_start:slice_src_end])
                 stutter_8x = np.tile(slice_32, (8, 1))
-                # Bit-decimation dive
-                decimated_stutter = apply_bitcrush(stutter_8x, bits=5, downsample=6, dry_wet=0.95)
-                processed[s][dest_start:dest_end] = smooth_edges(decimated_stutter * 1.1)
+                # Intense bit-decimation dive
+                decimated_stutter = apply_bitcrush(stutter_8x, bits=5, downsample=5, dry_wet=0.95)
+                ramp = np.linspace(0.9, 1.35, len(decimated_stutter))[:, None]
+                processed[s][dest_start:dest_end] = smooth_edges(decimated_stutter * ramp)
 
-    # 3. Normalize & Export
+    # 3. Master Theme Normalization (Preserving stem volume hierarchy!)
+    max_peak = max(np.max(np.abs(processed[s])) for s in stems)
+    norm_factor = 0.89 / max_peak if max_peak > 0 else 1.0
+    print(f'   -> Space master max peak: {max_peak:.4f}, global norm factor: {norm_factor:.4f}')
+
     for s in stems:
-        # Peak normalization to -1.0 dBFS (0.89)
-        peak = np.max(np.abs(processed[s]))
-        if peak > 0:
-            processed[s] = processed[s] * (0.89 / peak)
-            
+        processed[s] = processed[s] * norm_factor
+        stem_peak = np.max(np.abs(processed[s]))
+        stem_rms = np.sqrt(np.mean(processed[s] ** 2))
+        print(f'   -> Stem {s:7s}: peak = {stem_peak:.4f}, rms = {stem_rms:.4f}')
+        
         wav_path = f'{TEMP_DIR}/space_{s}.wav'
         mp3_path = f'{OUTPUT_DIR}/itswal_space_{s}.mp3'
         sf.write(wav_path, processed[s], SR)
@@ -346,8 +381,9 @@ def remix_pink_theme():
     """
     Banana Theme (Pink Mode) -> Spliced Bouncy Future-Funk / Lofi Chops
     - Spliced beat-repeats and stutter edits (1/8th & 1/16th repeats)
-    - Pitch/tempo bounce, tape flutter/vibrato, and reverse chord swell chops
+    - True varispeed pitch/tempo bounce, tape flutter/vibrato, and reverse chord swell chops
     - French-touch syncopated chops & sidechain bounce
+    - Preserved stem volume hierarchy with theme-wide master peak normalization
     """
     print('--> Building Banana Theme Remix (Spliced Bouncy Future-Funk / Lofi)...')
     stems = ['home', 'bio', 'cats', 'photos']
@@ -382,7 +418,7 @@ def remix_pink_theme():
             bar_slice = fluttered[s][bar_start:bar_end]
             fluttered[s][bar_start:bar_end] = apply_sidechain_bounce(bar_slice)
             
-        # Pattern 1: Turnaround bar (every 2nd bar, b % 4 == 1):
+        # Pattern 1: Turnaround bar (every 4th bar, b % 4 == 1):
         # 1/8th beat repeat on beat 3.5: repeat beat 3 (from 2*BEAT to 2.5*BEAT)
         if b % 4 == 1:
             src_start = bar_start + 2 * BEAT
@@ -402,7 +438,6 @@ def remix_pink_theme():
             for s in stems:
                 s16 = smooth_edges(fluttered[s][stut_src_start:stut_src_end])
                 s16_4x = np.tile(s16, (4, 1))
-                # Rising volume ramp
                 ramp = np.linspace(0.85, 1.25, len(s16_4x))[:, None]
                 fluttered[s][stut_dst_start:stut_dst_end] = smooth_edges(s16_4x * ramp)
                 
@@ -414,23 +449,20 @@ def remix_pink_theme():
             for s in stems:
                 chord_slice = fluttered[s][swell_start:swell_end]
                 rev_chord = np.flip(chord_slice, axis=0)
-                # Exponential crescendo swell
                 t_swell = np.linspace(0.1, 1.0, len(chord_slice)) ** 2
                 fluttered[s][swell_start:swell_end] = smooth_edges(rev_chord * t_swell[:, None] * 1.3)
                 
-            # Pitch/tempo bounce on downbeat of next bar (b + 1)
+            # Real varispeed pitch/tempo bounce on downbeat of next bar (b + 1)
             next_bar_start = bar_start + BAR
             if next_bar_start + BEAT < target_len:
-                bounce_len = int(SR * 0.12) # 120ms pitch bounce
+                bounce_len = int(SR * 0.16) # 160ms pitch bounce
                 for s in stems:
                     downbeat_slice = fluttered[s][next_bar_start : next_bar_start + bounce_len]
-                    # Varispeed dip curve: momentary drop of 40 cents snapping back
-                    t_b = np.linspace(0, 1, bounce_len)
-                    curve = 1.0 - 0.25 * (1.0 - t_b) ** 2
-                    fluttered[s][next_bar_start : next_bar_start + bounce_len] = downbeat_slice * curve[:, None]
+                    bounced = apply_pitch_bounce(downbeat_slice, dip_semitones=2.8)
+                    fluttered[s][next_bar_start : next_bar_start + bounce_len] = smooth_edges(bounced)
                     
         # Pattern 3: Future-funk syncopated re-trigger on bar 3 (b % 4 == 2):
-        # Re-trigger beat 1 chord stab on beat 2.5!
+        # Re-trigger beat 1 chord stab on beat 2.5 ("and" of 2)
         if b % 4 == 2:
             stab_src_start = bar_start
             stab_src_end = bar_start + EIGHTH
@@ -439,13 +471,26 @@ def remix_pink_theme():
             for s in stems:
                 stab = smooth_edges(fluttered[s][stab_src_start:stab_src_end])
                 fluttered[s][stab_dst_start:stab_dst_end] = stab * 1.15
+                
+        # Pattern 4: Micro 1/8th slice repeat on beat 2.5 (bars b % 4 == 0, for b > 0):
+        if b % 4 == 0 and b > 0:
+            rep_src = bar_start + BEAT
+            rep_dst = bar_start + BEAT + EIGHTH
+            for s in stems:
+                slice_8 = smooth_edges(fluttered[s][rep_src : rep_src + EIGHTH])
+                fluttered[s][rep_dst : rep_dst + EIGHTH] = slice_8
 
-    # 3. Normalize & Export
+    # 3. Master Theme Normalization (Preserving stem volume hierarchy!)
+    max_peak = max(np.max(np.abs(fluttered[s])) for s in stems)
+    norm_factor = 0.89 / max_peak if max_peak > 0 else 1.0
+    print(f'   -> Pink master max peak: {max_peak:.4f}, global norm factor: {norm_factor:.4f}')
+
     for s in stems:
-        peak = np.max(np.abs(fluttered[s]))
-        if peak > 0:
-            fluttered[s] = fluttered[s] * (0.89 / peak)
-            
+        fluttered[s] = fluttered[s] * norm_factor
+        stem_peak = np.max(np.abs(fluttered[s]))
+        stem_rms = np.sqrt(np.mean(fluttered[s] ** 2))
+        print(f'   -> Stem {s:7s}: peak = {stem_peak:.4f}, rms = {stem_rms:.4f}')
+        
         wav_path = f'{TEMP_DIR}/pink_{s}.wav'
         mp3_path = f'{OUTPUT_DIR}/itswal_pink_{s}.mp3'
         sf.write(wav_path, fluttered[s], SR)
@@ -461,6 +506,7 @@ def remix_expressive_theme():
     - 1/16th beat rolls/stutters on turnaround bars
     - Reverse chops into downbeats
     - 16th-note rhythmic gating (trance-gate / glitch chop)
+    - Preserved stem volume hierarchy with theme-wide master peak normalization
     """
     print('--> Building Expressive Theme Remix (Spliced Breakbeat / Glitch-Hop)...')
     stems = ['home', 'bio', 'cats', 'photos']
@@ -485,7 +531,7 @@ def remix_expressive_theme():
     gate_pat = np.array([1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0], dtype=float)
     gate_env = np.repeat(gate_pat, SIXTEENTH)
     w = int(SR * 0.002) # 2ms Hann smoothing
-    gate_smooth = np.convolve(gate_env, np.hanning(w)/np.sum(np.hanning(w)), mode='same')
+    gate_smooth = np.convolve(gate_env, np.hanning(w) / np.sum(np.hanning(w)), mode='same')
     gate_smooth = gate_smooth[:BAR, None]
     
     processed = {s: raw_tracks[s].copy() for s in stems}
@@ -502,28 +548,22 @@ def remix_expressive_theme():
                 b1 = smooth_edges(processed[s][bar_start : bar_start + BEAT])
                 b2 = smooth_edges(processed[s][bar_start + BEAT : bar_start + 2 * BEAT])
                 b4 = smooth_edges(processed[s][bar_start + 3 * BEAT : bar_start + 4 * BEAT])
-                # Assemble: Beat 1, Beat 2, Beat 1 (chopped kick retrigger), Beat 4
                 rearranged_bar = np.concatenate([b1, b2, b1, b4], axis=0)
                 processed[s][bar_start:bar_end] = rearranged_bar
                 
         # Sub-pattern 2 (b % 4 == 2): Rhythmic Gating Bar + Reverse Chop on Beat 4
         if b % 4 == 2:
             for s in stems:
-                # Apply 16th-note glitch-hop trance-gate
                 gated_bar = processed[s][bar_start:bar_end] * (0.12 + 0.88 * gate_smooth)
-                
-                # Reverse chop on Beat 4 (leading into next downbeat)
                 beat4_slice = gated_bar[3 * BEAT : 4 * BEAT]
                 rev_beat4 = np.flip(beat4_slice, axis=0)
                 t_rev = np.linspace(0.15, 1.0, len(beat4_slice)) ** 2
                 gated_bar[3 * BEAT : 4 * BEAT] = smooth_edges(rev_beat4 * t_rev[:, None] * 1.4)
-                
                 processed[s][bar_start:bar_end] = gated_bar
                 
         # Sub-pattern 3 (b % 4 == 3): Glitch-Hop Turnaround Breakdown & 1/16th Beat Rolls
         if b % 4 == 3:
             for s in stems:
-                # Spliced shuffle: Beat 1, Beat 3 (jump cut), Beat 2
                 b1 = smooth_edges(processed[s][bar_start : bar_start + BEAT])
                 b2 = smooth_edges(processed[s][bar_start + BEAT : bar_start + 2 * BEAT])
                 b3 = smooth_edges(processed[s][bar_start + 2 * BEAT : bar_start + 3 * BEAT])
@@ -534,27 +574,40 @@ def remix_expressive_theme():
                 ramp = np.linspace(0.8, 1.35, len(s16_roll))[:, None]
                 roll_beat4 = smooth_edges(s16_roll * ramp)
                 
-                # Assemble turnaround bar: [Beat 1, Beat 3, Beat 2, 1/16th Roll Beat 4]
                 turnaround_bar = np.concatenate([b1, b3, b2, roll_beat4], axis=0)
                 processed[s][bar_start:bar_end] = turnaround_bar
+                
+        # Sub-pattern 4 (b % 8 == 0, for b > 0): 1/32nd Glitch Drill Stutter on Beat 4.5
+        if b % 8 == 0 and b > 0:
+            drill_src = bar_start + 3 * BEAT + EIGHTH
+            for s in stems:
+                s32 = smooth_edges(processed[s][drill_src : drill_src + THIRTYSECOND])
+                s32_4x = np.tile(s32, (4, 1))
+                ramp = np.linspace(0.9, 1.3, len(s32_4x))[:, None]
+                processed[s][drill_src : drill_src + EIGHTH] = smooth_edges(s32_4x * ramp)
 
     # 3. Add Breakbeat / Glitch-Hop Punch & Warmth
     for s in stems:
-        # Glitch-hop drive / saturation
         sat = np.tanh(1.2 * processed[s])
-        mix = 0.85 * sat + 0.15 * processed[s]
+        processed[s] = 0.85 * sat + 0.15 * processed[s]
+
+    # 4. Master Theme Normalization (Preserving stem volume hierarchy!)
+    max_peak = max(np.max(np.abs(processed[s])) for s in stems)
+    norm_factor = 0.89 / max_peak if max_peak > 0 else 1.0
+    print(f'   -> Expressive master max peak: {max_peak:.4f}, global norm factor: {norm_factor:.4f}')
+
+    for s in stems:
+        processed[s] = processed[s] * norm_factor
+        stem_peak = np.max(np.abs(processed[s]))
+        stem_rms = np.sqrt(np.mean(processed[s] ** 2))
+        print(f'   -> Stem {s:7s}: peak = {stem_peak:.4f}, rms = {stem_rms:.4f}')
         
-        # Peak normalization to -1.0 dBFS (0.89)
-        peak = np.max(np.abs(mix))
-        if peak > 0:
-            mix = mix * (0.89 / peak)
-            
         wav_path = f'{TEMP_DIR}/expressive_{s}.wav'
         mp3_path = f'{OUTPUT_DIR}/itswal_expressive_{s}.mp3'
-        sf.write(wav_path, mix, SR)
+        sf.write(wav_path, processed[s], SR)
         subprocess.run(['ffmpeg', '-y', '-i', wav_path, '-codec:a', 'libmp3lame', '-b:a', '320k', mp3_path],
                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
-        print(f'   -> Rendered {mp3_path} ({len(mix)} samples)')
+        print(f'   -> Rendered {mp3_path} ({len(processed[s])} samples)')
 
 
 def main():
