@@ -1283,15 +1283,9 @@
     }
 
     /* --------------------------------------------------------------------------
-      EMAIL POPOVER / ACTION TAB
+      EMAIL INTERACTIVE TAB
       --------------------------------------------------------------------------
       */
-    .email-popover-container {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-    }
-
     #social-email[aria-expanded="true"] {
       color: var(--color-accent);
       transform: scale(1.2);
@@ -1309,65 +1303,64 @@
     }
 
     .email-popover {
-      position: absolute;
-      top: calc(100% + 14px);
-      right: -8px;
-      z-index: 100;
-      min-width: 250px;
-      padding: 10px 12px;
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.94);
-      border: 1px solid rgba(255, 255, 255, 0.8);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04);
-      color: #111827;
+      max-height: 0;
       opacity: 0;
-      visibility: hidden;
-      transform: translateY(-8px) scale(0.96);
-      transform-origin: top right;
-      transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                  transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                  visibility 0.2s;
+      overflow: hidden;
+      margin-top: 0;
+      transition: max-height 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+                  opacity 0.22s ease,
+                  margin-top 0.22s ease;
       pointer-events: none;
     }
 
     .email-popover.active {
+      max-height: 120px;
       opacity: 1;
-      visibility: visible;
-      transform: translateY(0) scale(1);
+      margin-top: 16px;
       pointer-events: auto;
     }
 
+    .email-popover-inner {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+      max-width: 100%;
+    }
+
     .email-popover-email {
-      font-size: 0.78rem;
+      font-size: 0.8rem;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      color: var(--color-text-muted);
-      margin-bottom: 8px;
-      padding: 5px 9px;
-      border-radius: 9px;
-      background: rgba(0, 0, 0, 0.05);
-      display: block;
-      text-align: center;
-      word-break: break-all;
+      font-weight: 500;
+      color: var(--color-text-main);
+      padding: 4px 10px;
+      border-radius: 9999px;
+      background: rgba(0, 0, 0, 0.04);
       user-select: all;
     }
 
     .email-popover-actions {
-      display: flex;
+      display: inline-flex;
+      align-items: center;
       gap: 6px;
     }
 
     .email-popover-btn {
-      flex: 1;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 5px;
-      padding: 7px 12px;
+      padding: 6px 14px;
       font-size: 0.78rem;
       font-weight: 600;
-      border-radius: 999px;
+      border-radius: 9999px;
       text-decoration: none;
       cursor: pointer;
       user-select: none;
@@ -1410,28 +1403,11 @@
       flex-shrink: 0;
     }
 
-    @media (max-width: 480px) {
-      .email-popover {
-        right: -16px;
-        min-width: 236px;
-        max-width: calc(100vw - 48px);
-        padding: 9px 10px;
-      }
-      .email-popover-email {
-        font-size: 0.72rem;
-        padding: 4px 6px;
-      }
-      .email-popover-btn {
-        padding: 6px 10px;
-        font-size: 0.74rem;
-      }
-    }
-
     /* Dark Theme Overrides */
-    body.theme-dark .email-popover {
-      background: rgba(22, 11, 38, 0.88);
+    body.theme-dark .email-popover-inner {
+      background: rgba(22, 11, 38, 0.85);
       border: 1px solid rgba(180, 100, 200, 0.35);
-      box-shadow: 0 16px 36px rgba(8, 2, 18, 0.75), inset 0 1px 1px rgba(200, 170, 220, 0.3);
+      box-shadow: 0 10px 30px rgba(8, 2, 18, 0.6), inset 0 1px 1px rgba(200, 170, 220, 0.3);
     }
 
     body.theme-dark .email-popover-email {
@@ -1461,10 +1437,10 @@
     }
 
     /* Banana Theme Overrides */
-    body.theme-banana .email-popover {
+    body.theme-banana .email-popover-inner {
       background: #FEFBDF;
       border: 2px solid #46483B;
-      box-shadow: 4px 4px 0px #46483B;
+      box-shadow: 3px 3px 0px #46483B;
       border-radius: 20px;
     }
 
@@ -1518,10 +1494,6 @@
       opacity: 1;
       transform: translateY(0);
       display: block;
-    }
-
-    #intro.visible {
-      padding-bottom: 72px;
     }
 
     .content-section h2 {
@@ -2287,37 +2259,37 @@
                 <path
                   d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
               </svg></a>
-            <!--email_off-->
-            <div class="email-popover-container">
-              <button type="button" class="social-icon h-6 w-6 flex items-center justify-center bg-transparent border-0 p-0 cursor-pointer"
-                id="social-email" aria-label="Reach out or copy email" aria-haspopup="dialog" aria-expanded="false" title="Reach out (walidelonk@gmail.com)">
-                <svg fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
-                </svg>
-              </button>
+            <button type="button" class="social-icon h-6 w-6 flex items-center justify-center bg-transparent border-0 p-0 cursor-pointer"
+              id="social-email" aria-label="Reach out or copy email" aria-haspopup="region" aria-expanded="false" title="Reach out (walidelonk@gmail.com)">
+              <svg fill="currentColor" viewBox="0 0 24 24">
+                <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+              </svg>
+            </button>
+          </div>
 
-              <div id="email-popover" class="email-popover" role="dialog" aria-label="Email options" aria-hidden="true">
-                <span class="email-popover-email">walidelonk@gmail.com</span>
-                <div class="email-popover-actions">
-                  <button type="button" id="email-copy-action" class="email-popover-btn email-popover-btn-secondary" title="Copy email address">
-                    <svg class="email-btn-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                    </svg>
-                    <span id="email-copy-text">Copy</span>
-                  </button>
-                  <a href="mailto:walidelonk@gmail.com" id="email-reach-action" class="email-popover-btn email-popover-btn-primary" title="Open mail app">
-                    <svg class="email-btn-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                      <line x1="22" y1="2" x2="11" y2="13"></line>
-                      <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                    </svg>
-                    <span>Reach out</span>
-                  </a>
-                </div>
+          <!--email_off-->
+          <div id="email-popover" class="email-popover" role="region" aria-label="Email options" aria-hidden="true">
+            <div class="email-popover-inner">
+              <span class="email-popover-email">walidelonk@gmail.com</span>
+              <div class="email-popover-actions">
+                <button type="button" id="email-copy-action" class="email-popover-btn email-popover-btn-secondary" title="Copy email address">
+                  <svg class="email-btn-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+                  <span id="email-copy-text">Copy</span>
+                </button>
+                <a href="mailto:walidelonk@gmail.com" id="email-reach-action" class="email-popover-btn email-popover-btn-primary" title="Open mail app">
+                  <svg class="email-btn-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                  </svg>
+                  <span>Reach out</span>
+                </a>
               </div>
             </div>
-            <!--/email_off-->
           </div>
+          <!--/email_off-->
         </div>
 
         <div id="bio" class="content-section">
@@ -4041,12 +4013,14 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
 
       function showSection(key) {
         hideAllSections();
-        const ep = document.getElementById('email-popover');
-        if (ep && ep.classList.contains('active')) {
-          ep.classList.remove('active');
-          ep.setAttribute('aria-hidden', 'true');
-          const eb = document.getElementById('social-email');
-          if (eb) eb.setAttribute('aria-expanded', 'false');
+        if (key !== 'intro') {
+          const ep = document.getElementById('email-popover');
+          if (ep && ep.classList.contains('active')) {
+            ep.classList.remove('active');
+            ep.setAttribute('aria-hidden', 'true');
+            const eb = document.getElementById('social-email');
+            if (eb) eb.setAttribute('aria-expanded', 'false');
+          }
         }
         requestAnimationFrame(() => {
           if (!key || key === '') key = 'intro';
