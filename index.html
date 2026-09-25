@@ -1286,6 +1286,193 @@
     }
 
     /* --------------------------------------------------------------------------
+      EMAIL POPOVER / ACTION TAB
+      --------------------------------------------------------------------------
+      */
+    .email-popover-container {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .email-popover {
+      position: absolute;
+      top: calc(100% + 12px);
+      right: 0;
+      z-index: 100;
+      min-width: 240px;
+      padding: 12px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.05);
+      color: #1f2937;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-8px) scale(0.95);
+      transform-origin: top right;
+      transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                  visibility 0.2s;
+      pointer-events: none;
+    }
+
+    .email-popover.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .email-popover-email {
+      font-size: 0.76rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      color: var(--color-text-muted);
+      margin-bottom: 8px;
+      padding: 5px 9px;
+      border-radius: 9px;
+      background: rgba(0, 0, 0, 0.04);
+      display: block;
+      text-align: center;
+      word-break: break-all;
+      user-select: all;
+    }
+
+    .email-popover-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .email-popover-btn {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      padding: 7px 12px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      border-radius: 999px;
+      text-decoration: none;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      transition: all 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
+      border: 1px solid transparent;
+      outline: none;
+    }
+
+    .email-popover-btn:active {
+      transform: translateY(1.5px) scale(0.96) !important;
+    }
+
+    .email-popover-btn-primary {
+      background: var(--color-accent);
+      color: #ffffff !important;
+    }
+
+    .email-popover-btn-primary:hover {
+      background: var(--color-accent-hover);
+      transform: translateY(-1px);
+    }
+
+    .email-popover-btn-secondary {
+      background: rgba(0, 0, 0, 0.05);
+      color: var(--color-text-main);
+      border-color: rgba(0, 0, 0, 0.08);
+    }
+
+    .email-popover-btn-secondary:hover {
+      background: rgba(0, 0, 0, 0.09);
+      transform: translateY(-1px);
+    }
+
+    .email-btn-icon {
+      width: 14px;
+      height: 14px;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
+    /* Dark Theme Overrides */
+    body.theme-dark .email-popover {
+      background: rgba(18, 8, 30, 0.88);
+      border: 1px solid rgba(180, 100, 200, 0.3);
+      box-shadow: 0 16px 40px rgba(8, 2, 18, 0.7), 0 0 24px rgba(160, 80, 190, 0.2);
+      color: #ede9f6;
+    }
+
+    body.theme-dark .email-popover-email {
+      background: rgba(255, 255, 255, 0.06);
+      color: #d097c8;
+      border: 1px solid rgba(180, 100, 200, 0.18);
+    }
+
+    body.theme-dark .email-popover-btn-primary {
+      background: #e879a8;
+      color: #0e0618 !important;
+    }
+
+    body.theme-dark .email-popover-btn-primary:hover {
+      background: #f472b6;
+      box-shadow: 0 0 14px rgba(232, 121, 168, 0.5);
+    }
+
+    body.theme-dark .email-popover-btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: #ede9f6;
+      border-color: rgba(180, 100, 200, 0.25);
+    }
+
+    body.theme-dark .email-popover-btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.14);
+      color: #ffffff;
+    }
+
+    /* Banana Theme Overrides */
+    body.theme-banana .email-popover {
+      background: #FEFBDF;
+      border: 2px solid #46483B;
+      box-shadow: 4px 4px 0px #46483B;
+      border-radius: 18px;
+      color: #46483B;
+    }
+
+    body.theme-banana .email-popover-email {
+      background: #E8ED95;
+      color: #46483B;
+      border: 1.5px solid #46483B;
+    }
+
+    body.theme-banana .email-popover-btn-primary {
+      background: #C4EE5B;
+      color: #121F00 !important;
+      border: 1.5px solid #46483B;
+      box-shadow: 2px 2px 0px #46483B;
+    }
+
+    body.theme-banana .email-popover-btn-primary:hover {
+      background: #A7D142;
+      transform: translate(-1px, -1px);
+      box-shadow: 3px 3px 0px #46483B;
+    }
+
+    body.theme-banana .email-popover-btn-secondary {
+      background: #FFFFFF;
+      color: #46483B;
+      border: 1.5px solid #46483B;
+      box-shadow: 2px 2px 0px #46483B;
+    }
+
+    body.theme-banana .email-popover-btn-secondary:hover {
+      background: #F0F0D8;
+      transform: translate(-1px, -1px);
+      box-shadow: 3px 3px 0px #46483B;
+    }
+
+    /* --------------------------------------------------------------------------
       CONTENT SECTION TRANSITIONS
       --------------------------------------------------------------------------
       */
@@ -2065,11 +2252,40 @@
                 <path
                   d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
               </svg></a>
+            <div class="email-popover-container">
+              <button type="button" class="social-icon h-6 w-6 flex items-center justify-center bg-transparent border-0 p-0 cursor-pointer"
+                id="social-email" aria-label="Email options" aria-haspopup="dialog" aria-expanded="false" title="Reach out (walidelonk@gmail.com)">
+                <svg fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+                </svg>
+              </button>
+
+              <div id="email-popover" class="email-popover" role="dialog" aria-label="Email options" aria-hidden="true">
+                <span class="email-popover-email">walidelonk@gmail.com</span>
+                <div class="email-popover-actions">
+                  <button type="button" id="email-copy-action" class="email-popover-btn email-popover-btn-secondary" title="Copy email address">
+                    <svg class="email-btn-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                    <span id="email-copy-text">Copy</span>
+                  </button>
+                  <a href="mailto:walidelonk@gmail.com" id="email-reach-action" class="email-popover-btn email-popover-btn-primary" title="Open email app">
+                    <svg class="email-btn-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <line x1="22" y1="2" x2="11" y2="13"></line>
+                      <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                    <span>Reach out</span>
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
         <div id="bio" class="content-section">
           <h2 class="text-4xl md:text-5xl font-bold mb-4">About Me</h2>
+          <p class="text-lg mb-4">Walid Elonok — 1st year SDIA at FSR.</p>
           <p class="text-lg mb-4">every elegant solution eventually creates a new, much worse problem.</p>
           <p class="text-lg mb-4">I like taking photos of cats (among other things), and building stuff to kill time</p>
 
@@ -3870,6 +4086,100 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
       const vibeDoodle = document.getElementById('vibe-doodle-trigger') || document.getElementById('chip-doodle-mode');
       if (vibeDoodle) {
         vibeDoodle.addEventListener('click', () => toggleDoodleMode(true));
+      }
+
+      // Email popover actions (Copy & Reach out)
+      const socialEmailBtn = document.getElementById('social-email');
+      const emailPopover = document.getElementById('email-popover');
+      const emailCopyAction = document.getElementById('email-copy-action');
+      const emailCopyText = document.getElementById('email-copy-text');
+      const emailReachAction = document.getElementById('email-reach-action');
+
+      function toggleEmailPopover(open) {
+        if (!emailPopover) return;
+        const willOpen = open !== undefined ? open : !emailPopover.classList.contains('active');
+        if (willOpen) {
+          emailPopover.classList.add('active');
+          emailPopover.setAttribute('aria-hidden', 'false');
+          if (socialEmailBtn) socialEmailBtn.setAttribute('aria-expanded', 'true');
+        } else {
+          emailPopover.classList.remove('active');
+          emailPopover.setAttribute('aria-hidden', 'true');
+          if (socialEmailBtn) socialEmailBtn.setAttribute('aria-expanded', 'false');
+        }
+      }
+
+      if (socialEmailBtn) {
+        socialEmailBtn.addEventListener('click', (e) => {
+          if (e && e.stopPropagation) e.stopPropagation();
+          toggleEmailPopover();
+        });
+      }
+
+      if (emailCopyAction) {
+        emailCopyAction.addEventListener('click', (e) => {
+          if (e && e.stopPropagation) e.stopPropagation();
+          const email = 'walidelonk@gmail.com';
+          const onCopied = () => {
+            if (emailCopyText) emailCopyText.textContent = 'Copied! :3';
+            showToast('Copied walidelonk@gmail.com to clipboard! :3', '📬', 3500);
+            setTimeout(() => {
+              if (emailCopyText) emailCopyText.textContent = 'Copy';
+              toggleEmailPopover(false);
+            }, 1200);
+          };
+
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(email).then(onCopied).catch(() => {
+              fallbackCopyEmail(email, onCopied);
+            });
+          } else {
+            fallbackCopyEmail(email, onCopied);
+          }
+        });
+      }
+
+      if (emailReachAction) {
+        emailReachAction.addEventListener('click', () => {
+          setTimeout(() => toggleEmailPopover(false), 250);
+        });
+      }
+
+      // Close popover when clicking outside or pressing Escape
+      document.addEventListener('click', (e) => {
+        if (!emailPopover || !emailPopover.classList.contains('active')) return;
+        if (e && e.target) {
+          if (emailPopover.contains && emailPopover.contains(e.target)) return;
+          if (socialEmailBtn && (e.target === socialEmailBtn || (socialEmailBtn.contains && socialEmailBtn.contains(e.target)))) return;
+        }
+        toggleEmailPopover(false);
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e && e.key === 'Escape' && emailPopover && emailPopover.classList.contains('active')) {
+          toggleEmailPopover(false);
+          if (socialEmailBtn && socialEmailBtn.focus) socialEmailBtn.focus();
+        }
+      });
+
+      function fallbackCopyEmail(text, onSuccess) {
+        try {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          ta.setAttribute('readonly', '');
+          ta.style.position = 'fixed';
+          ta.style.left = '-9999px';
+          ta.style.opacity = '0';
+          if (document.body && document.body.appendChild) {
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            if (ta.parentNode) ta.parentNode.removeChild(ta);
+          }
+          if (onSuccess) onSuccess();
+        } catch (_) {
+          showToast('walidelonk@gmail.com', '📬', 4500);
+        }
       }
 
       // Bottom-left watermark reveal on corner proximity
