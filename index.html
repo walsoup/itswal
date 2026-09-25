@@ -1286,75 +1286,68 @@
     }
 
     /* --------------------------------------------------------------------------
-      EMAIL POPOVER / ACTION TAB
+      EMAIL INTERACTIVE TAB
       --------------------------------------------------------------------------
       */
-    .email-popover-container {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-    }
-
-    .email-popover {
-      position: absolute;
-      top: calc(100% + 12px);
-      right: 0;
-      z-index: 100;
-      min-width: 240px;
-      padding: 12px;
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.88);
-      border: 1px solid rgba(255, 255, 255, 0.6);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.05);
-      color: #1f2937;
+    .email-tab {
+      max-height: 0;
       opacity: 0;
-      visibility: hidden;
-      transform: translateY(-8px) scale(0.95);
-      transform-origin: top right;
-      transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                  transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                  visibility 0.2s;
+      overflow: hidden;
+      margin-top: 0;
+      transition: max-height 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+                  opacity 0.25s ease,
+                  margin-top 0.25s ease;
       pointer-events: none;
     }
 
-    .email-popover.active {
+    .email-tab.active {
+      max-height: 140px;
       opacity: 1;
-      visibility: visible;
-      transform: translateY(0) scale(1);
+      margin-top: 16px;
       pointer-events: auto;
     }
 
-    .email-popover-email {
-      font-size: 0.76rem;
+    .email-tab-inner {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+      max-width: 100%;
+    }
+
+    .email-tab-address {
+      font-size: 0.8rem;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      color: var(--color-text-muted);
-      margin-bottom: 8px;
-      padding: 5px 9px;
-      border-radius: 9px;
+      font-weight: 500;
+      color: var(--color-text-main);
+      padding: 4px 10px;
+      border-radius: 9999px;
       background: rgba(0, 0, 0, 0.04);
-      display: block;
-      text-align: center;
-      word-break: break-all;
       user-select: all;
     }
 
-    .email-popover-actions {
-      display: flex;
+    .email-tab-actions {
+      display: inline-flex;
+      align-items: center;
       gap: 6px;
     }
 
-    .email-popover-btn {
-      flex: 1;
+    .email-tab-btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 5px;
-      padding: 7px 12px;
+      padding: 6px 14px;
       font-size: 0.78rem;
       font-weight: 600;
-      border-radius: 999px;
+      border-radius: 9999px;
       text-decoration: none;
       cursor: pointer;
       user-select: none;
@@ -1362,111 +1355,109 @@
       transition: all 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
       border: 1px solid transparent;
       outline: none;
+      white-space: nowrap;
     }
 
-    .email-popover-btn:active {
+    .email-tab-btn:active {
       transform: translateY(1.5px) scale(0.96) !important;
     }
 
-    .email-popover-btn-primary {
+    .email-tab-btn-primary {
       background: var(--color-accent);
       color: #ffffff !important;
     }
 
-    .email-popover-btn-primary:hover {
+    .email-tab-btn-primary:hover {
       background: var(--color-accent-hover);
       transform: translateY(-1px);
     }
 
-    .email-popover-btn-secondary {
+    .email-tab-btn-secondary {
       background: rgba(0, 0, 0, 0.05);
       color: var(--color-text-main);
       border-color: rgba(0, 0, 0, 0.08);
     }
 
-    .email-popover-btn-secondary:hover {
+    .email-tab-btn-secondary:hover {
       background: rgba(0, 0, 0, 0.09);
       transform: translateY(-1px);
     }
 
     .email-btn-icon {
-      width: 14px;
-      height: 14px;
+      width: 13px;
+      height: 13px;
       display: inline-block;
       flex-shrink: 0;
     }
 
     /* Dark Theme Overrides */
-    body.theme-dark .email-popover {
-      background: rgba(18, 8, 30, 0.88);
+    body.theme-dark .email-tab-inner {
+      background: rgba(22, 11, 38, 0.75);
       border: 1px solid rgba(180, 100, 200, 0.3);
-      box-shadow: 0 16px 40px rgba(8, 2, 18, 0.7), 0 0 24px rgba(160, 80, 190, 0.2);
+      box-shadow: 0 10px 30px rgba(8, 2, 18, 0.6), inset 0 1px 1px rgba(200, 170, 220, 0.3);
+    }
+
+    body.theme-dark .email-tab-address {
+      background: rgba(255, 255, 255, 0.06);
       color: #ede9f6;
     }
 
-    body.theme-dark .email-popover-email {
-      background: rgba(255, 255, 255, 0.06);
-      color: #d097c8;
-      border: 1px solid rgba(180, 100, 200, 0.18);
-    }
-
-    body.theme-dark .email-popover-btn-primary {
+    body.theme-dark .email-tab-btn-primary {
       background: #e879a8;
-      color: #0e0618 !important;
+      color: #120618 !important;
     }
 
-    body.theme-dark .email-popover-btn-primary:hover {
+    body.theme-dark .email-tab-btn-primary:hover {
       background: #f472b6;
       box-shadow: 0 0 14px rgba(232, 121, 168, 0.5);
     }
 
-    body.theme-dark .email-popover-btn-secondary {
+    body.theme-dark .email-tab-btn-secondary {
       background: rgba(255, 255, 255, 0.08);
       color: #ede9f6;
       border-color: rgba(180, 100, 200, 0.25);
     }
 
-    body.theme-dark .email-popover-btn-secondary:hover {
+    body.theme-dark .email-tab-btn-secondary:hover {
       background: rgba(255, 255, 255, 0.14);
       color: #ffffff;
     }
 
     /* Banana Theme Overrides */
-    body.theme-banana .email-popover {
+    body.theme-banana .email-tab-inner {
       background: #FEFBDF;
       border: 2px solid #46483B;
-      box-shadow: 4px 4px 0px #46483B;
-      border-radius: 18px;
-      color: #46483B;
+      box-shadow: 3px 3px 0px #46483B;
+      border-radius: 20px;
     }
 
-    body.theme-banana .email-popover-email {
+    body.theme-banana .email-tab-address {
       background: #E8ED95;
       color: #46483B;
       border: 1.5px solid #46483B;
     }
 
-    body.theme-banana .email-popover-btn-primary {
+    body.theme-banana .email-tab-btn-primary {
       background: #C4EE5B;
       color: #121F00 !important;
       border: 1.5px solid #46483B;
       box-shadow: 2px 2px 0px #46483B;
     }
 
-    body.theme-banana .email-popover-btn-primary:hover {
+    body.theme-banana .email-tab-btn-primary:hover {
       background: #A7D142;
       transform: translate(-1px, -1px);
       box-shadow: 3px 3px 0px #46483B;
     }
 
-    body.theme-banana .email-popover-btn-secondary {
+    body.theme-banana .email-tab-btn-secondary {
       background: #FFFFFF;
       color: #46483B;
       border: 1.5px solid #46483B;
       box-shadow: 2px 2px 0px #46483B;
     }
 
-    body.theme-banana .email-popover-btn-secondary:hover {
+    body.theme-banana .email-tab-btn-secondary:hover {
       background: #F0F0D8;
       transform: translate(-1px, -1px);
       box-shadow: 3px 3px 0px #46483B;
@@ -2252,32 +2243,32 @@
                 <path
                   d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
               </svg></a>
-            <div class="email-popover-container">
-              <button type="button" class="social-icon h-6 w-6 flex items-center justify-center bg-transparent border-0 p-0 cursor-pointer"
-                id="social-email" aria-label="Email options" aria-haspopup="dialog" aria-expanded="false" title="Reach out (walidelonk@gmail.com)">
-                <svg fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
-                </svg>
-              </button>
+            <button type="button" class="social-icon h-6 w-6 flex items-center justify-center bg-transparent border-0 p-0 cursor-pointer"
+              id="social-email" aria-label="Reach out or copy email" aria-expanded="false" title="Reach out (walidelonk@gmail.com)">
+              <svg fill="currentColor" viewBox="0 0 24 24">
+                <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+              </svg>
+            </button>
+          </div>
 
-              <div id="email-popover" class="email-popover" role="dialog" aria-label="Email options" aria-hidden="true">
-                <span class="email-popover-email">walidelonk@gmail.com</span>
-                <div class="email-popover-actions">
-                  <button type="button" id="email-copy-action" class="email-popover-btn email-popover-btn-secondary" title="Copy email address">
-                    <svg class="email-btn-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                    </svg>
-                    <span id="email-copy-text">Copy</span>
-                  </button>
-                  <a href="mailto:walidelonk@gmail.com" id="email-reach-action" class="email-popover-btn email-popover-btn-primary" title="Open email app">
-                    <svg class="email-btn-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                      <line x1="22" y1="2" x2="11" y2="13"></line>
-                      <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                    </svg>
-                    <span>Reach out</span>
-                  </a>
-                </div>
+          <div id="email-tab" class="email-tab" role="region" aria-label="Email options">
+            <div class="email-tab-inner">
+              <span class="email-tab-address">walidelonk@gmail.com</span>
+              <div class="email-tab-actions">
+                <button type="button" id="email-copy-action" class="email-tab-btn email-tab-btn-secondary" title="Copy email address">
+                  <svg class="email-btn-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+                  <span id="email-copy-text">Copy</span>
+                </button>
+                <a href="mailto:walidelonk@gmail.com" id="email-reach-action" class="email-tab-btn email-tab-btn-primary" title="Open mail app">
+                  <svg class="email-btn-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                  </svg>
+                  <span>Reach out</span>
+                </a>
               </div>
             </div>
           </div>
@@ -4088,23 +4079,21 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
         vibeDoodle.addEventListener('click', () => toggleDoodleMode(true));
       }
 
-      // Email popover actions (Copy & Reach out)
+      // Email interactive tab actions (Copy & Reach out)
       const socialEmailBtn = document.getElementById('social-email');
-      const emailPopover = document.getElementById('email-popover');
+      const emailTab = document.getElementById('email-tab');
       const emailCopyAction = document.getElementById('email-copy-action');
       const emailCopyText = document.getElementById('email-copy-text');
       const emailReachAction = document.getElementById('email-reach-action');
 
-      function toggleEmailPopover(open) {
-        if (!emailPopover) return;
-        const willOpen = open !== undefined ? open : !emailPopover.classList.contains('active');
+      function toggleEmailTab(open) {
+        if (!emailTab) return;
+        const willOpen = open !== undefined ? open : !emailTab.classList.contains('active');
         if (willOpen) {
-          emailPopover.classList.add('active');
-          emailPopover.setAttribute('aria-hidden', 'false');
+          emailTab.classList.add('active');
           if (socialEmailBtn) socialEmailBtn.setAttribute('aria-expanded', 'true');
         } else {
-          emailPopover.classList.remove('active');
-          emailPopover.setAttribute('aria-hidden', 'true');
+          emailTab.classList.remove('active');
           if (socialEmailBtn) socialEmailBtn.setAttribute('aria-expanded', 'false');
         }
       }
@@ -4112,7 +4101,7 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
       if (socialEmailBtn) {
         socialEmailBtn.addEventListener('click', (e) => {
           if (e && e.stopPropagation) e.stopPropagation();
-          toggleEmailPopover();
+          toggleEmailTab();
         });
       }
 
@@ -4125,7 +4114,7 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
             showToast('Copied walidelonk@gmail.com to clipboard! :3', '📬', 3500);
             setTimeout(() => {
               if (emailCopyText) emailCopyText.textContent = 'Copy';
-              toggleEmailPopover(false);
+              toggleEmailTab(false);
             }, 1200);
           };
 
@@ -4141,23 +4130,23 @@ SQUIGGLE INTERACTIONS (Cycle Themes)
 
       if (emailReachAction) {
         emailReachAction.addEventListener('click', () => {
-          setTimeout(() => toggleEmailPopover(false), 250);
+          setTimeout(() => toggleEmailTab(false), 250);
         });
       }
 
-      // Close popover when clicking outside or pressing Escape
+      // Close tab when clicking outside or pressing Escape
       document.addEventListener('click', (e) => {
-        if (!emailPopover || !emailPopover.classList.contains('active')) return;
+        if (!emailTab || !emailTab.classList.contains('active')) return;
         if (e && e.target) {
-          if (emailPopover.contains && emailPopover.contains(e.target)) return;
+          if (emailTab.contains && emailTab.contains(e.target)) return;
           if (socialEmailBtn && (e.target === socialEmailBtn || (socialEmailBtn.contains && socialEmailBtn.contains(e.target)))) return;
         }
-        toggleEmailPopover(false);
+        toggleEmailTab(false);
       });
 
       document.addEventListener('keydown', (e) => {
-        if (e && e.key === 'Escape' && emailPopover && emailPopover.classList.contains('active')) {
-          toggleEmailPopover(false);
+        if (e && e.key === 'Escape' && emailTab && emailTab.classList.contains('active')) {
+          toggleEmailTab(false);
           if (socialEmailBtn && socialEmailBtn.focus) socialEmailBtn.focus();
         }
       });
